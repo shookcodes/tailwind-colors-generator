@@ -1,4 +1,4 @@
-export const filterInputSearch = (value, listElement, action, { ...args }) => {
+export const filterInputSearch = (value, listElement) => {
   let found = false;
   const buttons = Array.from(listElement.querySelectorAll("button"));
   if (value.length > 1) {
@@ -17,6 +17,12 @@ export const filterInputSearch = (value, listElement, action, { ...args }) => {
       found = true;
     }
   });
+
+  if (found) {
+    buttons.map((button) => {
+      button.classList.add("hidden");
+    });
+  }
 
   if (!value.length) {
     listElement.classList.add("hidden");

@@ -1,6 +1,4 @@
-import { useState, useEffect } from "react";
-import { filterInputSearch } from "../../../utils/filterInputSearch";
-import { generateSecondaryData } from "../../../utils/generateSecondaryData";
+import { filterInputSearch, generateSecondaryData } from "../../../utils";
 import DropdownList from "./DropdownList";
 import { AiFillCaretDown } from "react-icons/ai";
 
@@ -9,8 +7,9 @@ const InputWithDropdown = ({
   placeholder,
   isDisabled,
   data,
-  setSecondaryData,
+  setFilteredTailwindColors,
   setInputData,
+  colorPreviewHex,
 }) => {
   const setDropdownVisibility = (hideAll) => {
     const dropdownLists = Array.from(
@@ -43,7 +42,7 @@ const InputWithDropdown = ({
   const setInputValue = (colorValue) => {
     // Filter the object that matches the selected color's prefix
     const currentColor = data.filter(
-      (color) => color && color.colorPrefix === colorValue.split("-")[0]
+      (color) => color && color?.colorPrefix === colorValue.split("-")[0]
     );
 
     // Filter the shade that matches the selected color's suffix
@@ -53,8 +52,8 @@ const InputWithDropdown = ({
 
     // Passing the input data to parent for data handling
     setInputData({
-      colorPrefix: currentColor[0].colorPrefix,
-      shades: currentShade,
+      colorPrefix: currentColor.pop().colorPrefix,
+      shade: currentShade.pop(),
     });
   };
 
@@ -77,16 +76,16 @@ const InputWithDropdown = ({
       if (index === 0) {
         // Generate the rendered list for the second drop-down if a valid match is found
         const generatedData = generateSecondaryData(e, data);
-        setSecondaryData(generatedData);
+        setFilteredTailwindColors(generatedData);
       }
     }
   };
 
   return (
-    <div>
+    <div className="w-full">
       <label htmlFor={"color" + index} className="relative h-full ">
         <input
-          className=" h-12 py-2 w-full"
+          className="h-12 py-2 w-full"
           placeholder={placeholder}
           name={"color"}
           type="text"
@@ -97,8 +96,14 @@ const InputWithDropdown = ({
           disabled={isDisabled}
           //   style={rgb && { backgroundColor: rgb }}
         />
+        {colorPreviewHex && (
+          <div
+            className="absolute w-8 h-8 -top-1.5 right-9 rounded-lg border border-gray-200 shadow-md"
+            style={{ backgroundColor: colorPreviewHex }}
+          ></div>
+        )}
         <button
-          className="absolute inset-y-1 right-4 group"
+          className="absolute inset-y-1 right-3 group"
           id={`dropdownToggle-${index}`}
           onClick={(e, index) => {
             handleDropdownClick(e, index);
@@ -121,7 +126,7 @@ const InputWithDropdown = ({
         index={index}
         data={data}
         setInputValue={setInputValue}
-        setSecondaryData={setSecondaryData}
+        setFilteredTailwindColors={setFilteredTailwindColors}
       />
     </div>
   );

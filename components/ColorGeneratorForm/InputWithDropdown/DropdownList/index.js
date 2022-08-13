@@ -1,6 +1,11 @@
-import { generateSecondaryData } from "../../../../utils/generateSecondaryData";
+import { generateSecondaryData } from "../../../../utils";
 
-const DropdownList = ({ data, index, setInputValue, setSecondaryData }) => {
+const DropdownList = ({
+  data,
+  index,
+  setInputValue,
+  setFilteredTailwindColors,
+}) => {
   const handleItemClick = (e, index) => {
     e.preventDefault();
     const input = document.querySelector(`#input-${index}`);
@@ -12,7 +17,7 @@ const DropdownList = ({ data, index, setInputValue, setSecondaryData }) => {
     // If the first input has data, pass new array with filtered data to the second input
     if (index === 0) {
       const generatedData = generateSecondaryData(e, data);
-      setSecondaryData(generatedData);
+      setFilteredTailwindColors(generatedData);
       const targetPrefix = e.target.value.split("-")[0];
       const secondaryInput = document.querySelector("#input-1");
 

@@ -5,7 +5,7 @@ import { tailwindColors } from "../../data/tailwindColors";
 const defaultTailwindColors = tailwindColors();
 const ColorGeneratorForm = () => {
   const handleSubmit = () => {
-    return console.log("got here");
+    return;
   };
 
   const [secondaryData, setSecondaryData] = useState([]);

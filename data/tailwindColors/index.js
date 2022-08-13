@@ -19,11 +19,11 @@ const tailwindColors = () => {
     } else {
       tailwindColorsArr.push({
         colorPrefix: color[0],
-        shades: [
+        shades: Array.from(
           Object.entries(color[1]).map((entry) => {
             return { value: entry[0], hex: entry[1] };
-          }),
-        ],
+          })
+        ),
       });
     }
   });

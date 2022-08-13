@@ -58,9 +58,7 @@ button {
 
 .dropdownList {
   position: relative;
-  height: 100%;
   max-height: 480px;
-  /* overflow-y: scroll; */
   @apply my-3 rounded-md shadow-md bg-gray-100;
 }
 

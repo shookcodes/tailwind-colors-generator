@@ -29,6 +29,7 @@ const ColorGeneratorDropdownInput = ({
     });
     e.preventDefault();
   };
+
   return (
     <div>
       <label htmlFor={"color" + index} className="relative h-full ">
@@ -76,12 +77,7 @@ const ColorGeneratorDropdownInput = ({
   );
 };
 
-const DropdownList = ({
-  data,
-  index,
-
-  setSecondaryData,
-}) => {
+const DropdownList = ({ data, index, setSecondaryData }) => {
   const handleItemClick = (e, index) => {
     e.preventDefault();
     const input = document.querySelector(`#input-${index}`);
@@ -90,12 +86,33 @@ const DropdownList = ({
     dropdownList.classList.add("hidden");
 
     // If the first input has data, pass new array with filtered data to the second input
-    if (index === 0 && setSecondaryData) {
-      setSecondaryData(
-        data.filter(
-          (item) => item.colorPrefix === e.target.innerText.split("-")[0]
-        )
-      );
+    if (index === 0) {
+      const colorPrefix = e.target.innerText.split("-")[0];
+      const colorSuffix = e.target.innerText.split("-")[1];
+
+      const listData = [
+        ...data.filter((color) => color.colorPrefix === colorPrefix),
+      ];
+
+      const shades = listData[0]?.shades;
+
+      const renderedColorsArr = [];
+
+      // If the value of the shade matches the first input value, don't add it to the secondary array
+      shades?.map((shade) => {
+        if (shade?.value === colorSuffix) {
+          return;
+        }
+        renderedColorsArr.push(shade);
+      });
+
+      // Creating a new list object with the filtered data, removing the current color selected from the first input. This copy ensures the data list isn't mutated and the secondary list shows the correct data.
+      const renderedColorsList = [
+        { colorPrefix, shades: [...renderedColorsArr] },
+      ];
+      setSecondaryData(() => {
+        return renderedColorsList;
+      });
     }
   };
 
@@ -103,41 +120,39 @@ const DropdownList = ({
     <ul
       id={`dropdownList-${index}`}
       className={`dropdownList 
-        flex-col h-100 scroll w-full z-50`}
+        flex-col scroll w-full z-50 hidden ${
+          index === 0 ? "h-auto" : "h-auto"
+        }`}
       // ref={ref}
     >
       {data &&
-        data.map((item, dataIndex) => {
-          return item.shades.map((shadeList) =>
-            shadeList.map((shade, shadeIndex) => {
-              const tailwindName = item.colorPrefix + "-" + shade.value;
-              return (
-                <li key={"btn-" + item.colorPrefix + "-" + shadeIndex}>
-                  <button
-                    className="flex justify-between text-gray-500 w-full pl-4 pr-1 py-3 items-center border-b border-b-gray-200 hover:cursor-pointer hover:text-gray-400  hover:bg-amber-50 hover:shadow-inner"
-                    id={tailwindName}
-                    value={tailwindName}
-                    onClick={(e) => {
-                      e.preventDefault();
-                      // Pass the index value of parent component for event handling
-                      handleItemClick(e, index);
-                      // handleItemClick((() => {
-                      //   return e.currentTarget;
-                      // }));
-                    }}
-                  >
-                    <span>{tailwindName}</span>
+        data.map((item, dataIndex) =>
+          item.shades.map((shade, shadeIndex) => {
+            const tailwindName = item.colorPrefix + "-" + shade.value;
 
-                    <div
-                      className="w-4 h-4 rounded-md border bg-${color} border-gray-300 shadoww-sm shadow"
-                      style={{ backgroundColor: shade.hex }}
-                    ></div>
-                  </button>
-                </li>
-              );
-            })
-          );
-        })}
+            return (
+              <li key={"btn-" + item.colorPrefix + "-" + shadeIndex}>
+                <button
+                  className="flex justify-between text-gray-500 w-full pl-4 pr-1 py-3 items-center border-b border-b-gray-200 hover:cursor-pointer hover:text-gray-400  hover:bg-amber-50 hover:shadow-inner"
+                  id={tailwindName}
+                  value={tailwindName}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    // Pass the index value of parent component for event handling
+                    handleItemClick(e, index);
+                  }}
+                >
+                  <span>{tailwindName}</span>
+
+                  <div
+                    className="w-4 h-4 rounded-md border bg-${color} border-gray-300 shadoww-sm shadow"
+                    style={{ backgroundColor: shade.hex }}
+                  ></div>
+                </button>
+              </li>
+            );
+          })
+        )}
     </ul>
   );
 };

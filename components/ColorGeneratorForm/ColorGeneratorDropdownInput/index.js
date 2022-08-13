@@ -1,4 +1,6 @@
 import { useState, useEffect } from "react";
+import { filterInputSearch } from "../../../utils/filterInputSearch";
+import { generateSecondaryData } from "../../../utils/generateSecondaryData";
 import { AiFillCaretDown } from "react-icons/ai";
 
 const ColorGeneratorDropdownInput = ({
@@ -8,14 +10,12 @@ const ColorGeneratorDropdownInput = ({
   data,
   setSecondaryData,
 }) => {
-  const handleDropdownClick = (e, index) => {
-    const dropdownList = document.querySelector(`#dropdownList-${index}`);
-
+  const setDropdownVisibility = () => {
     const dropdownLists = Array.from(
       document.querySelectorAll(".dropdownList")
     );
 
-    dropdownLists.map((list, listIndex) => {
+    return dropdownLists.map((list, listIndex) => {
       if (index === listIndex) {
         if (list.classList.contains("hidden")) {
           list.classList.remove("hidden");
@@ -27,7 +27,20 @@ const ColorGeneratorDropdownInput = ({
         list.classList.add("hidden");
       }
     });
+  };
+  const handleDropdownClick = (e) => {
+    setDropdownVisibility();
     e.preventDefault();
+  };
+
+  const handleInputChange = (e) => {
+    const index = parseInt(e.target.id.split("-")[1]);
+    const dropdownList = document.querySelector(`#dropdownList-${index}`);
+    const matchFound = filterInputSearch(e.target.value, dropdownList);
+    if (index === 0 && matchFound) {
+      const generatedData = generateSecondaryData(e, data);
+      setSecondaryData(generatedData);
+    }
   };
 
   return (
@@ -40,18 +53,15 @@ const ColorGeneratorDropdownInput = ({
           type="text"
           id={`input-${index}`}
           //   value={isDisabled ? "" : value}
-          //   onChange={(e) => {
-          //     handleInputChange(() => {
-          //       const value = e.target.value;
-          //       return { value, index };
-          //     });
-          //   }}
+          onChange={(e, index) => {
+            handleInputChange(e, index);
+          }}
           disabled={isDisabled}
           //   style={rgb && { backgroundColor: rgb }}
         />
         <button
           className="absolute inset-y-1 right-4"
-          onClick={(e) => {
+          onClick={(e, index) => {
             handleDropdownClick(e, index);
           }}
           disabled={isDisabled}
@@ -87,32 +97,8 @@ const DropdownList = ({ data, index, setSecondaryData }) => {
 
     // If the first input has data, pass new array with filtered data to the second input
     if (index === 0) {
-      const colorPrefix = e.target.innerText.split("-")[0];
-      const colorSuffix = e.target.innerText.split("-")[1];
-
-      const listData = [
-        ...data.filter((color) => color.colorPrefix === colorPrefix),
-      ];
-
-      const shades = listData[0]?.shades;
-
-      const renderedColorsArr = [];
-
-      // If the value of the shade matches the first input value, don't add it to the secondary array
-      shades?.map((shade) => {
-        if (shade?.value === colorSuffix) {
-          return;
-        }
-        renderedColorsArr.push(shade);
-      });
-
-      // Creating a new list object with the filtered data, removing the current color selected from the first input. This copy ensures the data list isn't mutated and the secondary list shows the correct data.
-      const renderedColorsList = [
-        { colorPrefix, shades: [...renderedColorsArr] },
-      ];
-      setSecondaryData(() => {
-        return renderedColorsList;
-      });
+      const generatedData = generateSecondaryData(e, data);
+      setSecondaryData(generatedData);
     }
   };
 

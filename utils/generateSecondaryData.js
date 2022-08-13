@@ -1,7 +1,9 @@
+// This function generates the second dropdown list based on the color prefix and value of the first input
 export const generateSecondaryData = (e, data) => {
-  const colorPrefix = e.target.value.split("-")[0];
-  const colorSuffix = e.target.value.split("-")[1];
+  const colorPrefix = e.target?.value?.split("-")[0];
+  const colorSuffix = e.target?.value?.split("-")[1];
 
+  // Filter out the colors that don't match the prefix
   const listData = [
     ...data.filter((color) => color.colorPrefix === colorPrefix),
   ];

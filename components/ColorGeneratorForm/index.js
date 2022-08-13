@@ -1,5 +1,5 @@
-import { useState } from "react";
-import ColorGeneratorDropdownInput from "./ColorGeneratorDropdownInput";
+import { useState, useEffect } from "react";
+import InputWithDropdown from "./InputWithDropdown";
 import { tailwindColors } from "../../data/tailwindColors";
 
 const defaultTailwindColors = tailwindColors();
@@ -9,32 +9,34 @@ const ColorGeneratorForm = () => {
   };
 
   const [secondaryData, setSecondaryData] = useState([]);
+  const [primaryInputData, setPrimaryInputData] = useState(null);
+  const [secondaryInputData, setSecondaryInputData] = useState(null);
 
+  useEffect(() => {
+    if (primaryInputData !== null && setSecondaryInputData !== null) {
+      console.log("primaryInputData", primaryInputData);
+      console.log("secondaryInputData", secondaryInputData);
+    }
+  }, [primaryInputData, secondaryInputData]);
   return (
     <form className="h-full w-full" onSubmit={handleSubmit}>
       <fieldset className="flex w-full flex-col items-center">
         <div className=" flex justify-center relative w-full ">
-          <ColorGeneratorDropdownInput
+          <InputWithDropdown
             index={0}
             placeholder="Search for a color"
             isDisabled={false}
             data={defaultTailwindColors}
             setSecondaryData={setSecondaryData}
+            setInputData={setPrimaryInputData}
           />
-          <ColorGeneratorDropdownInput
+          <InputWithDropdown
             index={1}
             placeholder="Search for a color"
             isDisabled={secondaryData.length > 0 ? false : true}
             data={secondaryData}
+            setInputData={setSecondaryInputData}
           />
-
-          {/* <DropdownTwoCol
-        arr={arr}
-        setPrimaryHex={setPrimaryHex}
-        setSecondaryHex={setSecondaryHex}
-        setPrimaryTwColor={setPrimaryTwColor}
-        setSecondaryTwColor={setSecondaryTwColor}
-      /> */}
         </div>
       </fieldset>
     </form>

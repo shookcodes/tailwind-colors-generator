@@ -1,7 +1,8 @@
 import { useState, useEffect } from "react";
 import InputWithDropdown from "./InputWithDropdown";
 import { tailwindColors } from "../../data/tailwindColors";
-
+import { convertFromHex } from "../../utils/convertHex";
+import { generateMedianRGB } from "../../utils/generateMedianRGB";
 const defaultTailwindColors = tailwindColors();
 const ColorGeneratorForm = () => {
   const handleSubmit = () => {
@@ -13,9 +14,11 @@ const ColorGeneratorForm = () => {
   const [secondaryInputData, setSecondaryInputData] = useState(null);
 
   useEffect(() => {
-    if (primaryInputData !== null && setSecondaryInputData !== null) {
-      console.log("primaryInputData", primaryInputData);
-      console.log("secondaryInputData", secondaryInputData);
+    if (primaryInputData !== null && secondaryInputData !== null) {
+      const primaryRGB = convertFromHex(primaryInputData.shades[0].hex);
+      const secondaryRGB = convertFromHex(secondaryInputData?.shades[0].hex);
+
+      const generatedRBG = generateMedianRGB(primaryRGB, secondaryRGB);
     }
   }, [primaryInputData, secondaryInputData]);
   return (

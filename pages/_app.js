@@ -1,7 +1,14 @@
-import '../styles/globals.css'
+import "../styles/globals.css";
+import { ColorPaletteProvider } from "../context/";
 
 function MyApp({ Component, pageProps }) {
-  return <Component {...pageProps} />
+  return (
+    <>
+      <ColorPaletteProvider>
+        <Component {...pageProps} />
+      </ColorPaletteProvider>
+    </>
+  );
 }
 
-export default MyApp
+export default MyApp;

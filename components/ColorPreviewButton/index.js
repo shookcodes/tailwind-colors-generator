@@ -1,8 +1,30 @@
+import { useContext } from "react";
+// import { updateColorsPalette } from "../../data/colorsObject/index";
+import { convertToHex } from "../../utils";
 import { MdAdd } from "react-icons/md";
+const ColorPreviewButton = ({
+  className,
+  text,
+  backgroundColor,
+  setCurrentPaletteColor,
+}) => {
+  // const context = useContext(ColorContext);
 
-const ColorPreviewButton = ({ className, text, backgroundColor }) => {
-  const handleFormSubmit = (e) => {
+  // Set the color object and pass it to the parent form component for data handling
+  const handleAddColorClick = (e) => {
     e.preventDefault();
+    const obj = {
+      colorPrefix: text.split("-")[0],
+      shade: {
+        value: text.split("-")[1],
+        hex: convertToHex(backgroundColor),
+        rgb: backgroundColor,
+      },
+    };
+
+    setCurrentPaletteColor(() => {
+      return obj;
+    });
   };
 
   return (
@@ -13,8 +35,9 @@ const ColorPreviewButton = ({ className, text, backgroundColor }) => {
       }}
       title="Add color to palette"
       type="submit"
+      value={text}
       onClick={(e) => {
-        handleFormSubmit(e);
+        handleAddColorClick(e);
       }}
     >
       <span className="flex">

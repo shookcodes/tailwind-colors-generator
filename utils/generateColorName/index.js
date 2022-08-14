@@ -1,4 +1,4 @@
-import { checkDuplicates } from "../checkDuplicates";
+import { checkColorNameDuplicates } from "../checkDuplicates";
 export const generateColorName = ({
   colorPrefix,
   primaryColorValue,
@@ -8,9 +8,11 @@ export const generateColorName = ({
   let averageValue =
     (parseInt(primaryColorValue) + parseInt(secondaryColorValue)) / 2;
 
-  if (checkDuplicates(data, colorPrefix, averageValue)) {
-    averageValue += 1;
-    checkDuplicates(data, colorPrefix, averageValue);
+  if (
+    checkColorNameDuplicates(data, colorPrefix, averageValue).duplicateValue
+  ) {
+    averageValue++;
+    checkColorNameDuplicates(data, colorPrefix, averageValue);
   }
 
   return colorPrefix + "-" + averageValue;

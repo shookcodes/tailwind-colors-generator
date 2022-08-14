@@ -1,7 +1,11 @@
-export const checkDuplicates = (data, colorPrefix, colorValue) => {
+const checkColorNameDuplicates = (data, colorPrefix, colorValue) => {
   const filteredColorPrefix = data.filter(
     (color) => color.colorPrefix === colorPrefix
   );
+
+  const duplicatePrefix = filteredColorPrefix.length === 0 ? false : true;
+
+  let duplicateValue;
 
   const shades = filteredColorPrefix?.pop().shades;
 
@@ -10,7 +14,23 @@ export const checkDuplicates = (data, colorPrefix, colorValue) => {
     .pop();
 
   if (filteredShade) {
-    // averageValue += 1;
-    return true;
+    duplicateValue = true;
+  } else {
+    duplicateValue = false;
   }
+  return { duplicatePrefix, duplicateValue };
 };
+
+const checkColorHexDuplicates = (data, colorPrefix, hex) => {
+  const filteredColors = data.filter(
+    (color) => color.colorPrefix === colorPrefix
+  );
+  const duplicateHex = filteredColors
+    .pop()
+    .shades.filter((shade) => shade.hex === hex)
+    ? true
+    : false;
+  return duplicateHex;
+};
+
+export { checkColorNameDuplicates, checkColorHexDuplicates };

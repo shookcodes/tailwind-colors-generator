@@ -61,13 +61,16 @@ const InputWithDropdown = ({
     const index = parseInt(e.target.id.split("-")[1]);
     const dropdownList = document.querySelector(`#dropdownList-${index}`);
     const matchFound = filterInputSearch(e.target.value, dropdownList);
+    const input = document.querySelector(`#input-${index}`);
 
-    // If the first input value is null, remove the value from the second input if it is not null and clear the input data passed to the parent
-    if (index === 0) {
-      if (!e.target.value) {
+    // If an input target doesn't have a value, set the data passed to the parent to null and set the value to null so the hex preview icon is not visible
+    if (!e.target.value) {
+      (input.value = ""), setInputData(null);
+      // If the first input value is null, remove the value from the second input if it is not null and clear the input data passed to the parent
+      if (index === 0) {
         setDropdownVisibility(true);
         document.querySelector("#input-1").value = "";
-        setInputData({});
+        setInputData(null);
       }
     }
     if (matchFound) {

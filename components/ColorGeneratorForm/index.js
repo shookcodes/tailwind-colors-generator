@@ -67,7 +67,7 @@ const ColorGeneratorForm = () => {
 
       if (colorsPalette.length === 0) {
         setColorsPalette([currentColorObject]);
-        setCurrentPaletteColor(null);
+        return setCurrentPaletteColor(null);
       } else {
         if (
           checkColorHexDuplicates(
@@ -76,7 +76,8 @@ const ColorGeneratorForm = () => {
             currentPaletteColor.shade.hex
           )
         ) {
-          setDuplicateAlert(true);
+          return setDuplicateAlert(true);
+        } else {
         }
       }
     }

@@ -15,7 +15,6 @@ const InputWithDropdown = ({
     const dropdownLists = Array.from(
       document.querySelectorAll(".dropdownList")
     );
-
     return dropdownLists.map((list, listIndex) => {
       if (hideAll) {
         return list.classList.add("hidden");
@@ -33,6 +32,7 @@ const InputWithDropdown = ({
       }
     });
   };
+
   const handleDropdownClick = (e) => {
     setDropdownVisibility();
     e.preventDefault();
@@ -66,6 +66,7 @@ const InputWithDropdown = ({
     // If an input target doesn't have a value, set the data passed to the parent to null and set the value to null so the hex preview icon is not visible
     if (!e.target.value) {
       (input.value = ""), setInputData(null);
+
       // If the first input value is null, remove the value from the second input if it is not null and clear the input data passed to the parent
       if (index === 0) {
         setDropdownVisibility(true);

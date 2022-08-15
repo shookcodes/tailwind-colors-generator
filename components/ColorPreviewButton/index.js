@@ -29,30 +29,32 @@ const ColorPreviewButton = ({
 
   return (
     // If className is passed, let className value specify the width of the button, otherwise return default width values
-    <button
-      className={`h-12 flex border-2 border-black justify-center items-center rounded-lg shadow-lg transform hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow hover:duration-150 hover:ease-in-out ${
+    <div
+      className={`h-12 rounded-lg drop-shadow-lg  ${
         className ? className : "w-full sm:w-8/12 "
-      } `}
-      style={{
-        backgroundColor: backgroundColor,
-      }}
-      title="Add color to palette"
-      type="submit"
-      value={text}
-      onClick={(e) => {
-        handleAddColorClick(e);
-      }}
+      }}`}
     >
-      {backgroundColor && (
+      <button
+        className={`flex w-full rounded-lg h-full justify-center items-center  transform hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow  duration-150 ease-in-out  `}
+        style={{
+          backgroundColor: backgroundColor,
+        }}
+        title="Add color to palette"
+        type="submit"
+        value={text}
+        onClick={(e) => {
+          handleAddColorClick(e);
+        }}
+      >
         <span
-          className={`flex whitespace-nowrap  ${
-            backgroundColor ? "text-opacity-100" : "text-opacity-0"
+          className={`flex text-black transform delay-100 transition ease-in-out whitespace-nowrap ${
+            backgroundColor ? "w-100 opacity-1 " : "w-0 opacity-0 "
           }`}
         >
           {text} <MdAdd className="ml-2 w-6 h-6" />
         </span>
-      )}
-    </button>
+      </button>
+    </div>
   );
 };
 

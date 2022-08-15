@@ -152,19 +152,17 @@ const ColorGeneratorForm = () => {
                   : ""
               }
             />
-            {/* {generatedRGB && ( */}
             <ColorPreviewButton
               backgroundColor={generatedRGB}
               text={generatedColorName}
               setCurrentPaletteColor={setCurrentPaletteColor}
               handleSubmit={handleSubmit}
-              className={`transition-all ease-out duration-500  ${
+              className={`transform ease-in-out duration-500 ${
                 generatedRGB
-                  ? "translate-x-0 w-full sm:w-8/12"
-                  : "-translate-x-100 w-0 "
+                  ? "translate-x-0 w-full sm:w-8/12 opacity-100"
+                  : "-translate-x-100 w-0 opacity-0"
               }`}
             />
-            {/* )} */}
           </div>
         </fieldset>
       </form>

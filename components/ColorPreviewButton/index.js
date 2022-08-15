@@ -28,8 +28,11 @@ const ColorPreviewButton = ({
   };
 
   return (
+    // If className is passed, let className value specify the width of the button, otherwise return default width values
     <button
-      className={`w-full sm:w-8/12 h-12 flex border-2 border-black justify-center items-center rounded-lg shadow-lg ${className} transform hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow duration-150 ease-in-out`}
+      className={`h-12 flex border-2 border-black justify-center items-center rounded-lg shadow-lg transform hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow hover:duration-150 hover:ease-in-out ${
+        className ? className : "w-full sm:w-8/12 "
+      } `}
       style={{
         backgroundColor: backgroundColor,
       }}
@@ -40,9 +43,15 @@ const ColorPreviewButton = ({
         handleAddColorClick(e);
       }}
     >
-      <span className="flex">
-        {text} <MdAdd className="ml-2 w-6 h-6" />
-      </span>
+      {backgroundColor && (
+        <span
+          className={`flex whitespace-nowrap  ${
+            backgroundColor ? "text-opacity-100" : "text-opacity-0"
+          }`}
+        >
+          {text} <MdAdd className="ml-2 w-6 h-6" />
+        </span>
+      )}
     </button>
   );
 };

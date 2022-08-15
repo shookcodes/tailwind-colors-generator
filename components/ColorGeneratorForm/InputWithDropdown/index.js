@@ -1,6 +1,7 @@
 import { filterInputSearch, generateSecondaryData } from "../../../utils";
 import DropdownList from "./DropdownList";
 import { AiFillCaretDown } from "react-icons/ai";
+import { useEffect } from "react";
 
 const InputWithDropdown = ({
   index,
@@ -8,6 +9,7 @@ const InputWithDropdown = ({
   isDisabled,
   data,
   setFilteredTailwindColors,
+  inputData,
   setInputData,
   colorPreviewHex,
 }) => {
@@ -57,6 +59,13 @@ const InputWithDropdown = ({
     });
   };
 
+  // Remove text from input fields
+  useEffect(() => {
+    if (inputData === null) {
+      document.querySelector(`#input-${index}`).value = "";
+    }
+  }, [inputData, index]);
+
   const handleInputChange = (e) => {
     const index = parseInt(e.target.id.split("-")[1]);
     const dropdownList = document.querySelector(`#dropdownList-${index}`);
@@ -65,14 +74,13 @@ const InputWithDropdown = ({
 
     // If an input target doesn't have a value, set the data passed to the parent to null and set the value to null so the hex preview icon is not visible
     if (!e.target.value) {
-      (input.value = ""), setInputData(null);
-
       // If the first input value is null, remove the value from the second input if it is not null and clear the input data passed to the parent
       if (index === 0) {
         setDropdownVisibility(true);
         document.querySelector("#input-1").value = "";
         setInputData(null);
       }
+      setInputData(null);
     }
     if (matchFound) {
       setInputValue(e.target.value);

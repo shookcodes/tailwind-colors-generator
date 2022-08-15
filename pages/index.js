@@ -2,9 +2,12 @@ import { useState, useEffect } from "react";
 import Head from "next/head";
 import ColorGeneratorForm from "../components/ColorGeneratorForm";
 import ColorsPalette from "../components/ColorsPalette";
+import CodeBox from "../components/CodeBox";
 export default function Home() {
   const [colorsPalette, setColorsPalette] = useState([]);
+  const [shadeAdded, setShadeAdded] = useState(null);
 
+  // console.log("shade added", shadeAdded);
   useEffect(() => {
     if (colorsPalette) {
       console.log("colorspalethome", colorsPalette);
@@ -28,18 +31,13 @@ export default function Home() {
           <ColorGeneratorForm
             colorsPalette={colorsPalette}
             setColorsPalette={setColorsPalette}
+            setShadeAdded={setShadeAdded}
           />
           <ColorsPalette
             colorsPalette={colorsPalette}
             setColorsPalette={setColorsPalette}
           />
-          {/* 
-          <ColorPalette
-            paletteArr={paletteArr}
-            textColor={state.textColor}
-            handleRemoveColor={handleRemoveColor}
-          />
-          <CodeBox paletteArr={paletteArr} /> */}
+          <CodeBox colorsPalette={colorsPalette} />
         </div>
       </div>
     </div>

@@ -12,7 +12,11 @@ import {
 } from "../../utils";
 
 const defaultTailwindColors = tailwindColors();
-const ColorGeneratorForm = ({ colorsPalette, setColorsPalette }) => {
+const ColorGeneratorForm = ({
+  colorsPalette,
+  setColorsPalette,
+  setShadeAdded,
+}) => {
   const [filteredTailwindColors, setFilteredTailwindColors] = useState([]);
   const [primaryInputData, setPrimaryInputData] = useState(null);
   const [secondaryInputData, setSecondaryInputData] = useState(null);
@@ -20,7 +24,6 @@ const ColorGeneratorForm = ({ colorsPalette, setColorsPalette }) => {
   const [generatedColorName, setGeneratedColorName] = useState("");
   const [currentPaletteColor, setCurrentPaletteColor] = useState(null);
   const [duplicateAlert, setDuplicateAlert] = useState(false);
-  console.log("PAL", colorsPalette);
 
   // Once "Add to palette" button is clicked, add the color to the palette array if there are no duplicates. Pass the paletteArr to the parent component for data handling.
   const handleAddToPaletteClick = (obj) => {
@@ -52,12 +55,16 @@ const ColorGeneratorForm = ({ colorsPalette, setColorsPalette }) => {
           const colorObject = colorsPalette.filter((color) => {
             return color.colorPrefix === colorPrefix;
           });
+
+          // setShadeAdded lets the parent component know that a shade has been added to the palette so the ColorPalette and CodeBox components are re-rendered correctly.
+          setShadeAdded(shade);
           return colorObject[0].shades.push({ ...shade });
         }
       }
     }
   };
 
+  // This useEffect takes the data from both inputs and creates a new color object that can be added to the colorsPalette array.
   useEffect(() => {
     if (primaryInputData === null) {
       setSecondaryInputData(null);
@@ -104,7 +111,7 @@ const ColorGeneratorForm = ({ colorsPalette, setColorsPalette }) => {
         setAlertVisible={setDuplicateAlert}
       />
       <form
-        className="h-full w-full"
+        className="h-full w-full mb-12"
         // onSubmit={handleAddToPaletteClick}
       >
         <fieldset className="flex w-full h-auto flex-col items-center">

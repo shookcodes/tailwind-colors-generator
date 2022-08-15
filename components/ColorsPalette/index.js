@@ -5,15 +5,14 @@ import { MdInvertColorsOff, MdRemove } from "react-icons/md";
 const ColorsPalette = ({
   colorsPalette,
   setColorsPaletteArr,
+  shadeAdded,
   handleRemoveColor,
   textColor,
 }) => {
-  // OLD GRID CODE:
-  // grid border-2 border-green-400 h-32 grid-cols-2 sm:grid-cols-4 md:grid-cols-5 mt-5 flex-wrap w-full gap-4
-  console.log("colors palette component", colorsPalette);
   return (
-    <div className="flex flex-col border-2 border-green-400 w-full h-full">
-      {colorsPalette.length > 0 &&
+    <div className="flex flex-col w-full h-full">
+      {colorsPalette &&
+        colorsPalette.length > 0 &&
         colorsPalette.map((color, colorIndex) => {
           const { colorPrefix } = color;
           console.log("color", color);

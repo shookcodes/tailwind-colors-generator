@@ -10,19 +10,27 @@ const CodeBox = ({ colorsPalette }) => {
                 return `${color.colorPrefix}: {
                 ${color.shades
                   .map((shade, index) => {
-                    return `${shade.value}: "${shade.hex}", \n         `;
+                    return `${shade.value}: "${shade.hex}"${
+                      color.shades.length > 1 &&
+                      index !== color.shades.length - 1
+                        ? ","
+                        : ""
+                    }\n                `;
                   })
-                  .join("")}   }
-        }
-    }         
-}`;
+                  .join("")}}${
+                  colorsPalette.length > 1 && index !== colorsPalette.length - 1
+                    ? ",\n "
+                    : ""
+                }           `;
               })
-              .join("")}`;
+              .join("")}
+            }
+        }
+    }`;
 
-  //   console.log(JSON.stringify(colorsObject));
   async function copyText() {
     const copyButton = document.querySelector("#copy-button");
-    await navigator.clipboard.writeText(colorsPalette);
+    await navigator.clipboard.writeText(colorsObject);
     const originalInnerHtml = copyButton.innerHTML;
     document.querySelector("#copy-button").innerHTML = "Copied!";
     setTimeout(() => {

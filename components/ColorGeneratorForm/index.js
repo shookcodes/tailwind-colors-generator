@@ -22,34 +22,40 @@ const ColorGeneratorForm = () => {
   const [colorsPalette, setColorsPalette] = useState([]);
   const [duplicateAlert, setDuplicateAlert] = useState(false);
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    console.log("got here");
-    if (currentPaletteColor?.shade !== undefined) {
-      const currentColorObject = {
-        colorPrefix: currentPaletteColor.colorPrefix,
-        shades: [{ ...currentPaletteColor.shade }],
-      };
-
-      if (colorsPalette.length === 0) {
-        setColorsPalette([currentColorObject]);
-        return setCurrentPaletteColor(null);
+  const handleAddToPaletteClick = (obj) => {
+    // e.preventDefault();
+    const { colorPrefix, shade } = obj();
+    setCurrentPaletteColor(obj);
+    const hex = shade.hex;
+    if (colorsPalette.length === 0) {
+      setColorsPalette([{ colorPrefix, shades: [{ ...shade }] }]);
+    } else {
+      if (checkColorHexDuplicates(colorsPalette, colorPrefix, hex)) {
+        return setDuplicateAlert(true);
       } else {
-        if (
-          checkColorHexDuplicates(
-            colorsPalette,
-            currentPaletteColor.colorPrefix,
-            currentPaletteColor.shade.hex
-          )
-        ) {
-          return setDuplicateAlert(true);
-        } else {
+        const { duplicatePrefix, duplicateValue } = checkColorNameDuplicates(
+          colorsPalette,
+          colorPrefix,
+          shade
+        );
+        if (!duplicatePrefix) {
+          setColorsPalette([
+            ...colorsPalette,
+            {
+              colorPrefix,
+              shades: [{ ...shade }],
+            },
+          ]);
+        } else if (duplicatePrefix && !duplicateValue) {
+          const colorObject = colorsPalette.filter((color) => {
+            return color.colorPrefix === colorPrefix;
+          });
+          return colorObject[0].shades.push({ ...shade });
         }
       }
     }
   };
 
-  console.log(secondaryInputData, "2nd");
   useEffect(() => {
     if (primaryInputData === null) {
       setSecondaryInputData(null);
@@ -57,10 +63,15 @@ const ColorGeneratorForm = () => {
 
     if (primaryInputData === null || secondaryInputData === null) {
       setCurrentPaletteColor(null);
+      setSecondaryInputData(null);
       setGeneratedRGB(null);
       setGeneratedColorName("");
     }
-    if (primaryInputData !== null && secondaryInputData !== null) {
+    if (
+      primaryInputData !== null &&
+      secondaryInputData !== null &&
+      secondaryInputData.shade.hex
+    ) {
       const primaryRGB = convertFromHex(primaryInputData.shade.hex);
       const secondaryRGB = convertFromHex(secondaryInputData?.shade.hex);
       const colorPrefix = secondaryInputData.colorPrefix;
@@ -68,7 +79,7 @@ const ColorGeneratorForm = () => {
       const secondaryColorValue = secondaryInputData.shade.value;
 
       if (primaryInputData.colorPrefix !== colorPrefix) {
-        setSecondaryInputData(null);
+        return setSecondaryInputData(null);
       }
       // generate RGB for the median color
       setGeneratedRGB(generateMedianRGB(primaryRGB, secondaryRGB));
@@ -79,41 +90,15 @@ const ColorGeneratorForm = () => {
         data: defaultTailwindColors,
       };
       setGeneratedColorName(generateColorName({ ...colorObject }));
+
       // setGeneratedColorName();
     }
-  }, [filteredTailwindColors, primaryInputData, secondaryInputData]);
-
-  console.log("cur", currentPaletteColor);
-  useEffect(() => {
-    if (currentPaletteColor !== null) {
-      const { colorPrefix, shade } = currentPaletteColor;
-      const hex = shade?.hex;
-      if (colorsPalette.length === 0) {
-        setColorsPalette([{ colorPrefix, shades: [{ ...shade }] }]);
-        return setCurrentPaletteColor(null);
-      } else {
-        if (checkColorHexDuplicates(colorsPalette, colorPrefix, hex)) {
-          return setDuplicateAlert(true);
-        } else {
-          const { duplicatePrefix, duplicateValue } = checkColorNameDuplicates(
-            colorsPalette,
-            colorPrefix,
-            shade
-          );
-
-          console.log("prefix", duplicatePrefix, "\n value", duplicateValue);
-          if (duplicatePrefix && !duplicateValue) {
-            const colorObject = colorsPalette.filter((color) => {
-              return color.colorPrefix === colorPrefix;
-            });
-            console.log("color", colorsPalette, colorObject);
-            colorObject[0].shades.push({ ...shade });
-          }
-        }
-      }
-    }
-    console.log("pal", colorsPalette);
-  }, [colorsPalette, currentPaletteColor]);
+  }, [
+    colorsPalette,
+    filteredTailwindColors,
+    primaryInputData,
+    secondaryInputData,
+  ]);
 
   return (
     <>
@@ -123,9 +108,7 @@ const ColorGeneratorForm = () => {
       />
       <form
         className="h-full w-full"
-        onSubmit={(e) => {
-          handleSubmit(e);
-        }}
+        // onSubmit={handleAddToPaletteClick}
       >
         <fieldset className="flex w-full h-auto flex-col items-center">
           <div className=" flex flex-col sm:flex sm:flex-row sm:flex-nowrap sm:items-start items-center justify-center relative w-full gap-6 sm:gap-4">
@@ -155,8 +138,9 @@ const ColorGeneratorForm = () => {
             <ColorPreviewButton
               backgroundColor={generatedRGB}
               text={generatedColorName}
+              currentPaletteColor={currentPaletteColor}
               setCurrentPaletteColor={setCurrentPaletteColor}
-              handleSubmit={handleSubmit}
+              handleAddToPaletteClick={handleAddToPaletteClick}
               className={`transform ease-in-out duration-500 ${
                 generatedRGB
                   ? "translate-x-0 w-full sm:w-8/12 opacity-100"

@@ -80,7 +80,7 @@ const InputWithDropdown = ({
         document.querySelector("#input-1").value = "";
         setInputData(null);
       }
-      setInputData(null);
+      // setInputData(null);
     }
     if (matchFound) {
       setInputValue(e.target.value);

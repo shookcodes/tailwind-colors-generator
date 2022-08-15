@@ -1,17 +1,17 @@
-import { useContext } from "react";
-// import { updateColorsPalette } from "../../data/colorsObject/index";
 import { convertToHex } from "../../utils";
 import { MdAdd } from "react-icons/md";
 const ColorPreviewButton = ({
   className,
   text,
   backgroundColor,
+  currentPaletteColor,
   setCurrentPaletteColor,
+  handleAddToPaletteClick,
 }) => {
   // const context = useContext(ColorContext);
 
   // Set the color object and pass it to the parent form component for data handling
-  const handleAddColorClick = (e) => {
+  const handleAddColorButtonClick = (e) => {
     e.preventDefault();
     const obj = {
       colorPrefix: text.split("-")[0],
@@ -22,7 +22,7 @@ const ColorPreviewButton = ({
       },
     };
 
-    setCurrentPaletteColor(() => {
+    handleAddToPaletteClick(() => {
       return obj;
     });
   };
@@ -43,7 +43,7 @@ const ColorPreviewButton = ({
         type="submit"
         value={text}
         onClick={(e) => {
-          handleAddColorClick(e);
+          handleAddColorButtonClick(e);
         }}
       >
         <span

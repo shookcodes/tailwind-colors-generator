@@ -5,28 +5,31 @@ const CodeBox = ({ colorsPalette }) => {
   const colorsObject = `module.exports = {
     theme: {
         colors: { 
-            ${colorsPalette
-              .map((color, index) => {
-                return `${color.colorPrefix}: {
-                ${color.shades
-                  .map((shade, index) => {
-                    return `${shade.value}: "${shade.hex}"${
-                      color.shades.length > 1 &&
-                      index !== color.shades.length - 1
-                        ? ","
-                        : ""
-                    }\n                `;
-                  })
-                  .join("")}}${
-                  colorsPalette.length > 1 && index !== colorsPalette.length - 1
-                    ? ",\n "
-                    : ""
-                }           `;
-              })
-              .join("")}
+            extend: {
+              ${colorsPalette
+                .map((color, index) => {
+                  return `${color.colorPrefix}: {
+                  ${color.shades
+                    .map((shade, index) => {
+                      return `${shade.value}: "${shade.hex}"${
+                        color.shades.length > 1 &&
+                        index !== color.shades.length - 1
+                          ? ", \n                "
+                          : "\n            "
+                      }`;
+                    })
+                    .join("")}}${
+                    colorsPalette.length > 1 &&
+                    index !== colorsPalette.length - 1
+                      ? ",\n "
+                      : ""
+                  }           `;
+                })
+                .join("")}
             }
         }
-    }`;
+    }
+}`;
 
   async function copyText() {
     const copyButton = document.querySelector("#copy-button");

@@ -12,18 +12,18 @@ import {
 } from "../../utils";
 
 const defaultTailwindColors = tailwindColors();
-const ColorGeneratorForm = () => {
+const ColorGeneratorForm = ({ colorsPalette, setColorsPalette }) => {
   const [filteredTailwindColors, setFilteredTailwindColors] = useState([]);
   const [primaryInputData, setPrimaryInputData] = useState(null);
   const [secondaryInputData, setSecondaryInputData] = useState(null);
   const [generatedRGB, setGeneratedRGB] = useState(null);
   const [generatedColorName, setGeneratedColorName] = useState("");
   const [currentPaletteColor, setCurrentPaletteColor] = useState(null);
-  const [colorsPalette, setColorsPalette] = useState([]);
   const [duplicateAlert, setDuplicateAlert] = useState(false);
+  console.log("PAL", colorsPalette);
 
+  // Once "Add to palette" button is clicked, add the color to the palette array if there are no duplicates. Pass the paletteArr to the parent component for data handling.
   const handleAddToPaletteClick = (obj) => {
-    // e.preventDefault();
     const { colorPrefix, shade } = obj();
     setCurrentPaletteColor(obj);
     const hex = shade.hex;
@@ -39,13 +39,15 @@ const ColorGeneratorForm = () => {
           shade
         );
         if (!duplicatePrefix) {
-          setColorsPalette([
-            ...colorsPalette,
-            {
-              colorPrefix,
-              shades: [{ ...shade }],
-            },
-          ]);
+          setColorsPalette(() => {
+            return [
+              ...colorsPalette,
+              {
+                colorPrefix,
+                shades: [{ ...shade }],
+              },
+            ];
+          });
         } else if (duplicatePrefix && !duplicateValue) {
           const colorObject = colorsPalette.filter((color) => {
             return color.colorPrefix === colorPrefix;
@@ -93,12 +95,7 @@ const ColorGeneratorForm = () => {
 
       // setGeneratedColorName();
     }
-  }, [
-    colorsPalette,
-    filteredTailwindColors,
-    primaryInputData,
-    secondaryInputData,
-  ]);
+  }, [filteredTailwindColors, primaryInputData, secondaryInputData]);
 
   return (
     <>

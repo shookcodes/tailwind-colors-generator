@@ -15,14 +15,12 @@ const ColorsPalette = ({
         colorsPalette.length > 0 &&
         colorsPalette.map((color, colorIndex) => {
           const { colorPrefix } = color;
-          console.log("color", color);
 
           return (
             <div key={colorIndex} className="w-full h-full mb-4">
               <span>{colorPrefix}</span>
               <div className="flex gap-4">
                 {color.shades.map((shade, index) => {
-                  console.log("shade", shade);
                   const colorName = `${colorPrefix}-${shade.value}`;
 
                   {

@@ -7,12 +7,6 @@ export default function Home() {
   const [colorsPalette, setColorsPalette] = useState([]);
   const [shadeAdded, setShadeAdded] = useState(null);
 
-  // console.log("shade added", shadeAdded);
-  useEffect(() => {
-    if (colorsPalette) {
-      console.log("colorspalethome", colorsPalette);
-    }
-  }, [colorsPalette]);
   return (
     <div>
       <Head>

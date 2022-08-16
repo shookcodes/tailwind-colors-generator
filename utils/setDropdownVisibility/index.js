@@ -4,8 +4,6 @@ export const setDropdownVisibility = (list) => {
   const index = list.id.split("-")[1];
   const dropdownIcon = document.getElementById(`dropdownIcon-${index}`);
 
-  console.log("in", dropdownIcon);
-
   const hideList = () => {
     dropdownIcon.classList.remove("-scale-100");
     return (

@@ -31,20 +31,6 @@ const DropdownList = ({
     }
   };
 
-  useEffect(() => {
-    const list = document.querySelector(`#dropdownList-${index}`);
-    if (list.classList.contains("opacity-0")) {
-      console.log("list", list);
-      document
-        .querySelector(`#dropdownToggle-${index}`)
-        .classList.remove("-scale-100");
-    } else {
-      document
-        .querySelector(`#dropdownToggle-${index}`)
-        .classList.add("-scale-100");
-    }
-  }, [index]);
-
   return (
     // TODO add animations for list openening/closing
     //  transform ease-in-out duration-150

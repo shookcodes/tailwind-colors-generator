@@ -21,7 +21,7 @@ export default function Home() {
         id="container"
         className="flex flex-col items-center justify-between h-full w-11/12 mx-auto m-8  bg-gray-50 rounded-lg pt-8  shadow-lg max-w-screen-lg select-none "
       >
-        {/* Below div wraps the content so that the top of the menu dropdown overflow is hidden when the menu is open */}
+        {/* Below div wraps the content so that the top of the menu dropdown overflow is hidden when the menu is open pb-40 is so that shadow is not cut off from open menu due to overflow rules */}
         <div className="w-full h-max  px-4 pb-40 overflow-hidden">
           <div className="w-full flex h-full flex-col items-center mx-auto max-w-3xl  ">
             <ColorGeneratorForm

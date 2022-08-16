@@ -82,9 +82,8 @@ const InputWithDropdown = ({
       if (index === 0) {
         handleDropdownVisibility(true);
         document.querySelector("#input-1").value = "";
-        setInputData(null);
       }
-      // setInputData(null);
+      setInputData(null);
     }
     if (matchFound) {
       setInputValue(e.target.value);
@@ -96,6 +95,8 @@ const InputWithDropdown = ({
       }
     }
   };
+
+  console.log("PREVIEW HEX DD", colorPreviewHex);
 
   return (
     <div className="relative w-full h-full ">

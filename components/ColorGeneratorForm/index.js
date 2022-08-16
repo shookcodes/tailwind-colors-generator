@@ -76,6 +76,7 @@ const ColorGeneratorForm = ({
       setGeneratedRGB(null);
       setGeneratedColorName("");
     }
+
     if (
       primaryInputData !== null &&
       secondaryInputData !== null &&
@@ -134,9 +135,7 @@ const ColorGeneratorForm = ({
               inputData={secondaryInputData}
               setInputData={setSecondaryInputData}
               colorPreviewHex={
-                secondaryInputData?.shade.hex
-                  ? secondaryInputData?.shade.hex
-                  : ""
+                secondaryInputData?.shade ? secondaryInputData.shade.hex : null
               }
             />
             <ColorPreviewButton

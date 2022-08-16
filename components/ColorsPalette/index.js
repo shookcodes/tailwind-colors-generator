@@ -21,17 +21,17 @@ const ColorsPalette = ({
               <div className="flex gap-4">
                 {color.shades.map((shade, index) => {
                   const colorName = `${colorPrefix}-${shade.value}`;
-
-                  {
-                    /* TODO: Add toggle text func  */
-                  }
+                  console.log("shade", shade);
                   return (
-                    <div key={index} className=" text-gray-700 ">
+                    <div
+                      key={index}
+                      className=" text-gray-700 origin-center animate-scaleIn"
+                    >
                       <div
                         name={"block"}
                         key={index}
                         id={colorName}
-                        className="relative flex justify-center items-center w-16 h-16 rounded-lg border-gray-300 shadow-lg"
+                        className="relative flex justify-center items-center w-16 h-16 rounded-lg border-gray-300 shadow-lg animate-scaleIn origin-center mx-auto"
                         style={{ background: shade.hex }}
                         // onMouseEnter={(e) => {
                         //   handleBlockMouseEnter(e);
@@ -55,34 +55,3 @@ const ColorsPalette = ({
 };
 
 export default ColorsPalette;
-
-//   <div
-//     name={"block"}
-//     key={index}
-//     id={color.generatedTwName}
-//     className="relative w-full h-full rounded-lg border-gray-300 shadow-lg"
-//     style={{ background: color.generatedRGB }}
-//     onMouseEnter={(e) => {
-//       handleBlockMouseEnter(e);
-//     }}
-//     onMouseLeave={(e) => {
-//       handleBlockMouseLeave(e);
-//     }}
-//     value={color.generatedTwName}
-//   >
-//     <button
-//       className={`absolute hidden right-0 top-1 mr-0.5 w-6 h-auto transform hover:scale-125 hover:opacity-80`}
-//       onClick={(e) => {
-//         handleRemoveColor(e);
-//       }}
-//       id={"removeButton-" + index}
-//     >
-//       {/* <MdRemove className={toggleTextColor(color.generatedRGB)} /> */}
-//     </button>
-//     <div
-//       className={`flex flex-col justify-center w-full h-full items-center text-center gap-2 whitespace-nowrap text-sm p-4 ${toggleTextColor(
-//         color.shade.hex
-//       )}`}
-//     >
-//     </div>
-//   </div>

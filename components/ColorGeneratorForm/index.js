@@ -58,6 +58,7 @@ const ColorGeneratorForm = ({
 
           // setShadeAdded lets the parent component know that a shade has been added to the palette so the ColorPalette and CodeBox components are re-rendered correctly.
           setShadeAdded(shade);
+
           return colorObject[0].shades.push({ ...shade });
         }
       }

@@ -20,6 +20,20 @@ module.exports = {
         xl: "1280px",
         "2xl": "1440px",
       },
+      keyframes: {
+        scaleIn: {
+          "0%": { transform: "scale (0, 0)", height: 0, width: 0, opacity: 0 },
+          "100%": {
+            transform: "scale (1, 1)",
+            height: "full",
+            width: "full",
+            opacity: 1,
+          },
+        },
+      },
+      animation: {
+        scaleIn: "scaleIn 0.2s ease-in-out forwards",
+      },
     },
   },
   plugins: [],

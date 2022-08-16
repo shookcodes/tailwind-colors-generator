@@ -14,23 +14,36 @@ const InputWithDropdown = ({
   colorPreviewHex,
 }) => {
   const setDropdownVisibility = (hideAll) => {
+    const showClasses = ["translate-y-4", "h-auto", "shadow-xl"];
+    const hideClasses = ["-translate-y-full", "shadow-none"];
+
     const dropdownLists = Array.from(
       document.querySelectorAll(".dropdownList")
     );
     return dropdownLists.map((list, listIndex) => {
+      const hideList = () => {
+        list.classList.add(...hideClasses);
+        list.classList.remove(...showClasses);
+      };
+
+      const showList = () => {
+        list.classList.remove(...hideClasses);
+        list.classList.add(...showClasses);
+      };
       if (hideAll) {
-        return list.classList.add("hidden");
+        hideList();
+        return;
       }
 
       if (index === listIndex) {
-        if (list.classList.contains("hidden")) {
-          list.classList.remove("hidden");
+        if (list.classList.contains("-translate-y-full")) {
+          showList();
         } else {
-          list.classList.add("hidden");
+          hideList();
         }
       }
       if (listIndex !== index) {
-        list.classList.add("hidden");
+        hideList();
       }
     });
   };
@@ -94,8 +107,8 @@ const InputWithDropdown = ({
   };
 
   return (
-    <div className="w-full">
-      <label htmlFor={"color" + index} className="relative h-full ">
+    <div className="relative w-full h-full ">
+      <label htmlFor={"color" + index} className="relative h-full z-20 ">
         <input
           className="h-12 py-2 w-full"
           placeholder={placeholder}
@@ -133,13 +146,14 @@ const InputWithDropdown = ({
           />
         </button>
       </label>
-
-      <DropdownList
-        index={index}
-        data={data}
-        setInputValue={setInputValue}
-        setFilteredTailwindColors={setFilteredTailwindColors}
-      />
+      <div className="relative w-full h-full ">
+        <DropdownList
+          index={index}
+          data={data}
+          setInputValue={setInputValue}
+          setFilteredTailwindColors={setFilteredTailwindColors}
+        />
+      </div>
     </div>
   );
 };

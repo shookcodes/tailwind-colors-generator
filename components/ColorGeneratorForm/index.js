@@ -111,10 +111,10 @@ const ColorGeneratorForm = ({
         setAlertVisible={setDuplicateAlert}
       />
       <form
-        className="h-full w-full mb-12"
+        className="h-full w-full mb-12 "
         // onSubmit={handleAddToPaletteClick}
       >
-        <fieldset className="flex w-full h-auto flex-col items-center">
+        <fieldset className="flex w-full h-auto flex-col items-center ">
           <div className=" flex flex-col sm:flex sm:flex-row sm:flex-nowrap sm:items-start items-center justify-center relative w-full gap-6 sm:gap-4">
             <InputWithDropdown
               index={0}
@@ -129,7 +129,7 @@ const ColorGeneratorForm = ({
             <InputWithDropdown
               index={1}
               placeholder="Search for a color"
-              isDisabled={filteredTailwindColors.length > 0 ? false : true}
+              isDisabled={primaryInputData ? false : true}
               data={filteredTailwindColors}
               inputData={secondaryInputData}
               setInputData={setSecondaryInputData}

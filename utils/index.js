@@ -7,6 +7,8 @@ import { filterInputSearch } from "./filterInputSearch";
 import { generateColorName } from "./generateColorName";
 import { generateMedianRGB } from "./generateMedianRGB";
 import { generateSecondaryData } from "./generateSecondaryData";
+import { handleOutsideClick } from "./handleOutsideClick";
+import { setDropdownVisibility } from "./setDropdownVisibility";
 
 export {
   checkColorNameDuplicates,
@@ -17,4 +19,6 @@ export {
   generateColorName,
   generateMedianRGB,
   generateSecondaryData,
+  handleOutsideClick,
+  setDropdownVisibility,
 };

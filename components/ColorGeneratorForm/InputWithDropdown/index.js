@@ -1,8 +1,11 @@
-import { filterInputSearch, generateSecondaryData } from "../../../utils";
-import DropdownList from "./DropdownList";
-import { AiFillCaretDown } from "react-icons/ai";
 import { useEffect } from "react";
-import { setDropdownVisibility } from "../../../utils/setDropdownVisibility";
+import DropdownList from "./DropdownList";
+import {
+  filterInputSearch,
+  generateSecondaryData,
+  setDropdownVisibility,
+} from "../../../utils";
+import { AiFillCaretDown } from "react-icons/ai";
 
 const InputWithDropdown = ({
   index,
@@ -96,13 +99,20 @@ const InputWithDropdown = ({
     }
   };
 
-  console.log("PREVIEW HEX DD", colorPreviewHex);
-
+  // useEffect(() => {
+  //   if (colorPreviewHex) {
+  //     console.log("HEX IND", index);
+  //   }
+  // }, [colorPreviewHex, index]);
   return (
     <div className="relative w-full h-full ">
       <label htmlFor={"color" + index} className="relative h-full z-20 ">
         <input
-          className="h-12 py-2 w-full"
+          className={`h-12 py-2 w-full transition-all ease-in-out duration-300 ${
+            isDisabled
+              ? "placeholder-gray-300 bg-gray-100 shadow-inner drop-shadow"
+              : "shadow-md"
+          }`}
           placeholder={placeholder}
           name={"color"}
           type="text"
@@ -129,12 +139,9 @@ const InputWithDropdown = ({
         >
           <AiFillCaretDown
             id={`dropdownIcon-${index}`}
-            className="w-4 h-4 transform group-hover:translate-y-0.5 ease-in-out duration-150"
-            style={
-              isDisabled
-                ? { fill: "rgb(209 213 219)" }
-                : { fill: "rgb(75 85 99)" }
-            }
+            className={`w-4 h-4 transform  text-gray-600 group-hover:translate-y-0.5 ease-in-out duration-150 ${
+              isDisabled ? "text-opacity-20" : "text-opacity-100"
+            }`}
           />
         </button>
       </label>

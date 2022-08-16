@@ -27,7 +27,7 @@ const ColorPreviewButton = ({
 
   const textColor = () => {
     if (backgroundColor) {
-      toggleTextColor(backgroundColor);
+      return toggleTextColor(backgroundColor);
     }
   };
   return (

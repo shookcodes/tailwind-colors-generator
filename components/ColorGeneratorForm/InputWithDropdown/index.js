@@ -104,13 +104,13 @@ const InputWithDropdown = ({
   //   }
   // }, [colorPreviewHex, index]);
   return (
-    <div className="relative w-full h-full ">
+    <div className={`relative w-full h-full ${index === 0 ? "z-20" : "z-10"}`}>
       <label htmlFor={"color" + index} className="relative h-full z-20 ">
         <input
           className={`h-12 py-2 w-full transition-all ease-in-out duration-300 ${
             isDisabled
               ? "placeholder-gray-300 bg-gray-100 shadow-inner drop-shadow"
-              : "shadow-md"
+              : "shadow"
           }`}
           placeholder={placeholder}
           name={"color"}

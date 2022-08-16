@@ -6,7 +6,7 @@ const DropdownList = ({
   index,
   setInputValue,
   setFilteredTailwindColors,
-  setListVisibility,
+  setDropdownVisibility,
 }) => {
   const handleItemClick = (e, index) => {
     e.preventDefault();
@@ -14,7 +14,7 @@ const DropdownList = ({
     const dropdownList = document.querySelector(`#dropdownList-${index}`);
     input.value = e.target.innerText;
 
-    setListVisibility(dropdownList).hideList();
+    setDropdownVisibility(dropdownList).hideList();
 
     setInputValue(e.target.value);
     // If the first input has data, pass new array with filtered data to the second input

@@ -2,27 +2,7 @@ import { filterInputSearch, generateSecondaryData } from "../../../utils";
 import DropdownList from "./DropdownList";
 import { AiFillCaretDown } from "react-icons/ai";
 import { useEffect } from "react";
-
-export const setListVisibility = (list) => {
-  const showClasses = ["translate-y-4", "h-auto", "shadow-xl"];
-  const hideClasses = ["-translate-y-full", "h-0", "shadow-none"];
-
-  const hideList = () => {
-    return (
-      list.classList.add(...hideClasses) &&
-      list.classList.remove(...showClasses)
-    );
-  };
-
-  const showList = () => {
-    return (
-      list.classList.remove(...hideClasses) &&
-      list.classList.add(...showClasses)
-    );
-  };
-
-  return { hideList, showList };
-};
+import { setDropdownVisibility } from "../../../utils/setDropdownVisibility";
 
 const InputWithDropdown = ({
   index,
@@ -34,33 +14,33 @@ const InputWithDropdown = ({
   setInputData,
   colorPreviewHex,
 }) => {
-  const setDropdownVisibility = (hideAll) => {
+  const handleDropdownVisibility = (hideAll) => {
     const dropdownLists = Array.from(
       document.querySelectorAll(".dropdownList")
     );
 
     return dropdownLists.map((list, listIndex) => {
       if (hideAll) {
-        setListVisibility(list).hideList();
+        setDropdownVisibility(list).hideList();
 
         return;
       }
 
       if (index === listIndex) {
         if (list.classList.contains("-translate-y-full")) {
-          setListVisibility(list).showList();
+          setDropdownVisibility(list).showList();
         } else {
-          setListVisibility(list).hideList();
+          setDropdownVisibility(list).hideList();
         }
       }
       if (listIndex !== index) {
-        setListVisibility(list).hideList();
+        setDropdownVisibility(list).hideList();
       }
     });
   };
 
   const handleDropdownClick = (e) => {
-    setDropdownVisibility();
+    handleDropdownVisibility();
     e.preventDefault();
   };
 
@@ -100,7 +80,7 @@ const InputWithDropdown = ({
     if (!e.target.value) {
       // If the first input value is null, remove the value from the second input if it is not null and clear the input data passed to the parent
       if (index === 0) {
-        setDropdownVisibility(true);
+        handleDropdownVisibility(true);
         document.querySelector("#input-1").value = "";
         setInputData(null);
       }
@@ -163,7 +143,7 @@ const InputWithDropdown = ({
           data={data}
           setInputValue={setInputValue}
           setFilteredTailwindColors={setFilteredTailwindColors}
-          setListVisibility={setListVisibility}
+          setDropdownVisibility={setDropdownVisibility}
         />
       </div>
     </div>

@@ -34,11 +34,11 @@ const DropdownList = ({
   return (
     // TODO add animations for list openening/closing
     //  transform ease-in-out duration-150
-    <div className={`absolute -top-8 inset-x-0 z-10 w-full ${className} `}>
+    <div className={`absolute -top-8 inset-x-0 z-0 w-full ${className} `}>
       <ul
         id={`dropdownList-${index}`}
         className={` 
-        flex-col scroll w-full z-10 rounded-md mt-12 shadow-lg opacity-0 transform duration-200 bg-gray-100 -translate-y-full mx-auto dropdownList`}
+        flex-col scroll w-full z-10 rounded-md mt-12 shadow-lg opacity-0 transform duration-200 bg-gray-100 transition-all -translate-y-full mx-auto dropdownList`}
         // ref={ref}
       >
         {data &&

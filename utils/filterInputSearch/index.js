@@ -3,7 +3,7 @@ export const filterInputSearch = (value, listElement) => {
   let found = false;
   const buttons = Array.from(listElement.querySelectorAll("button"));
   if (value.length > 1) {
-    listElement.classList.remove("hidden");
+    setDropdownVisibility(listElement).showList();
   }
   buttons.map((button) => {
     if (

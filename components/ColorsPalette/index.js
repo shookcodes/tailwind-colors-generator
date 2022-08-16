@@ -21,6 +21,7 @@ const ColorsPalette = ({
               <div className="flex gap-4">
                 {color.shades.map((shade, index) => {
                   const colorName = `${colorPrefix}-${shade.value}`;
+                  const textColor = toggleTextColor(shade.rgb);
                   return (
                     <div
                       key={index}
@@ -30,9 +31,7 @@ const ColorsPalette = ({
                         name={"block"}
                         key={index}
                         id={colorName}
-                        className={`relative flex justify-center items-center w-16 h-16 rounded-lg border-gray-300 shadow-lg animate-scaleIn origin-center mx-auto ${toggleTextColor(
-                          shade.rgb
-                        )}`}
+                        className={`relative flex justify-center items-center w-16 h-16 rounded-lg border-gray-300 shadow-lg animate-scaleIn origin-center mx-auto ${textColor}`}
                         style={{ background: shade.hex }}
                         // onMouseEnter={(e) => {
                         //   handleBlockMouseEnter(e);

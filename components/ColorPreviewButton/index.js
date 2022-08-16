@@ -8,7 +8,6 @@ const ColorPreviewButton = ({
   backgroundColor,
   handleAddToPaletteClick,
 }) => {
-  const [textColor, setTextColor] = useState(null);
   // Set the color object and pass it to the parent form component for data handling
   const handleAddColorButtonClick = (e) => {
     e.preventDefault();
@@ -26,7 +25,11 @@ const ColorPreviewButton = ({
     });
   };
 
-  // const textColor = toggleTextColor(backgroundColor);
+  const textColor = () => {
+    if (backgroundColor) {
+      toggleTextColor(backgroundColor);
+    }
+  };
   return (
     // If className is passed, let className value specify the width of the button, otherwise return default width values
     <div
@@ -47,9 +50,9 @@ const ColorPreviewButton = ({
         }}
       >
         <span
-          className={`flex  transform delay-100 transition ease-in-out whitespace-nowrap ${toggleTextColor(
-            backgroundColor
-          )} ${backgroundColor ? "w-100 opacity-1 " : "w-0 opacity-0 "}`}
+          className={`flex  transform delay-100 transition ease-in-out whitespace-nowrap ${textColor()} ${
+            backgroundColor ? "w-100 opacity-1 " : "w-0 opacity-0 "
+          }`}
         >
           {text} <MdAdd className="ml-2 w-6 h-6" />
         </span>

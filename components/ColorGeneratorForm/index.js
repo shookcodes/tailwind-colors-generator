@@ -41,7 +41,7 @@ const ColorGeneratorForm = ({
           colorPrefix,
           shade
         );
-        if (!duplicatePrefix) {
+        if (!duplicatePrefix && !duplicateValue) {
           setColorsPalette(() => {
             return [
               ...colorsPalette,
@@ -99,12 +99,18 @@ const ColorGeneratorForm = ({
         primaryColorValue,
         secondaryColorValue,
         data: defaultTailwindColors,
+        secondaryData: colorsPalette,
       };
       setGeneratedColorName(generateColorName({ ...colorObject }));
 
       // setGeneratedColorName();
     }
-  }, [filteredTailwindColors, primaryInputData, secondaryInputData]);
+  }, [
+    filteredTailwindColors,
+    colorsPalette,
+    primaryInputData,
+    secondaryInputData,
+  ]);
 
   return (
     <>

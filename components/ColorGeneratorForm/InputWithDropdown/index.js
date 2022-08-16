@@ -35,8 +35,7 @@ const InputWithDropdown = ({
         } else {
           setDropdownVisibility(list).hideList();
         }
-      }
-      if (listIndex !== index) {
+      } else {
         setDropdownVisibility(list).hideList();
       }
     });

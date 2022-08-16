@@ -1,6 +1,6 @@
 export const setDropdownVisibility = (list) => {
-  const showClasses = ["translate-y-4", "h-auto", "shadow-xl"];
-  const hideClasses = ["-translate-y-full", "h-0", "shadow-none"];
+  const showClasses = ["translate-y-4", "shadow-xl"];
+  const hideClasses = ["-translate-y-full", "shadow-none"];
 
   const hideList = () => {
     return (

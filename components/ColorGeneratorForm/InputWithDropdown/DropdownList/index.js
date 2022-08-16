@@ -40,7 +40,7 @@ const DropdownList = ({
         <ul
           id={`dropdownList-${index}`}
           className={` 
-        flex-col scroll w-full z-10 h-0 rounded-md shadow-lg transform duration-200 bg-gray-100 -translate-y-full dropdownList`}
+        flex-col scroll w-full z-10 rounded-md shadow-lg transform duration-200 bg-gray-100 -translate-y-full dropdownList`}
           // ref={ref}
         >
           {data &&

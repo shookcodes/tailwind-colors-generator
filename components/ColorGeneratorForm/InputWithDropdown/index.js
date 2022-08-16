@@ -3,6 +3,27 @@ import DropdownList from "./DropdownList";
 import { AiFillCaretDown } from "react-icons/ai";
 import { useEffect } from "react";
 
+export const setListVisibility = (list) => {
+  const showClasses = ["translate-y-4", "h-auto", "shadow-xl"];
+  const hideClasses = ["-translate-y-full", "h-0", "shadow-none"];
+
+  const hideList = () => {
+    return (
+      list.classList.add(...hideClasses) &&
+      list.classList.remove(...showClasses)
+    );
+  };
+
+  const showList = () => {
+    return (
+      list.classList.remove(...hideClasses) &&
+      list.classList.add(...showClasses)
+    );
+  };
+
+  return { hideList, showList };
+};
+
 const InputWithDropdown = ({
   index,
   placeholder,
@@ -14,36 +35,26 @@ const InputWithDropdown = ({
   colorPreviewHex,
 }) => {
   const setDropdownVisibility = (hideAll) => {
-    const showClasses = ["translate-y-4", "h-auto", "shadow-xl"];
-    const hideClasses = ["-translate-y-full", "shadow-none"];
-
     const dropdownLists = Array.from(
       document.querySelectorAll(".dropdownList")
     );
-    return dropdownLists.map((list, listIndex) => {
-      const hideList = () => {
-        list.classList.add(...hideClasses);
-        list.classList.remove(...showClasses);
-      };
 
-      const showList = () => {
-        list.classList.remove(...hideClasses);
-        list.classList.add(...showClasses);
-      };
+    return dropdownLists.map((list, listIndex) => {
       if (hideAll) {
-        hideList();
+        setListVisibility(list).hideList();
+
         return;
       }
 
       if (index === listIndex) {
         if (list.classList.contains("-translate-y-full")) {
-          showList();
+          setListVisibility(list).showList();
         } else {
-          hideList();
+          setListVisibility(list).hideList();
         }
       }
       if (listIndex !== index) {
-        hideList();
+        setListVisibility(list).hideList();
       }
     });
   };
@@ -152,6 +163,7 @@ const InputWithDropdown = ({
           data={data}
           setInputValue={setInputValue}
           setFilteredTailwindColors={setFilteredTailwindColors}
+          setListVisibility={setListVisibility}
         />
       </div>
     </div>

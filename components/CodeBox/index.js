@@ -8,22 +8,24 @@ const CodeBox = ({ colorsPalette }) => {
             extend: {
               ${colorsPalette
                 .map((color, index) => {
-                  return `${color.colorPrefix}: {
+                  return `${index > 0 ? "" : "  "}${color.colorPrefix}: {
                   ${color.shades
                     .map((shade, index) => {
-                      return `${shade.value}: "${shade.hex}"${
+                      return `${index > 0 ? "     " : "  "}${shade.value}: "${
+                        shade.hex
+                      }"${
                         color.shades.length > 1 &&
                         index !== color.shades.length - 1
-                          ? ", \n                "
-                          : "\n            "
+                          ? ",\n               "
+                          : "\n               "
                       }`;
                     })
-                    .join("")}}${
+                    .join("")} }${
                     colorsPalette.length > 1 &&
                     index !== colorsPalette.length - 1
                       ? ",\n "
                       : ""
-                  }           `;
+                  }                `;
                 })
                 .join("")}
             }
@@ -53,7 +55,7 @@ const CodeBox = ({ colorsPalette }) => {
   }
 
   return (
-    <div className="relative w-full h-full bg-gray-100 text-gray-800 rounded-md shadow-lg border border-gray-200 p-4 z-0 sm:p-8 text-sm sm:text-base">
+    <div className="relative w-full h-full bg-gray-100 text-gray-800 rounded-md shadow-lg border border-gray-200 p-4 z-0 sm:p-8 text-sm sm:text-base hover:cursor-text ">
       <div className="absolute top-4 right-4 flex justify-end">
         <button
           title="Download"
@@ -72,8 +74,8 @@ const CodeBox = ({ colorsPalette }) => {
         </button>
       </div>
       {/* whitespace-pre */}
-      <pre className="w-full h-full">
-        <code>{colorsObject}</code>
+      <pre className="w-full h-full select-text">
+        <code className="">{colorsObject}</code>
       </pre>
     </div>
   );

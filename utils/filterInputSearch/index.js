@@ -1,3 +1,4 @@
+import { setListVisibility } from "../../components/ColorGeneratorForm/InputWithDropdown";
 export const filterInputSearch = (value, listElement) => {
   let found = false;
   const buttons = Array.from(listElement.querySelectorAll("button"));
@@ -25,7 +26,7 @@ export const filterInputSearch = (value, listElement) => {
   }
 
   if (!value.length) {
-    listElement.classList.add("hidden");
+    setListVisibility(listElement).hideList();
     buttons.map((button) => {
       button.classList.remove("hidden");
     });

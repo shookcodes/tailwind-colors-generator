@@ -19,7 +19,7 @@ export default function Home() {
       </Head>
       <div
         id="container"
-        className="flex flex-col items-center justify-between h-full w-11/12 mx-auto m-8  bg-gray-50 rounded-lg px-4 py-8  shadow-lg max-w-screen-lg"
+        className="flex flex-col items-center justify-between h-full w-11/12 mx-auto m-8  bg-gray-50 rounded-lg px-4 py-8  shadow-lg max-w-screen-lg select-none"
       >
         {/* Below div wraps the content so that the top of the menu dropdown overflow is hidden when the menu is open */}
         <div className="w-full h-max pb-48 overflow-hidden">

@@ -10,7 +10,7 @@ const ColorsPalette = ({
   textColor,
 }) => {
   return (
-    <div className="flex flex-col w-full h-full">
+    <div className="flex flex-col w-full h-full mb-12">
       {colorsPalette &&
         colorsPalette.length > 0 &&
         colorsPalette.map((color, colorIndex) => {

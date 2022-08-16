@@ -6,13 +6,17 @@ const DropdownList = ({
   index,
   setInputValue,
   setFilteredTailwindColors,
+  setListVisibility,
 }) => {
   const handleItemClick = (e, index) => {
     e.preventDefault();
     const input = document.querySelector(`#input-${index}`);
     const dropdownList = document.querySelector(`#dropdownList-${index}`);
     input.value = e.target.innerText;
-    dropdownList.classList.add("hidden");
+
+    setListVisibility(dropdownList).hideList();
+    // dropdownList.classList.add(...hideClasses);
+    // dropdownList.classList.remove(...showClasses);
 
     setInputValue(e.target.value);
     // If the first input has data, pass new array with filtered data to the second input
@@ -38,7 +42,7 @@ const DropdownList = ({
         <ul
           id={`dropdownList-${index}`}
           className={` 
-        flex-col scroll w-full z-10 rounded-md shadow-lg transform duration-300 bg-gray-100 dropdownList`}
+        flex-col scroll w-full z-10 h-0 rounded-md shadow-lg transform duration-200 bg-gray-100 -translate-y-full dropdownList`}
           // ref={ref}
         >
           {data &&

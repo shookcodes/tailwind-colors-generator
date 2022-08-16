@@ -8,7 +8,7 @@ const PopupAlert = ({ alertVisible, setAlertVisible }) => {
     <div
       className={`${
         alertVisible ? "flex" : "hidden"
-      } fixed z-20 bg-gray-800 bg-opacity-60 bottom-0 h-screen w-full justify-center items-center`}
+      } fixed bg-gray-800 bg-opacity-60 bottom-0 h-screen w-full justify-center items-center z-50`}
     >
       <div className="flex flex-col justify-evenly items-center text-center w-full mx-6 px-6 max-w-xl bg-gray-50 rounded-lg h-52 -mt-32">
         Oops, this color is already on your palette.

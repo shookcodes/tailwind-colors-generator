@@ -28,7 +28,7 @@ const ColorGeneratorForm = ({
   // Once "Add to palette" button is clicked, add the color to the palette array if there are no duplicates. Pass the paletteArr to the parent component for data handling.
   const handleAddToPaletteClick = (obj) => {
     const { colorPrefix, shade } = obj();
-    setCurrentPaletteColor(obj);
+    setCurrentPaletteColor(obj());
     const hex = shade.hex;
     if (colorsPalette.length === 0) {
       setColorsPalette([{ colorPrefix, shades: [{ ...shade }] }]);

@@ -1,15 +1,14 @@
-import { convertToHex } from "../../utils";
+import { useState, useEffect } from "react";
+
+import { convertToHex, toggleTextColor } from "../../utils";
 import { MdAdd } from "react-icons/md";
 const ColorPreviewButton = ({
   className,
   text,
   backgroundColor,
-  currentPaletteColor,
-  setCurrentPaletteColor,
   handleAddToPaletteClick,
 }) => {
-  // const context = useContext(ColorContext);
-
+  const [textColor, setTextColor] = useState(null);
   // Set the color object and pass it to the parent form component for data handling
   const handleAddColorButtonClick = (e) => {
     e.preventDefault();
@@ -27,6 +26,7 @@ const ColorPreviewButton = ({
     });
   };
 
+  // const textColor = toggleTextColor(backgroundColor);
   return (
     // If className is passed, let className value specify the width of the button, otherwise return default width values
     <div
@@ -35,7 +35,7 @@ const ColorPreviewButton = ({
       }}`}
     >
       <button
-        className={`flex w-full rounded-lg h-full justify-center items-center  transform hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow  duration-150 ease-in-out  `}
+        className={`flex w-full rounded-lg h-full justify-center items-center  transform hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow  duration-150 ease-in-out `}
         style={{
           backgroundColor: backgroundColor,
         }}
@@ -47,9 +47,9 @@ const ColorPreviewButton = ({
         }}
       >
         <span
-          className={`flex text-black transform delay-100 transition ease-in-out whitespace-nowrap ${
-            backgroundColor ? "w-100 opacity-1 " : "w-0 opacity-0 "
-          }`}
+          className={`flex  transform delay-100 transition ease-in-out whitespace-nowrap ${toggleTextColor(
+            backgroundColor
+          )} ${backgroundColor ? "w-100 opacity-1 " : "w-0 opacity-0 "}`}
         >
           {text} <MdAdd className="ml-2 w-6 h-6" />
         </span>

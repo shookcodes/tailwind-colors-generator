@@ -9,6 +9,7 @@ import { generateMedianRGB } from "./generateMedianRGB";
 import { generateSecondaryData } from "./generateSecondaryData";
 import { handleOutsideClick } from "./handleOutsideClick";
 import { setDropdownVisibility } from "./setDropdownVisibility";
+import { toggleTextColor } from "./toggleTextColor";
 
 export {
   checkColorNameDuplicates,
@@ -21,4 +22,5 @@ export {
   generateSecondaryData,
   handleOutsideClick,
   setDropdownVisibility,
+  toggleTextColor,
 };

@@ -5,8 +5,9 @@ module.exports = {
     "./components/**/*.{js,ts,jsx,tsx}",
   ],
   safelist: [
-    "text-slate-50",
+    "text-gray-50",
     "text-gray-800",
+    "text-slate-50",
     "text-slate-700",
     "text-slate-800",
   ],

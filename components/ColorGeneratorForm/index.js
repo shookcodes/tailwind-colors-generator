@@ -25,11 +25,21 @@ const ColorGeneratorForm = ({
   const [currentPaletteColor, setCurrentPaletteColor] = useState(null);
   const [duplicateAlert, setDuplicateAlert] = useState(false);
 
+  // Sort each color's values from smallest to largest
+  const sortColorValues = colorsPalette.map((color) => {
+    if (color.shades && color.shades?.length > 1) {
+      color.shades?.sort((a, b) => {
+        return a.value - b.value;
+      });
+    }
+  });
   // Once "Add to palette" button is clicked, add the color to the palette array if there are no duplicates. Pass the paletteArr to the parent component for data handling.
   const handleAddToPaletteClick = (obj) => {
     const { colorPrefix, shade } = obj();
     setCurrentPaletteColor(obj());
     const hex = shade.hex;
+
+    sortColorValues;
     if (colorsPalette.length === 0) {
       setColorsPalette([{ colorPrefix, shades: [{ ...shade }] }]);
     } else {

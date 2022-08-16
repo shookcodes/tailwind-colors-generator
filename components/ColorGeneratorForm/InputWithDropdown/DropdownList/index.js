@@ -15,8 +15,6 @@ const DropdownList = ({
     input.value = e.target.innerText;
 
     setListVisibility(dropdownList).hideList();
-    // dropdownList.classList.add(...hideClasses);
-    // dropdownList.classList.remove(...showClasses);
 
     setInputValue(e.target.value);
     // If the first input has data, pass new array with filtered data to the second input

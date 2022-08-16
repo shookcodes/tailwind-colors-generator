@@ -4,8 +4,7 @@ import { MdInvertColorsOff, MdRemove } from "react-icons/md";
 
 const ColorsPalette = ({
   colorsPalette,
-  setColorsPaletteArr,
-  shadeAdded,
+  setColorsPalette,
   handleRemoveColor,
   textColor,
 }) => {
@@ -32,7 +31,7 @@ const ColorsPalette = ({
                         name={"block"}
                         key={index}
                         id={colorName}
-                        className="relative w-16 h-16 rounded-lg border-gray-300 shadow-lg"
+                        className="relative flex justify-center items-center w-16 h-16 rounded-lg border-gray-300 shadow-lg"
                         style={{ background: shade.hex }}
                         // onMouseEnter={(e) => {
                         //   handleBlockMouseEnter(e);
@@ -41,7 +40,9 @@ const ColorsPalette = ({
                         //   handleBlockMouseLeave(e);
                         // }}
                         value={colorName}
-                      ></div>
+                      >
+                        {shade.value}
+                      </div>
                     </div>
                   );
                 })}

@@ -4,7 +4,12 @@ module.exports = {
     "./pages/**/*.{js,ts,jsx,tsx}",
     "./components/**/*.{js,ts,jsx,tsx}",
   ],
-  safelist: ["text-gray-50", "text-gray-800"],
+  safelist: [
+    "text-slate-50",
+    "text-gray-800",
+    "text-slate-700",
+    "text-slate-800",
+  ],
   theme: {
     extend: {
       screens: {

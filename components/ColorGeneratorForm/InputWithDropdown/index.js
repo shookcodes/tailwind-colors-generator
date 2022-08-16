@@ -72,7 +72,7 @@ const InputWithDropdown = ({
     );
 
     // Filter the shade that matches the selected color's suffix
-    const currentShade = currentColor[0].shades.filter(
+    const currentShade = currentColor[0].shades?.filter(
       (shade) => parseInt(shade.value) === parseInt(colorValue.split("-")[1])
     );
 

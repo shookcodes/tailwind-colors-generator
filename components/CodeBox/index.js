@@ -55,7 +55,7 @@ const CodeBox = ({ colorsPalette }) => {
   }
 
   return (
-    <div className="relative w-full h-full bg-gray-100 text-gray-800 rounded-md shadow-lg border border-gray-200 p-4 z-0 sm:p-8 text-sm sm:text-base hover:cursor-text ">
+    <div className="relative w-full h-full bg-gray-100 text-slate-700 rounded-md shadow-lg border border-gray-200 p-4 z-0 sm:p-8 text-sm sm:text-base hover:cursor-text ">
       <div className="absolute top-4 right-4 flex justify-end">
         <button
           title="Download"

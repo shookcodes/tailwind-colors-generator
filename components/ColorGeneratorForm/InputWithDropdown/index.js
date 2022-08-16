@@ -22,21 +22,28 @@ const InputWithDropdown = ({
       document.querySelectorAll(".dropdownList")
     );
 
-    return dropdownLists.map((list, listIndex) => {
+    dropdownLists.map((list, listIndex) => {
+      const dropdownToggle = document.querySelector(
+        `#dropdownIcon-${listIndex}`
+      );
+
       if (hideAll) {
         setDropdownVisibility(list).hideList();
-
+        // dropdownToggle.classList.remove("-scale-100");
         return;
       }
 
       if (index === listIndex) {
         if (list.classList.contains("-translate-y-full")) {
           setDropdownVisibility(list).showList();
+          // dropdownToggle.classList.add("-scale-100");
         } else {
           setDropdownVisibility(list).hideList();
+          // dropdownToggle.classList.remove("-scale-100");
         }
       } else {
         setDropdownVisibility(list).hideList();
+        // dropdownToggle.classList.remove("-scale-100");
       }
     });
   };
@@ -98,11 +105,6 @@ const InputWithDropdown = ({
     }
   };
 
-  // useEffect(() => {
-  //   if (colorPreviewHex) {
-  //     console.log("HEX IND", index);
-  //   }
-  // }, [colorPreviewHex, index]);
   return (
     <div className={`relative w-full h-full ${index === 0 ? "z-20" : "z-10"}`}>
       <label htmlFor={"color" + index} className="relative h-full z-20 ">

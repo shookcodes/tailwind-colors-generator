@@ -9,6 +9,7 @@ import {
   convertFromHex,
   generateMedianRGB,
   generateColorName,
+  convertToHex,
 } from "../../utils";
 
 const defaultTailwindColors = tailwindColors();
@@ -111,7 +112,18 @@ const ColorGeneratorForm = ({
         data: defaultTailwindColors,
         secondaryData: colorsPalette,
       };
-      setGeneratedColorName(generateColorName({ ...colorObject }));
+
+      if (
+        !checkColorHexDuplicates(
+          colorsPalette,
+          colorPrefix,
+          convertToHex(generatedRGB)
+        )
+      );
+
+      {
+        setGeneratedColorName(generateColorName({ ...colorObject }));
+      }
 
       // setGeneratedColorName();
     }
@@ -120,6 +132,7 @@ const ColorGeneratorForm = ({
     colorsPalette,
     primaryInputData,
     secondaryInputData,
+    generatedRGB,
   ]);
 
   return (

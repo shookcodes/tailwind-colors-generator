@@ -41,6 +41,7 @@ const ColorGeneratorForm = ({
     const { colorPrefix, shade } = obj();
     setCurrentPaletteColor(obj());
     const hex = shade.hex;
+    const currentName = colorPrefix + "-" + shade.value;
 
     console.log("ob", isDuplicateHex, obj());
     sortColorValues;
@@ -48,15 +49,45 @@ const ColorGeneratorForm = ({
       setColorsPalette([{ colorPrefix, shades: [{ ...shade }] }]);
     } else {
       // console.log('filter', colorsPalette.filter(color => {`${color.colorPefix}-`}))
-      setColorsPalette(() => {
-        return [
+      if (isDuplicateHex) {
+        setDuplicateAlert(true);
+        // setIsDuplicateHex(false);
+      }
+
+      const paletteDuplicates = () => {
+        return checkColorNameDuplicates(colorsPalette, currentName)
+          ? checkColorNameDuplicates(colorsPalette, currentName)
+          : false;
+      };
+
+      if (!paletteDuplicates().duplicatePrefix) {
+        console.log("go to dup prefix click");
+        return setColorsPalette([
           ...colorsPalette,
-          {
-            colorPrefix,
-            shades: [{ ...shade }],
-          },
-        ];
-      });
+          { colorPrefix, shades: [{ ...shade }] },
+        ]);
+      }
+
+      if (
+        paletteDuplicates().duplicatePrefix &&
+        !paletteDuplicates().duplicateValue
+      ) {
+        console.log("got to duplicate value click");
+        return setColorsPalette([
+          ...colorsPalette,
+          colorPrefix,
+          { shades: [{ ...shade }] },
+        ]);
+      }
+      // setColorsPalette(() => {
+      //   return [
+      //     ...colorsPalette,
+      //     {
+      //       colorPrefix,
+      //       shades: [{ ...shade }],
+      //     },
+      //   ];
+      // });
     }
     // else if (duplicatePrefix && !duplicateValue) {
     //   const colorObject = colorsPalette.filter((color) => {
@@ -114,6 +145,7 @@ const ColorGeneratorForm = ({
           (parseInt(currentName.split("-")[1]) + 1));
       };
       if (generatedRGB) {
+        setIsDuplicateHex(false);
         // defaultDuplicates  checks for duplicates of the default Tailwind colors. Returns false if no duplicates are found, otherwise return checkColorNameDuplicates's value
         const defaultDuplicates = () => {
           return checkColorNameDuplicates(defaultTailwindColors, currentName)
@@ -128,24 +160,27 @@ const ColorGeneratorForm = ({
             : false;
         };
 
-        if (!defaultDuplicates()) {
+        if (!defaultDuplicates().duplicateValue) {
           return setGeneratedColorName(currentName);
         }
 
+        console.log("here 1");
         // If a duplicate is found in the default array, increase the value of the currentName by one.
         if (defaultDuplicates().duplicateValue) {
           increaseColorValue(currentName);
           console.log("increased", currentName);
+          console.log("got to first", colorsPalette);
 
           // If colorValue is empty, set the generatedColorName to the currentName
           if (colorsPalette.length === 0) {
             return setGeneratedColorName(currentName);
           }
+          return generatedColorName;
         }
-        console.log("default", generatedColorName, defaultDuplicates());
+        console.log("default", generatedColorName, paletteDuplicates());
 
         if (colorsPalette.length > 0) {
-          if (!paletteDuplicates()) {
+          if (!paletteDuplicates().duplicatePrefix) {
             return setGeneratedColorName(currentName);
           }
           if (paletteDuplicates().duplicatePrefix) {
@@ -157,7 +192,7 @@ const ColorGeneratorForm = ({
                 convertToHex(generatedRGB)
               )
             ) {
-              console.log("got to hex check");
+              console.log("DUP HEX");
               setIsDuplicateHex(() => {
                 return true;
               });
@@ -165,7 +200,22 @@ const ColorGeneratorForm = ({
             }
 
             if (paletteDuplicates().duplicateValue) {
+              checkColorNameDuplicates(
+                colorsPalette,
+                currentName,
+                (duplicatePrefix, duplicateValue) => {
+                  if (duplicateValue) {
+                    increaseColorValue(currentName);
+                    console.log("increased", currentName);
+                  } else {
+                    return setGeneratedColorName(() => {
+                      return currentName;
+                    });
+                  }
+                }
+              );
             }
+            return setGeneratedColorName(currentName);
             //   currentName =
             //     currentName.split("-")[0] +
             //     "-" +

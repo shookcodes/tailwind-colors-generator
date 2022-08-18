@@ -8,6 +8,7 @@ const ColorsPalette = ({
   handleRemoveColor,
   textColor,
 }) => {
+  console.log("from pal", colorsPalette);
   return (
     <div className="flex flex-col w-full h-full mb-12">
       {colorsPalette &&

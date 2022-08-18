@@ -1,5 +1,4 @@
 const checkColorNameDuplicates = (data, colorName, callback) => {
-  console.log("dup names", data, colorName);
   const colorPrefix = colorName.split("-")[0];
   const colorValue = parseInt(colorName.split("-")[1]);
 
@@ -28,7 +27,7 @@ const checkColorNameDuplicates = (data, colorName, callback) => {
     duplicateValue = false;
   }
 
-  return { duplicatePrefix, duplicateValue };
+  return { duplicatePrefix, duplicateValue, callback };
 };
 
 const checkColorHexDuplicates = (data, colorPrefix, hex) => {

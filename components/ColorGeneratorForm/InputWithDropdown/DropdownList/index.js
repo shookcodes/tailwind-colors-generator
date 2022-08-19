@@ -13,16 +13,16 @@ const DropdownList = ({
     e.preventDefault();
     const input = document.querySelector(`#input-${index}`);
     const dropdownList = document.querySelector(`#dropdownList-${index}`);
-    input.value = e.target.innerText;
+    input.value = e.currentTarget.innerText;
 
     setDropdownVisibility(dropdownList).hideList();
 
-    setInputValue(e.target.value);
+    setInputValue(e.currentTarget.value);
     // If the first input has data, pass new array with filtered data to the second input
     if (index === 0) {
       const generatedData = generateSecondaryData(e, data);
       setFilteredTailwindColors(generatedData);
-      const targetPrefix = e.target.value.split("-")[0];
+      const targetPrefix = e.currentTarget.value.split("-")[0];
       const secondaryInput = document.querySelector("#input-1");
 
       if (targetPrefix !== secondaryInput.value.split("-")[0]) {
@@ -32,14 +32,11 @@ const DropdownList = ({
   };
 
   return (
-    // TODO add animations for list openening/closing
-    //  transform ease-in-out duration-150
     <div className={`absolute -top-8 inset-x-0 z-0 w-full ${className} `}>
       <ul
         id={`dropdownList-${index}`}
         className={` 
         flex-col scroll w-full z-10 rounded-md mt-12 shadow-lg opacity-0 transform duration-200 bg-gray-100 transition-all -translate-y-full mx-auto dropdownList`}
-        // ref={ref}
       >
         {data &&
           data.map((item, dataIndex) =>

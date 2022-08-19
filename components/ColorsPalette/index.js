@@ -8,7 +8,6 @@ const ColorsPalette = ({
   handleRemoveColor,
   textColor,
 }) => {
-  console.log("from pal", colorsPalette);
   return (
     <div className="flex flex-col w-full h-full mb-12">
       {colorsPalette &&
@@ -22,7 +21,10 @@ const ColorsPalette = ({
               <div className="flex gap-4">
                 {color.shades.map((shade, index) => {
                   const colorName = `${colorPrefix}-${shade.value}`;
-                  const textColor = toggleTextColor(shade.rgb);
+
+                  // TODO REMOVE CONDITIONAL AFTER BUG FIXES
+                  const textColor = toggleTextColor(shade?.rgb);
+
                   return (
                     <div
                       key={index}

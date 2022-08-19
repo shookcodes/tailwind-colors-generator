@@ -23,27 +23,19 @@ const InputWithDropdown = ({
     );
 
     dropdownLists.map((list, listIndex) => {
-      const dropdownToggle = document.querySelector(
-        `#dropdownIcon-${listIndex}`
-      );
-
       if (hideAll) {
         setDropdownVisibility(list).hideList();
-        // dropdownToggle.classList.remove("-scale-100");
         return;
       }
 
       if (index === listIndex) {
         if (list.classList.contains("-translate-y-full")) {
           setDropdownVisibility(list).showList();
-          // dropdownToggle.classList.add("-scale-100");
         } else {
           setDropdownVisibility(list).hideList();
-          // dropdownToggle.classList.remove("-scale-100");
         }
       } else {
         setDropdownVisibility(list).hideList();
-        // dropdownToggle.classList.remove("-scale-100");
       }
     });
   };
@@ -61,14 +53,14 @@ const InputWithDropdown = ({
     );
 
     // Filter the shade that matches the selected color's suffix
-    const currentShade = currentColor[0].shades?.filter((shade) => {
+    const currentShade = currentColor[0]?.shades?.filter((shade) => {
       return parseInt(shade.value) === parseInt(colorValue.split("-")[1]);
     });
 
     // Passing the input data to parent for data handling
     setInputData({
-      colorPrefix: currentColor.pop().colorPrefix,
-      shade: currentShade.pop(),
+      colorPrefix: currentColor?.pop().colorPrefix,
+      shade: currentShade[0],
     });
   };
 

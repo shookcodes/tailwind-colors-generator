@@ -4,13 +4,11 @@ import ColorPreviewButton from "../ColorPreviewButton";
 import PopupAlert from "../PopupAlert";
 import { tailwindColors } from "../../data/tailwindColors";
 import {
-  checkColorNameDuplicates,
-  // checkColorHexDuplicates,
   convertFromHex,
   generateMedianRGB,
   generateColorName,
   convertToHex,
-  checkColorHexDuplicates,
+  validateGeneratedColor,
 } from "../../utils";
 
 const defaultTailwindColors = tailwindColors();
@@ -28,6 +26,9 @@ const ColorGeneratorForm = ({
   const [duplicateAlert, setDuplicateAlert] = useState(false);
   const [isDuplicateHex, setIsDuplicateHex] = useState(false);
 
+  const [colorObject, setColorObject] = useState(null);
+  const [shadeObject, setShadeObject] = useState(null);
+
   // Sort each color's values from smallest to largest
   const sortColorValues = colorsPalette.map((color) => {
     if (color.shades && color.shades?.length > 1) {
@@ -40,66 +41,42 @@ const ColorGeneratorForm = ({
   const handleAddToPaletteClick = (obj) => {
     const { colorPrefix, shade } = obj();
     setCurrentPaletteColor(obj());
-    const hex = shade.hex;
-    const currentName = colorPrefix + "-" + shade.value;
 
-    console.log("ob", isDuplicateHex, obj());
     sortColorValues;
     if (colorsPalette.length === 0) {
       setColorsPalette([{ colorPrefix, shades: [{ ...shade }] }]);
     } else {
-      // console.log('filter', colorsPalette.filter(color => {`${color.colorPefix}-`}))
       if (isDuplicateHex) {
         setDuplicateAlert(true);
-        // setIsDuplicateHex(false);
-      }
+      } else {
+        if (shadeObject) {
+          const { colorPrefix } = shadeObject;
 
-      const paletteDuplicates = () => {
-        return checkColorNameDuplicates(colorsPalette, currentName)
-          ? checkColorNameDuplicates(colorsPalette, currentName)
-          : false;
-      };
+          const filteredColor = colorsPalette.filter((color) => {
+            if (color.colorPrefix === colorPrefix) {
+              return color.shades.push(shadeObject.shade);
+            }
+          });
+          console.log("FILT", filteredColor);
+          setColorsPalette([...colorsPalette]);
 
-      if (!paletteDuplicates().duplicatePrefix) {
-        console.log("go to dup prefix click");
-        return setColorsPalette([
-          ...colorsPalette,
-          { colorPrefix, shades: [{ ...shade }] },
-        ]);
+          setShadeAdded(true);
+        } else if (colorObject) {
+          setColorsPalette([
+            ...colorsPalette,
+            {
+              colorPrefix: colorObject.colorPrefix,
+              shades: [{ ...colorObject.shades[0] }],
+            },
+          ]);
+          setColorObject(() => {
+            return null;
+          });
+        }
       }
-
-      if (
-        paletteDuplicates().duplicatePrefix &&
-        !paletteDuplicates().duplicateValue
-      ) {
-        console.log("got to duplicate value click");
-        return setColorsPalette([
-          ...colorsPalette,
-          colorPrefix,
-          { shades: [{ ...shade }] },
-        ]);
-      }
-      // setColorsPalette(() => {
-      //   return [
-      //     ...colorsPalette,
-      //     {
-      //       colorPrefix,
-      //       shades: [{ ...shade }],
-      //     },
-      //   ];
-      // });
     }
-    // else if (duplicatePrefix && !duplicateValue) {
-    //   const colorObject = colorsPalette.filter((color) => {
-    //     return color.colorPrefix === colorPrefix;
-    //   });
-
-    //   // setShadeAdded lets the parent component know that a shade has been added to the palette so the ColorPalette and CodeBox components are re-rendered correctly.
-    //   setShadeAdded(shade);
-
-    //   return colorObject[0].shades.push({ ...shade });
-    // }
-    // }
+    return setShadeAdded(true);
+    // setShadeAdded triggers ColorPalette and CodeBox to re-render once shade is added to colorPalette
   };
 
   // This useEffect takes the data from both inputs and creates a new color object that can be added to the colorsPalette array.
@@ -109,9 +86,8 @@ const ColorGeneratorForm = ({
     }
 
     if (primaryInputData === null || secondaryInputData === null) {
-      setCurrentPaletteColor(null);
       setSecondaryInputData(null);
-      // setGeneratedRGB(null);
+      setGeneratedRGB(null);
       setGeneratedColorName("");
     }
 
@@ -125,135 +101,51 @@ const ColorGeneratorForm = ({
       const colorPrefix = secondaryInputData.colorPrefix;
       const primaryColorValue = primaryInputData.shade.value;
       const secondaryColorValue = secondaryInputData.shade.value;
-
+      setIsDuplicateHex(false);
       if (primaryInputData.colorPrefix !== colorPrefix) {
         return setSecondaryInputData(null);
       }
       // generate RGB for the median color
       setGeneratedRGB(generateMedianRGB(primaryRGB, secondaryRGB));
-      const colorObject = {
+      const colorValues = {
         colorPrefix,
         primaryColorValue,
         secondaryColorValue,
       };
-      let currentName = generateColorName({ ...colorObject });
 
-      const increaseColorValue = () => {
-        return (currentName =
-          currentName.split("-")[0] +
-          "-" +
-          (parseInt(currentName.split("-")[1]) + 1));
-      };
       if (generatedRGB) {
+        const hex = convertToHex(generatedRGB);
         setIsDuplicateHex(false);
-        // defaultDuplicates  checks for duplicates of the default Tailwind colors. Returns false if no duplicates are found, otherwise return checkColorNameDuplicates's value
-        const defaultDuplicates = () => {
-          return checkColorNameDuplicates(defaultTailwindColors, currentName)
-            ? checkColorNameDuplicates(defaultTailwindColors, currentName)
-            : false;
-        };
-
-        // paletteDuplicates  checks for duplicates of the colorsPalette array. Returns false if no duplicates are found, otherwise return checkColorNameDuplicates's value
-        const paletteDuplicates = () => {
-          return checkColorNameDuplicates(colorsPalette, currentName)
-            ? checkColorNameDuplicates(colorsPalette, currentName)
-            : false;
-        };
-
-        if (!defaultDuplicates().duplicateValue) {
-          return setGeneratedColorName(currentName);
-        }
-
-        console.log("here 1");
-        // If a duplicate is found in the default array, increase the value of the currentName by one.
-        if (defaultDuplicates().duplicateValue) {
-          increaseColorValue(currentName);
-          console.log("increased", currentName);
-          console.log("got to first", colorsPalette);
-
-          // If colorValue is empty, set the generatedColorName to the currentName
-          if (colorsPalette.length === 0) {
-            return setGeneratedColorName(currentName);
-          }
-          return generatedColorName;
-        }
-        console.log("default", generatedColorName, paletteDuplicates());
-
-        if (colorsPalette.length > 0) {
-          if (!paletteDuplicates().duplicatePrefix) {
-            return setGeneratedColorName(currentName);
-          }
-          if (paletteDuplicates().duplicatePrefix) {
-            console.log("got to duplicatePrefix");
-            if (
-              checkColorHexDuplicates(
-                colorsPalette,
-                currentName.split("-")[0],
-                convertToHex(generatedRGB)
-              )
-            ) {
-              console.log("DUP HEX");
-              setIsDuplicateHex(() => {
-                return true;
+        const colorName = validateGeneratedColor(
+          defaultTailwindColors,
+          colorsPalette,
+          generateColorName({ ...colorValues }),
+          hex,
+          (currentName, duplicatePrefix, error) => {
+            const currentPrefix = currentName.split("-")[0];
+            const currentValue = currentName.split("-")[1];
+            if (error) {
+              return setIsDuplicateHex(true);
+            }
+            if (!duplicatePrefix) {
+              setColorObject({
+                colorPrefix: currentPrefix,
+                shades: [{ value: currentValue, hex, rgb: generatedRGB }],
               });
-              return setGeneratedColorName(currentName);
+              return setShadeObject(null);
             }
-
-            if (paletteDuplicates().duplicateValue) {
-              checkColorNameDuplicates(
-                colorsPalette,
-                currentName,
-                (duplicatePrefix, duplicateValue) => {
-                  if (duplicateValue) {
-                    increaseColorValue(currentName);
-                    console.log("increased", currentName);
-                  } else {
-                    return setGeneratedColorName(() => {
-                      return currentName;
-                    });
-                  }
-                }
-              );
+            if (duplicatePrefix) {
+              setShadeObject({
+                colorPrefix: currentPrefix,
+                shade: { value: currentValue, hex, rgb: generatedRGB },
+              });
+              return setColorObject(null);
             }
-            return setGeneratedColorName(currentName);
-            //   currentName =
-            //     currentName.split("-")[0] +
-            //     "-" +
-            //     (parseInt(currentName.split("-")[1]) + 1);
-
-            // }
           }
-        }
-        // if (
-        //   defaultDuplicate().duplicatePrefix &&
-        //   defaultDuplicate().duplicateValue
-        // ) {
-        //   console.log("go there");
-        //   currentName =
-        //     currentName.split("-")[0] +
-        //     "-" +
-        //     (parseInt(currentName.split("-")[1]) + 1);
-        //   if (colorsPalette.length === 0) {
-        //     return setGeneratedColorName(currentName);
-        //   }
-        // else if (colorsPalette.length > 0) {
-        //   if (
-        //     paletteDuplicate.duplicatePrefix &&
-        //     paletteDuplicate.duplicateValue
-        //   ) {
-        //     currentName =
-        //       currentName.split("-")[0] +
-        //       "-" +
-        //       (parseInt(currentName.split("-")[1]) + 1);
-        //   } else {
-        //     return;
-        //   }
-        // }
-        console.log("dupse", currentName);
+        );
+
+        setGeneratedColorName(colorName);
       }
-      // setGeneratedColorName(currentName);
-      // }
-      // setGeneratedColorName();
     }
   }, [
     filteredTailwindColors,
@@ -262,6 +154,7 @@ const ColorGeneratorForm = ({
     secondaryInputData,
     generatedRGB,
     generatedColorName,
+    isDuplicateHex,
   ]);
 
   return (

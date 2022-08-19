@@ -17,12 +17,8 @@ export const setDropdownVisibility = (list) => {
   const dropdownIcon = document.getElementById(`dropdownIcon-${index}`);
 
   const buttons = Array.from(list.querySelectorAll("button"));
-  console.log();
-  const listWrapper = list.parentNode;
   const hideList = () => {
     dropdownIcon.classList.remove("-scale-100");
-    // listWrapper.classList.add("h-0");
-    // listWrapper.classList.remove("h-auto");
     list.classList.add(...hideClasses);
     list.classList.remove(...showClasses);
 
@@ -33,9 +29,6 @@ export const setDropdownVisibility = (list) => {
 
   const showList = () => {
     dropdownIcon.classList.add("-scale-100");
-    // listWrapper.classList.add("h-auto");
-    // listWrapper.classList.remove("h-0");
-
     list.classList.remove(...hideClasses);
     list.classList.add(...showClasses);
     buttons.map((button) => {

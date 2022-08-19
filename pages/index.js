@@ -29,11 +29,16 @@ export default function Home() {
               setColorsPalette={setColorsPalette}
               setShadeAdded={setShadeAdded}
             />
-            <ColorsPalette
-              colorsPalette={colorsPalette}
-              setColorsPalette={setColorsPalette}
-            />
-            <CodeBox colorsPalette={colorsPalette} />
+            {shadeAdded && (
+              <ColorsPalette
+                colorsPalette={colorsPalette}
+                setColorsPalette={setColorsPalette}
+                shadeAdded={shadeAdded}
+              />
+            )}
+            {shadeAdded && (
+              <CodeBox colorsPalette={colorsPalette} shadeAdded={shadeAdded} />
+            )}
           </div>
         </div>
       </div>

@@ -10,6 +10,7 @@ import { generateSecondaryData } from "./generateSecondaryData";
 import { handleOutsideClick } from "./handleOutsideClick";
 import { setDropdownVisibility } from "./setDropdownVisibility";
 import { toggleTextColor } from "./toggleTextColor";
+import { validateGeneratedColor } from "./validateGeneratedColor";
 
 export {
   checkColorNameDuplicates,
@@ -23,4 +24,5 @@ export {
   handleOutsideClick,
   setDropdownVisibility,
   toggleTextColor,
+  validateGeneratedColor,
 };

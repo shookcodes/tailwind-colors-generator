@@ -7,7 +7,8 @@ const checkColorNameDuplicates = (data, colorName, callback) => {
   });
 
   // If the colorPrefix is found in the data, return true
-  const duplicatePrefix = filteredColorPrefix.length === 0 ? false : true;
+  const duplicatePrefix =
+    filteredColorPrefix.length === 0 ? false : colorPrefix;
 
   if (!duplicatePrefix || duplicatePrefix.length === 0) {
     duplicatePrefix = false;
@@ -18,11 +19,11 @@ const checkColorNameDuplicates = (data, colorName, callback) => {
   const shades = filteredColorPrefix?.pop().shades;
 
   const filteredShade = shades
-    .filter((shade) => parseInt(shade.value) === colorValue)
+    .filter((shade) => parseInt(shade?.value) === colorValue)
     .pop();
 
   if (filteredShade) {
-    duplicateValue = true;
+    duplicateValue = colorValue;
   } else {
     duplicateValue = false;
   }
@@ -42,7 +43,7 @@ const checkColorHexDuplicates = (data, colorPrefix, hex) => {
     (shade) => shade.hex === hex
   );
 
-  return filteredHex.length > 0 ? true : false;
+  return filteredHex.length > 0 ? hex : false;
 };
 
 export { checkColorNameDuplicates, checkColorHexDuplicates };

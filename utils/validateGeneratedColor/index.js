@@ -9,11 +9,11 @@ export const validateGeneratedColor = (
   rgb,
   callback,
   duplicatePrefix = false,
-  error = false
+  duplicateColor = null
 
   // duplicateValue = false
 ) => {
-  //   let error = false;
+  //   let duplicateColor = false;
   // If a duplicate is found in the default array, increase the value of the currentName by one.
   const increaseColorValue = () => {
     return (currentName =
@@ -40,7 +40,7 @@ export const validateGeneratedColor = (
   }
   // If the filtered palette is empty or if there are no other colors on the palette starting with the same color prefix, return the validated name.
   if (filteredColors.length === 0 || !paletteDuplicates().duplicatePrefix) {
-    callback(currentName, duplicatePrefix, error);
+    callback(currentName, duplicatePrefix, duplicateColor);
     return currentName;
   }
 
@@ -54,21 +54,43 @@ export const validateGeneratedColor = (
         paletteDuplicates().duplicateValue
       }`
     ) {
+      let prefix;
+      let shade;
       const duplicateNameAndHex = checkColorHexDuplicates(
         filteredColors,
         currentName.split("-")[0],
         rgb
       );
-      // If the current color has the same colorPrefix, value, and hex properties, set error callback value to true but don't update the value of the currentName.
+
+      console.log("DUPLICATE NAME AND HEX", duplicateNameAndHex);
+
+      // If the current color has the same colorPrefix, value, and hex properties, set duplicateColor callback value to true but don't update the value of the currentName.
       if (duplicateNameAndHex) {
-        error = true;
+        duplicateColor = filteredColors.map((color) => {
+          if (color.colorPrefix === duplicateNameAndHex.colorPrefix) {
+            prefix = color.colorPrefix;
+            shade = color.shades
+              .filter((shade) => {
+                return shade.hex === duplicateNameAndHex.filteredShades[0].hex;
+              })
+              .pop();
+          }
+
+          return { prefix, shade };
+        });
       }
+
+      console.log("DUP COLOR", duplicateColor);
       // If the current name is the same but the hexes are different, increase the value of the currentName.
-      if (!duplicateNameAndHex) {
+      if (!duplicateColor) {
         increaseColorValue(currentName);
+      } else {
+        currentName = currentName.split("-")[0] + "-" + parseInt(shade.value);
       }
     }
-    callback(currentName, duplicatePrefix, error);
+
+    console.log("DUP FROM VAL", duplicatePrefix, duplicateColor);
+    callback(currentName, duplicatePrefix, duplicateColor);
     return currentName;
   }
 };

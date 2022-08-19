@@ -121,10 +121,11 @@ const ColorGeneratorForm = ({
           colorsPalette,
           generateColorName({ ...colorValues }),
           hex,
-          (currentName, duplicatePrefix, error) => {
+          (currentName, duplicatePrefix, duplicateColor) => {
             const currentPrefix = currentName.split("-")[0];
             const currentValue = currentName.split("-")[1];
-            if (error) {
+            if (duplicateColor) {
+              console.log("duplicate color", duplicateColor);
               return setIsDuplicateHex(true);
             }
             if (!duplicatePrefix) {

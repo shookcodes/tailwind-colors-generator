@@ -39,11 +39,11 @@ const checkColorHexDuplicates = (data, colorPrefix, hex) => {
     return;
   }
 
-  const filteredHex = filteredColors[0]?.shades?.filter(
+  const filteredShades = filteredColors[0]?.shades?.filter(
     (shade) => shade.hex === hex
   );
 
-  return filteredHex.length > 0 ? hex : false;
+  return filteredShades.length > 0 ? { colorPrefix, filteredShades } : false;
 };
 
 export { checkColorNameDuplicates, checkColorHexDuplicates };

@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useState, useEffect } from "react";
 import DropdownList from "./DropdownList";
 import {
   filterInputSearch,
@@ -17,6 +17,8 @@ const InputWithDropdown = ({
   setInputData,
   colorPreviewHex,
 }) => {
+  const [openDropdownIndex, setOpenDropdownIndex] = useState("");
+
   const handleDropdownVisibility = ({ hideAll, hideOther, toggle }) => {
     const dropdownLists = Array.from(
       document.querySelectorAll(".dropdownList")
@@ -30,7 +32,7 @@ const InputWithDropdown = ({
 
       if (toggle && index === listIndex) {
         if (list.classList.contains("-translate-y-full")) {
-          setDropdownVisibility(list).showList();
+          setDropdownVisibility(list).showList(setOpenDropdownIndex);
         } else {
           setDropdownVisibility(list).hideList();
         }
@@ -59,7 +61,7 @@ const InputWithDropdown = ({
       // If the first input value is null, remove the value from the second input if it is not null and clear the input data passed to the parent
       if (index === 0) {
         handleDropdownVisibility({ hideAll: true });
-        document.querySelector("#input-1").value = "";
+        document.querySelector("#dropdownInput-1").value = "";
       }
       setInputData(null);
     }
@@ -102,7 +104,7 @@ const InputWithDropdown = ({
   // Remove text from input fields
   useEffect(() => {
     if (inputData === null) {
-      document.querySelector(`#input-${index}`).value = "";
+      document.querySelector(`#dropdownInput-${index}`).value = "";
     }
   }, [inputData, index]);
 
@@ -121,8 +123,9 @@ const InputWithDropdown = ({
           }`}
           placeholder={placeholder}
           name={"color"}
+          dropdownInput
           type="text"
-          id={`input-${index}`}
+          id={`dropdownInput-${index}`}
           onChange={(e, index) => {
             handleInputChange(e, index);
           }}
@@ -162,6 +165,8 @@ const InputWithDropdown = ({
         setInputValue={setInputValue}
         setFilteredTailwindColors={setFilteredTailwindColors}
         setDropdownVisibility={setDropdownVisibility}
+        openDropdownIndex={openDropdownIndex}
+        setOpenDropdownIndex={setDropdownVisibility}
       />
     </div>
   );

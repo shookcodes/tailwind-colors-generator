@@ -8,7 +8,6 @@ export const setDropdownVisibility = (listElement) => {
 
   const hideList = () => {
     dropdownIcon.classList.remove("-scale-100");
-
     listElement.classList.add(...hideClasses);
     listElement.classList.remove(...showClasses);
 
@@ -18,7 +17,7 @@ export const setDropdownVisibility = (listElement) => {
     }, 200);
   };
 
-  const showList = () => {
+  const showList = (setListIndexCallback) => {
     buttons.map((button) => {
       button.classList.remove("hidden");
     });
@@ -28,6 +27,9 @@ export const setDropdownVisibility = (listElement) => {
 
     listElement.parentNode.classList.remove("h-0");
     listElement.parentNode.classList.add("h-128");
+    return setListIndexCallback(() => {
+      return index;
+    });
   };
 
   return { hideList, showList };

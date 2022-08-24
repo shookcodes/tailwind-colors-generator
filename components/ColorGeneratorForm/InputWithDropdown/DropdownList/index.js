@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useState, useEffect } from "react";
 import { generateSecondaryData } from "../../../../utils";
 
 const DropdownList = ({
@@ -7,10 +7,12 @@ const DropdownList = ({
   setInputValue,
   setFilteredTailwindColors,
   setDropdownVisibility,
+  openDropdownIndex,
+  setOpenDropdownIndex,
 }) => {
   const handleItemClick = (e, index) => {
     e.preventDefault();
-    const input = document.querySelector(`#input-${index}`);
+    const input = document.querySelector(`#dropdownInput-${index}`);
     const dropdownList = document.querySelector(`#dropdownList-${index}`);
     input.value = e.currentTarget.innerText;
 
@@ -22,13 +24,34 @@ const DropdownList = ({
       const generatedData = generateSecondaryData(e, data);
       setFilteredTailwindColors(generatedData);
       const targetPrefix = e.currentTarget.value.split("-")[0];
-      const secondaryInput = document.querySelector("#input-1");
+      const secondaryInput = document.querySelector("#dropdownInput-1");
 
       if (targetPrefix !== secondaryInput.value.split("-")[0]) {
         secondaryInput.value = "";
       }
     }
   };
+
+  useEffect(() => {
+    const currentInput = document?.querySelector(
+      `#dropdownInput-${openDropdownIndex}`
+    );
+    const handleListButtonKeyUp = (e) => {
+      if (
+        e.key === "Enter" &&
+        e.target.classList.contains("dropdownListButton")
+      ) {
+        currentInput.focus();
+      }
+    };
+    if (openDropdownIndex) {
+      document.addEventListener("keyup", handleListButtonKeyUp);
+    }
+
+    return () => {
+      document.removeEventListener("keyup", handleListButtonKeyUp);
+    };
+  }, [openDropdownIndex]);
 
   return (
     <div
@@ -38,7 +61,7 @@ const DropdownList = ({
       <ul
         id={`dropdownList-${index}`}
         className={` absolute top-0 inset-0 mt-4 
-        flex-col scroll w-full h-max z-10 rounded-md  shadow-lg opacity-0 transform duration-200 bg-gray-100 transition-all max-h-120 -translate-y-full mx-auto dropdownList`}
+        flex-col scroll w-full h-max z-10 rounded-md shadow-lg opacity-0 transform duration-200 bg-gray-100 transition-all max-h-120 -translate-y-full mx-auto dropdownList`}
       >
         {data &&
           data.map((item, dataIndex) =>
@@ -48,7 +71,7 @@ const DropdownList = ({
               return (
                 <li key={"btn-" + item.colorPrefix + "-" + shadeIndex}>
                   <button
-                    className="flex justify-between text-gray-500 w-full pl-4 pr-1 py-3 items-center border-b border-b-gray-200 hover:cursor-pointer hover:text-gray-400  hover:bg-amber-50 hover:shadow-inner"
+                    className="flex justify-between text-gray-500 w-full pl-4 pr-1 py-3 items-center border-b border-b-gray-200 hover:cursor-pointer hover:text-gray-400  hover:bg-amber-50 hover:shadow-inner dropdownListButton"
                     id={tailwindName}
                     value={tailwindName}
                     onClick={(e) => {

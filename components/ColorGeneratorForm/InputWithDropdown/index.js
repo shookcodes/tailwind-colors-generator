@@ -17,7 +17,7 @@ const InputWithDropdown = ({
   setInputData,
   colorPreviewHex,
 }) => {
-  const handleDropdownVisibility = (hideAll) => {
+  const handleDropdownVisibility = ({ hideAll, hideOther, toggle }) => {
     const dropdownLists = Array.from(
       document.querySelectorAll(".dropdownList")
     );
@@ -28,7 +28,7 @@ const InputWithDropdown = ({
         return;
       }
 
-      if (index === listIndex) {
+      if (toggle && index === listIndex) {
         if (list.classList.contains("-translate-y-full")) {
           setDropdownVisibility(list).showList();
         } else {
@@ -37,12 +37,47 @@ const InputWithDropdown = ({
       } else {
         setDropdownVisibility(list).hideList();
       }
+
+      if (hideOther && index !== listIndex) {
+        setDropdownVisibility(list).hideList();
+      }
     });
   };
 
   const handleDropdownClick = (e) => {
-    handleDropdownVisibility();
+    handleDropdownVisibility({ toggle: true });
     e.preventDefault();
+  };
+
+  const handleInputChange = (e) => {
+    const index = parseInt(e.target.id.split("-")[1]);
+    const dropdownList = document.querySelector(`#dropdownList-${index}`);
+    const matchFound = filterInputSearch(e.target.value, dropdownList);
+
+    // If an input target doesn't have a value, set the data passed to the parent to null and set the value to null so the hex preview icon is not visible
+    if (!e.target.value) {
+      // If the first input value is null, remove the value from the second input if it is not null and clear the input data passed to the parent
+      if (index === 0) {
+        handleDropdownVisibility({ hideAll: true });
+        document.querySelector("#input-1").value = "";
+      }
+      setInputData(null);
+    }
+    if (matchFound) {
+      setInputValue(e.target.value);
+
+      if (index === 0) {
+        // Generate the rendered list for the second drop-down if a valid match is found
+        const generatedData = generateSecondaryData(e, data);
+        setFilteredTailwindColors(() => {
+          return generatedData;
+        });
+      }
+    }
+  };
+
+  const handleInputFocus = (e, index) => {
+    handleDropdownVisibility({ hideOther: true });
   };
 
   // Filter data and return the value of the input's matching object to parent component for data handling
@@ -71,33 +106,6 @@ const InputWithDropdown = ({
     }
   }, [inputData, index]);
 
-  const handleInputChange = (e) => {
-    const index = parseInt(e.target.id.split("-")[1]);
-    const dropdownList = document.querySelector(`#dropdownList-${index}`);
-    const matchFound = filterInputSearch(e.target.value, dropdownList);
-
-    // If an input target doesn't have a value, set the data passed to the parent to null and set the value to null so the hex preview icon is not visible
-    if (!e.target.value) {
-      // If the first input value is null, remove the value from the second input if it is not null and clear the input data passed to the parent
-      if (index === 0) {
-        handleDropdownVisibility(true);
-        document.querySelector("#input-1").value = "";
-      }
-      setInputData(null);
-    }
-    if (matchFound) {
-      setInputValue(e.target.value);
-
-      if (index === 0) {
-        // Generate the rendered list for the second drop-down if a valid match is found
-        const generatedData = generateSecondaryData(e, data);
-        setFilteredTailwindColors(() => {
-          return generatedData;
-        });
-      }
-    }
-  };
-
   return (
     <div
       className={`relative w-full h-full bg-inherit ${
@@ -119,6 +127,10 @@ const InputWithDropdown = ({
             handleInputChange(e, index);
           }}
           disabled={isDisabled}
+          onFocus={(e) => {
+            handleInputFocus(e, index);
+          }}
+
           //   style={rgb && { backgroundColor: rgb }}
         />
         {colorPreviewHex && (

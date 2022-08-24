@@ -99,7 +99,7 @@ const InputWithDropdown = ({
 
   return (
     <div
-      className={` border-2 border-blue-400 w-full h-full ${
+      className={`relative w-full h-full bg-inherit ${
         index === 0 ? "z-20" : "z-10"
       }`}
     >

@@ -168,8 +168,8 @@ const ColorGeneratorForm = ({
           e.preventDefault();
         }}
       >
-        <fieldset className="flex w-full h-auto flex-col items-center  mb-12 border-2">
-          <div className=" flex flex-col sm:flex sm:flex-row sm:flex-nowrap sm:items-start items-center justify-center relative w-full sm:gap-4">
+        <fieldset className="flex w-full h-auto flex-col items-center  mb-12">
+          <div className=" flex flex-col sm:flex sm:flex-row sm:flex-nowrap sm:items-start items-center justify-center relative w-full gap-6 sm:gap-4">
             <InputWithDropdown
               index={0}
               placeholder="Search for a color"

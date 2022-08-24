@@ -13,6 +13,10 @@ module.exports = {
   ],
   theme: {
     extend: {
+      spacing: {
+        120: "480px",
+        128: "512px",
+      },
       screens: {
         xs: "320px",
         sm: "640px",
@@ -47,31 +51,10 @@ module.exports = {
             opacity: 1,
           },
         },
-        slideOutUp: {
-          "0%": {
-            transform: "scaleY(1, 1)",
-            "max-height": "500px",
-            height: "500px",
-            // width: "full",
-            opacity: 1,
-          },
-          "100%": {
-            transform: "scaleY(0, 0)",
-            "max-height": 0,
-            height: 0,
-            // width: 0,
-            opacity: 0,
-          },
-        },
       },
-      transitionProperty: {
-        // height: "height",
-        // 'spacing': 'margin, padding',
-      },
+
       animation: {
         scaleIn: "scaleIn 0.2s ease-in-out forwards",
-        slideInDown: "slideInDown 0.2s ease-in-out",
-        slideOutUp: "slideOutUp 0.2s ease-in-out",
       },
     },
   },

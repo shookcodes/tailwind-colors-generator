@@ -2,7 +2,6 @@ import { useEffect } from "react";
 import { generateSecondaryData } from "../../../../utils";
 
 const DropdownList = ({
-  className,
   data,
   index,
   setInputValue,
@@ -32,11 +31,14 @@ const DropdownList = ({
   };
 
   return (
-    <div className={`absolute -top-8 inset-x-0 z-0 w-full ${className} `}>
+    <div
+      className="absolute top-8 mt-4 w-full overflow-hidden "
+      id={`dropdownListWrapper-${index}`}
+    >
       <ul
         id={`dropdownList-${index}`}
-        className={` 
-        flex-col scroll w-full z-10 rounded-md mt-12 shadow-lg opacity-0 transform duration-200 bg-gray-100 transition-all -translate-y-full mx-auto dropdownList`}
+        className={` absolute top-0 inset-0 mt-4 
+        flex-col scroll w-full h-max z-10 rounded-md  shadow-lg opacity-0 transform duration-200 bg-gray-100 transition-all max-h-120 -translate-y-full mx-auto dropdownList`}
       >
         {data &&
           data.map((item, dataIndex) =>

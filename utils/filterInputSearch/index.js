@@ -6,30 +6,31 @@ export const filterInputSearch = (value, listElement) => {
     setDropdownVisibility(listElement).showList();
   }
   buttons.map((button) => {
+    if (button.innerText.toLowerCase() === value.toLowerCase()) {
+      found = true;
+    }
     if (
       button.innerText.toLowerCase().includes(value.toLowerCase()) &&
-      value.length > 2
+      value.length > 1
     ) {
+      if (value.includes("-")) {
+        return;
+      }
       button.classList.remove("hidden");
     } else {
       button.classList.add("hidden");
     }
-    if (button.innerText.toLowerCase() === value.toLowerCase()) {
-      found = true;
-    }
   });
 
-  if (found) {
-    buttons.map((button) => {
-      button.classList.add("hidden");
-    });
+  if (found && value.split("-")[1] !== "50") {
+    setDropdownVisibility(listElement).hideList();
   }
 
-  if (!value.length) {
+  if (!value) {
     setDropdownVisibility(listElement).hideList();
-    buttons.map((button) => {
-      button.classList.remove("hidden");
-    });
+    // buttons.map((button) => {
+    //   button.classList.remove("hidden");
+    // });
   }
   return found;
 };

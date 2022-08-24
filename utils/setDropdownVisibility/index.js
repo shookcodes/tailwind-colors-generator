@@ -1,30 +1,33 @@
-export const setDropdownVisibility = (list) => {
+export const setDropdownVisibility = (listElement) => {
   const showClasses = ["translate-y-4", "shadow-xl", "opacity-100", "z-50"];
   const hideClasses = ["-translate-y-full", "shadow-none", "opacity-0", "z-10"];
-  const index = list.id.split("-")[1];
+  const index = listElement.id.split("-")[1];
   const dropdownIcon = document.getElementById(`dropdownIcon-${index}`);
 
-  const buttons = Array.from(list.querySelectorAll("button"));
+  const buttons = Array.from(listElement.querySelectorAll("button"));
 
   const hideList = () => {
     dropdownIcon.classList.remove("-scale-100");
 
-    list.classList.add(...hideClasses);
-    list.classList.remove(...showClasses);
+    listElement.classList.add(...hideClasses);
+    listElement.classList.remove(...showClasses);
 
     setTimeout(() => {
-      list.parentNode.classList.remove("h-128");
-      list.parentNode.classList.add("h-0");
+      listElement.parentNode.classList.remove("h-128");
+      listElement.parentNode.classList.add("h-0");
     }, 200);
   };
 
   const showList = () => {
+    buttons.map((button) => {
+      button.classList.remove("hidden");
+    });
     dropdownIcon.classList.add("-scale-100");
-    list.classList.remove(...hideClasses);
-    list.classList.add(...showClasses);
+    listElement.classList.remove(...hideClasses);
+    listElement.classList.add(...showClasses);
 
-    list.parentNode.classList.remove("h-0");
-    list.parentNode.classList.add("h-128");
+    listElement.parentNode.classList.remove("h-0");
+    listElement.parentNode.classList.add("h-128");
   };
 
   return { hideList, showList };

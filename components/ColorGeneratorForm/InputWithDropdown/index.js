@@ -75,7 +75,6 @@ const InputWithDropdown = ({
     const index = parseInt(e.target.id.split("-")[1]);
     const dropdownList = document.querySelector(`#dropdownList-${index}`);
     const matchFound = filterInputSearch(e.target.value, dropdownList);
-    const input = document.querySelector(`#input-${index}`);
 
     // If an input target doesn't have a value, set the data passed to the parent to null and set the value to null so the hex preview icon is not visible
     if (!e.target.value) {
@@ -92,7 +91,9 @@ const InputWithDropdown = ({
       if (index === 0) {
         // Generate the rendered list for the second drop-down if a valid match is found
         const generatedData = generateSecondaryData(e, data);
-        setFilteredTailwindColors(generatedData);
+        setFilteredTailwindColors(() => {
+          return generatedData;
+        });
       }
     }
   };

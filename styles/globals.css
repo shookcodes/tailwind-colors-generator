@@ -46,12 +46,16 @@ button {
 }
 
 .buttonPrimary {
-  @apply rounded-md bg-gradient-to-br from-violet-200 to-violet-300 w-40 mx-2 h-10 text-gray-500 font-medium text-sm;
+  @apply rounded-md bg-gradient-to-br from-sky-200 to-sky-300 w-40 mx-2 h-10 text-gray-500 font-medium text-sm  transition ease-in-out  hover:from-sky-300 hover:to-sky-200 hover:shadow-inner hover:opacity-90;
+}
+
+/* .buttonPrimary {
+  @apply rounded-md bg-gradient-to-br from-sky-200 to-sky-300 w-40 mx-2 h-10 text-gray-500 font-medium text-sm transform transition-all ease-in-out duration-100;
 }
 
 .buttonPrimary:hover {
-  @apply bg-gradient-to-br from-violet-300 to-violet-200 shadow-inner;
-}
+  @apply bg-gradient-to-br from-sky-300 to-sky-200 shadow-inner;
+} */
 
 #container {
   min-height: 650px;

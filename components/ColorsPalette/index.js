@@ -1,4 +1,3 @@
-import { useEffect, useState } from "react";
 import { toggleTextColor } from "../../utils";
 import { MdInvertColorsOff, MdRemove } from "react-icons/md";
 
@@ -16,9 +15,14 @@ const ColorsPalette = ({
           const { colorPrefix } = color;
 
           return (
-            <div key={colorIndex} className="w-full h-full mb-4">
-              <span>{colorPrefix}</span>
-              <div className="flex gap-4">
+            <div
+              key={colorIndex}
+              className={`w-full h-full mb-4 ${
+                colorIndex !== colorsPalette.length - 1 ? "mb-8" : ""
+              }`}
+            >
+              <h2 className="mb-1">{colorPrefix}</h2>
+              <div className="flex flex-wrap gap-6 justify-start">
                 {color.shades.map((shade, index) => {
                   const colorName = `${colorPrefix}-${shade.value}`;
 
@@ -28,7 +32,7 @@ const ColorsPalette = ({
                   return (
                     <div
                       key={index}
-                      className=" text-gray-700 origin-center animate-scaleIn"
+                      className="text-gray-700 origin-center animate-scaleIn"
                     >
                       <div
                         name={"block"}

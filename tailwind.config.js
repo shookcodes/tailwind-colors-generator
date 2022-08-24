@@ -23,17 +23,55 @@ module.exports = {
       },
       keyframes: {
         scaleIn: {
-          "0%": { transform: "scale (0, 0)", height: 0, width: 0, opacity: 0 },
+          "0%": { transform: "scale(0, 0)", height: 0, width: 0, opacity: 0 },
           "100%": {
-            transform: "scale (1, 1)",
+            transform: "scale(1, 1)",
             height: "full",
             width: "full",
             opacity: 1,
           },
         },
+        slideInDown: {
+          "0%": {
+            transform: "scaleY(0)",
+            "max-height": 0,
+            height: 0,
+            // width: 0,
+            opacity: 0,
+          },
+          "100%": {
+            transform: "scaleY(1)",
+            height: "500px",
+            "max-height": "500px",
+            // width: "full",
+            opacity: 1,
+          },
+        },
+        slideOutUp: {
+          "0%": {
+            transform: "scaleY(1, 1)",
+            "max-height": "500px",
+            height: "500px",
+            // width: "full",
+            opacity: 1,
+          },
+          "100%": {
+            transform: "scaleY(0, 0)",
+            "max-height": 0,
+            height: 0,
+            // width: 0,
+            opacity: 0,
+          },
+        },
+      },
+      transitionProperty: {
+        // height: "height",
+        // 'spacing': 'margin, padding',
       },
       animation: {
         scaleIn: "scaleIn 0.2s ease-in-out forwards",
+        slideInDown: "slideInDown 0.2s ease-in-out",
+        slideOutUp: "slideOutUp 0.2s ease-in-out",
       },
     },
   },

@@ -54,6 +54,7 @@ export const validateGeneratedColor = (
         paletteDuplicates().duplicateValue
       }`
     ) {
+        
       let prefix;
       let shade;
       const duplicateNameAndHex = checkColorHexDuplicates(
@@ -61,8 +62,6 @@ export const validateGeneratedColor = (
         currentName.split("-")[0],
         rgb
       );
-
-      console.log("DUPLICATE NAME AND HEX", duplicateNameAndHex);
 
       // If the current color has the same colorPrefix, value, and hex properties, set duplicateColor callback value to true but don't update the value of the currentName.
       if (duplicateNameAndHex) {
@@ -80,7 +79,6 @@ export const validateGeneratedColor = (
         });
       }
 
-      console.log("DUP COLOR", duplicateColor);
       // If the current name is the same but the hexes are different, increase the value of the currentName.
       if (!duplicateColor) {
         increaseColorValue(currentName);
@@ -89,7 +87,6 @@ export const validateGeneratedColor = (
       }
     }
 
-    console.log("DUP FROM VAL", duplicatePrefix, duplicateColor);
     callback(currentName, duplicatePrefix, duplicateColor);
     return currentName;
   }

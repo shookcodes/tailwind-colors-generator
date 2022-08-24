@@ -98,7 +98,11 @@ const InputWithDropdown = ({
   };
 
   return (
-    <div className={`relative w-full h-full ${index === 0 ? "z-20" : "z-10"}`}>
+    <div
+      className={` border-2 border-blue-400 w-full h-full ${
+        index === 0 ? "z-20" : "z-10"
+      }`}
+    >
       <label htmlFor={"color" + index} className="relative h-full z-20 ">
         <input
           className={`h-12 py-2 w-full transition-all ease-in-out duration-300 ${
@@ -138,15 +142,14 @@ const InputWithDropdown = ({
           />
         </button>
       </label>
-      <div className="relative w-full h-full ">
-        <DropdownList
-          index={index}
-          data={data}
-          setInputValue={setInputValue}
-          setFilteredTailwindColors={setFilteredTailwindColors}
-          setDropdownVisibility={setDropdownVisibility}
-        />
-      </div>
+
+      <DropdownList
+        index={index}
+        data={data}
+        setInputValue={setInputValue}
+        setFilteredTailwindColors={setFilteredTailwindColors}
+        setDropdownVisibility={setDropdownVisibility}
+      />
     </div>
   );
 };

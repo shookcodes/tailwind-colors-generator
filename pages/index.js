@@ -22,23 +22,28 @@ export default function Home() {
         className="flex flex-col items-center justify-between h-full w-11/12 mx-auto m-8  bg-gray-50 rounded-lg pt-8  shadow-lg max-w-screen-lg select-none "
       >
         {/* Below div wraps the content so that the top of the menu dropdown overflow is hidden when the menu is open pb-40 is so that shadow is not cut off from open menu due to overflow rules */}
-        <div className="w-full h-max  px-4 pb-40 overflow-hidden">
-          <div className="w-full flex h-full flex-col items-center mx-auto max-w-3xl  ">
-            <ColorGeneratorForm
-              colorsPalette={colorsPalette}
-              setColorsPalette={setColorsPalette}
-              setShadeAdded={setShadeAdded}
-            />
-            {shadeAdded && (
-              <ColorsPalette
+        <div className="w-full h-full  px-4 pb-80 border-2 border-red-500">
+          <div className="w-full h-max  px-4 pb-40">
+            <div className="w-full flex h-full flex-col items-center mx-auto max-w-3xl  ">
+              <ColorGeneratorForm
                 colorsPalette={colorsPalette}
                 setColorsPalette={setColorsPalette}
-                shadeAdded={shadeAdded}
+                setShadeAdded={setShadeAdded}
               />
-            )}
-            {shadeAdded && (
-              <CodeBox colorsPalette={colorsPalette} shadeAdded={shadeAdded} />
-            )}
+              {shadeAdded && (
+                <ColorsPalette
+                  colorsPalette={colorsPalette}
+                  setColorsPalette={setColorsPalette}
+                  shadeAdded={shadeAdded}
+                />
+              )}
+              {shadeAdded && (
+                <CodeBox
+                  colorsPalette={colorsPalette}
+                  shadeAdded={shadeAdded}
+                />
+              )}
+            </div>
           </div>
         </div>
       </div>

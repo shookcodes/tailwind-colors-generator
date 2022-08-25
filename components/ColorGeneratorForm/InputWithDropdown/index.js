@@ -18,6 +18,7 @@ const InputWithDropdown = ({
   colorPreviewHex,
 }) => {
   const [openDropdownIndex, setOpenDropdownIndex] = useState("");
+  const [currentInputIndex, setCurrentInputIndex] = useState("");
 
   const handleDropdownVisibility = ({ hideAll, hideOther, toggle }) => {
     const dropdownLists = Array.from(
@@ -32,6 +33,7 @@ const InputWithDropdown = ({
 
       if (toggle && index === listIndex) {
         if (list.classList.contains("-translate-y-full")) {
+          // Show the list and return/set the current index of the open dropdown.
           setDropdownVisibility(list).showList(setOpenDropdownIndex);
         } else {
           setDropdownVisibility(list).hideList();
@@ -78,7 +80,14 @@ const InputWithDropdown = ({
     }
   };
 
-  const handleInputFocus = (e, index) => {
+  const handleInputFocus = (index) => {
+    console.log("focus ind", index);
+    setCurrentInputIndex(() => {
+      return index;
+    });
+    // If input is focused, hide other list if it is open.
+
+    console.log("cur", currentInputIndex);
     handleDropdownVisibility({ hideOther: true });
   };
 
@@ -108,6 +117,12 @@ const InputWithDropdown = ({
     }
   }, [inputData, index]);
 
+  useEffect(() => {
+    if (currentInputIndex) {
+      console.log("got to indexinput", currentInputIndex);
+    }
+  }, [currentInputIndex]);
+
   return (
     <div
       className={`relative w-full h-full bg-inherit ${
@@ -123,7 +138,6 @@ const InputWithDropdown = ({
           }`}
           placeholder={placeholder}
           name={"color"}
-          dropdownInput
           type="text"
           id={`dropdownInput-${index}`}
           onChange={(e, index) => {
@@ -131,7 +145,7 @@ const InputWithDropdown = ({
           }}
           disabled={isDisabled}
           onFocus={(e) => {
-            handleInputFocus(e, index);
+            handleInputFocus(index);
           }}
 
           //   style={rgb && { backgroundColor: rgb }}

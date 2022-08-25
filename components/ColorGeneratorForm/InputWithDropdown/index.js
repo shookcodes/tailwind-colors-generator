@@ -16,6 +16,7 @@ const InputWithDropdown = ({
   inputData,
   setInputData,
   colorPreviewHex,
+  showPrimary,
 }) => {
   const [openDropdownIndex, setOpenDropdownIndex] = useState("");
   const [currentInputIndex, setCurrentInputIndex] = useState("");
@@ -176,6 +177,7 @@ const InputWithDropdown = ({
         setDropdownVisibility={setDropdownVisibility}
         openDropdownIndex={openDropdownIndex}
         setOpenDropdownIndex={setDropdownVisibility}
+        showPrimary={showPrimary}
       />
     </div>
   );

@@ -9,6 +9,7 @@ const DropdownList = ({
   setDropdownVisibility,
   openDropdownIndex,
   setOpenDropdownIndex,
+  showPrimary,
 }) => {
   const handleItemClick = (e, index) => {
     e.preventDefault();
@@ -68,6 +69,10 @@ const DropdownList = ({
             item.shades.map((shade, shadeIndex) => {
               const tailwindName = item.colorPrefix + "-" + shade.value;
 
+              if (showPrimary && shade.value !== "500") {
+                return null;
+              }
+
               return (
                 <li key={"btn-" + item.colorPrefix + "-" + shadeIndex}>
                   <button
@@ -80,7 +85,7 @@ const DropdownList = ({
                       handleItemClick(e, index);
                     }}
                   >
-                    <span>{tailwindName}</span>
+                    <span>{showPrimary ? item.colorPrefix : tailwindName}</span>
 
                     <div
                       className="w-4 h-4 rounded-md border bg-${color} border-gray-300 shadoww-sm shadow"

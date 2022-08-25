@@ -156,6 +156,8 @@ const ColorGeneratorForm = ({
     isDuplicateHex,
   ]);
 
+  console.log(defaultTailwindColors);
+
   return (
     <>
       <PopupAlert
@@ -180,7 +182,20 @@ const ColorGeneratorForm = ({
               inputData={primaryInputData}
               setInputData={setPrimaryInputData}
               colorPreviewHex={primaryInputData?.shade.hex}
+              showPrimary={true}
             />
+            <InputWithDropdown
+              index={1}
+              placeholder="Search for a color"
+              isDisabled={primaryInputData ? false : true}
+              data={filteredTailwindColors}
+              inputData={secondaryInputData}
+              setInputData={setSecondaryInputData}
+              colorPreviewHex={
+                secondaryInputData?.shade ? secondaryInputData.shade.hex : null
+              }
+            />
+            {/* This needs to have some kind of tertiaryInputData so it works */}
             <InputWithDropdown
               index={1}
               placeholder="Search for a color"

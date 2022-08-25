@@ -22,11 +22,11 @@ export const setDropdownVisibility = (listElement) => {
       button.classList.remove("hidden");
     });
     dropdownIcon.classList.add("-scale-100");
+    listElement.parentNode.classList.remove("h-0");
+    listElement.parentNode.classList.add("h-128");
     listElement.classList.remove(...hideClasses);
     listElement.classList.add(...showClasses);
 
-    listElement.parentNode.classList.remove("h-0");
-    listElement.parentNode.classList.add("h-128");
     return setListIndexCallback(() => {
       return index;
     });

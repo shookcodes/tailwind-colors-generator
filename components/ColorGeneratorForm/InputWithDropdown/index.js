@@ -73,21 +73,17 @@ const InputWithDropdown = ({
       if (index === 0) {
         // Generate the rendered list for the second drop-down if a valid match is found
         const generatedData = generateSecondaryData(e, data);
-        setFilteredTailwindColors(() => {
-          return generatedData;
-        });
+        setFilteredTailwindColors(generatedData);
       }
     }
   };
 
   const handleInputFocus = (index) => {
-    console.log("focus ind", index);
     setCurrentInputIndex(() => {
       return index;
     });
     // If input is focused, hide other list if it is open.
 
-    console.log("cur", currentInputIndex);
     handleDropdownVisibility({ hideOther: true });
   };
 
@@ -119,7 +115,6 @@ const InputWithDropdown = ({
 
   useEffect(() => {
     if (currentInputIndex) {
-      console.log("got to indexinput", currentInputIndex);
     }
   }, [currentInputIndex]);
 

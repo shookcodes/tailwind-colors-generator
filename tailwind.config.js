@@ -10,6 +10,18 @@ module.exports = {
     "text-slate-50",
     "text-slate-700",
     "text-slate-800",
+    "h-128",
+    "h-0",
+    "translate-y-4",
+    "shadow-xl",
+    "opacity-100",
+    "z-50",
+    "-translate-y-full",
+    "shadow-none",
+    "opacity-0",
+    "z-10",
+    "hidden",
+    "animate-slideInDown",
   ],
   theme: {
     extend: {

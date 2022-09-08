@@ -2,7 +2,7 @@ import { useState, useEffect, useContext } from "react";
 import InputWithDropdown from "./InputWithDropdown";
 import ColorPreviewButton from "../ColorPreviewButton";
 import PopupAlert from "../PopupAlert";
-import { tailwindColors } from "../../data/tailwindColors";
+import { tailwindColors, baseTailwindColors } from "../../data/tailwindColors";
 import {
   convertFromHex,
   generateMedianRGB,
@@ -12,6 +12,7 @@ import {
 } from "../../utils";
 
 const defaultTailwindColors = tailwindColors();
+
 const ColorGeneratorForm = ({
   colorsPalette,
   setColorsPalette,
@@ -93,8 +94,9 @@ const ColorGeneratorForm = ({
     if (
       primaryInputData !== null &&
       secondaryInputData !== null &&
-      secondaryInputData.shade.hex
+      secondaryInputData.shade?.hex
     ) {
+      console.log("2nd input", secondaryInputData);
       const primaryRGB = convertFromHex(primaryInputData.shade.hex);
       const secondaryRGB = convertFromHex(secondaryInputData?.shade.hex);
       const colorPrefix = secondaryInputData.colorPrefix;
@@ -173,18 +175,29 @@ const ColorGeneratorForm = ({
           <div className=" flex flex-col sm:flex sm:flex-row sm:flex-nowrap sm:items-start items-center justify-center relative w-full gap-6 sm:gap-4">
             <InputWithDropdown
               index={0}
-              placeholder="Search for a color"
+              placeholder="Choose base color"
               isDisabled={false}
-              data={defaultTailwindColors}
+              data={baseTailwindColors()}
               setFilteredTailwindColors={setFilteredTailwindColors}
               inputData={primaryInputData}
               setInputData={setPrimaryInputData}
-              colorPreviewHex={primaryInputData?.shade.hex}
+              colorPreviewHex={primaryInputData?.shade?.hex}
             />
             <InputWithDropdown
               index={1}
-              placeholder="Search for a color"
+              placeholder="Select 1st shade"
               isDisabled={primaryInputData ? false : true}
+              data={filteredTailwindColors}
+              inputData={secondaryInputData}
+              setInputData={setSecondaryInputData}
+              colorPreviewHex={
+                secondaryInputData?.shade ? secondaryInputData.shade?.hex : null
+              }
+            />
+            <InputWithDropdown
+              index={2}
+              placeholder="Select 2nd shade"
+              isDisabled={primaryInputData && secondaryInputData ? false : true}
               data={filteredTailwindColors}
               inputData={secondaryInputData}
               setInputData={setSecondaryInputData}

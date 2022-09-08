@@ -93,6 +93,7 @@ const InputWithDropdown = ({
     const currentColor = data.filter(
       (color) => color && color?.colorPrefix === colorValue?.split("-")[0]
     );
+    console.log("COL", colorValue, data);
 
     // Filter the shade that matches the selected color's suffix
     const currentShade = currentColor[0]?.shades?.filter((shade) => {

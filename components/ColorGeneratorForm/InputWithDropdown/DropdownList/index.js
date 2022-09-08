@@ -21,6 +21,7 @@ const DropdownList = ({
     setInputValue(e.currentTarget.value);
     // If the first input has data, pass new array with filtered data to the second input
     if (index === 0) {
+      console.log("DATA", data);
       const generatedData = generateSecondaryData(e, data);
       setFilteredTailwindColors(generatedData);
       const targetPrefix = e.currentTarget.value.split("-")[0];
@@ -73,14 +74,14 @@ const DropdownList = ({
                   <button
                     className="flex justify-between text-gray-500 w-full pl-4 pr-1 py-3 items-center border-b border-b-gray-200 hover:cursor-pointer hover:text-gray-400  hover:bg-amber-50 hover:shadow-inner dropdownListButton"
                     id={tailwindName}
-                    value={tailwindName}
+                    value={item.colorPrefix}
                     onClick={(e) => {
                       e.preventDefault();
                       // Pass the index value of parent component for event handling
                       handleItemClick(e, index);
                     }}
                   >
-                    <span>{tailwindName}</span>
+                    <span>{index === 0 ? item.colorPrefix : shade.value}</span>
 
                     <div
                       className="w-4 h-4 rounded-md border bg-${color} border-gray-300 shadoww-sm shadow"

@@ -130,9 +130,9 @@ const InputWithDropdown = ({
 
   return (
     <div
-      className={`relative w-full h-full bg-inherit ${
-        index === 0 ? "z-20" : "z-10"
-      }`}
+      className={`relative w-full h-full bg-inherit ${index === 0 && "z-30"}  ${
+        index === 1 && "z-20"
+      } ${index === 2 && "z-10"}`}
     >
       <label htmlFor={"color" + index} className="relative h-full z-20 ">
         <input

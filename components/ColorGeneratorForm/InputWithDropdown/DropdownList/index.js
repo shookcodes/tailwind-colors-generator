@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
 import { generateListData } from "../../../../utils";
 
 const DropdownList = ({
@@ -8,7 +8,6 @@ const DropdownList = ({
   setList,
   setDropdownVisibility,
   openDropdownIndex,
-  setOpenDropdownIndex,
 }) => {
   const handleItemClick = (e, item, index) => {
     e.preventDefault();
@@ -54,8 +53,8 @@ const DropdownList = ({
     >
       <ul
         id={`dropdownList-${index}`}
-        className={` absolute top-0 inset-0 mt-4 
-        flex-col scroll w-full h-max z-10 rounded-md shadow-lg opacity-0 transform duration-200 bg-gray-100 transition-all max-h-120 -translate-y-full mx-auto dropdownList`}
+        className={` absolute top-0 inset-0 mt-0 
+        flex-col scroll w-full h-max z-10 rounded-md shadow-lg opacity-0 transform duration-200 bg-gray-100 transition-all max-h-120 -translate-y-full mx-auto dropdownList border border-gray-200`}
       >
         {data &&
           data.map((item, dataIndex) =>
@@ -68,7 +67,7 @@ const DropdownList = ({
               return (
                 <li key={"btn-" + item.colorPrefix + "-" + shadeIndex}>
                   <button
-                    className="flex justify-between text-gray-500 w-full pl-4 pr-1 py-3 items-center border-b border-b-gray-200 hover:cursor-pointer hover:text-gray-400  hover:bg-amber-50 hover:shadow-inner dropdownListButton"
+                    className="flex justify-between text-gray-500 w-full pl-4 pr-1 py-3 items-center border-b border-b-gray-200 hover:cursor-pointer hover:text-gray-400  hover:bg-amber-50 hover:shadow-inner dropdownListButton group"
                     id={tailwindName}
                     value={tailwindName}
                     onClick={(e) => {
@@ -80,7 +79,7 @@ const DropdownList = ({
                     <span>{index === 0 ? item.colorPrefix : shade.value}</span>
 
                     <div
-                      className="w-4 h-4 rounded-md border bg-${color} border-gray-300 shadoww-sm shadow"
+                      className="w-4 h-4 rounded-md border border-gray-300 shadoww-sm shadow group-hover:w-6 group-hover:h-6 transition-all ease-in-out"
                       style={{ backgroundColor: shade.hex }}
                     ></div>
                   </button>

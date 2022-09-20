@@ -4,7 +4,6 @@ import { generateListData } from "../../../../utils";
 const DropdownList = ({
   data,
   index,
-  // setInputValue,
   setInputData,
   setList,
   setDropdownVisibility,
@@ -19,7 +18,6 @@ const DropdownList = ({
     input.value = e.currentTarget.innerText;
     setDropdownVisibility(dropdownList).hideList();
     const generatedData = generateListData(e, data, index);
-    // setInputValue(e.currentTarget.value);
     setInputData(item);
     index !== 2 &&
       setList(() => {
@@ -39,6 +37,7 @@ const DropdownList = ({
         currentInput.focus();
       }
     };
+
     if (openDropdownIndex) {
       document.addEventListener("keyup", handleListButtonKeyUp);
     }
@@ -46,7 +45,7 @@ const DropdownList = ({
     return () => {
       document.removeEventListener("keyup", handleListButtonKeyUp);
     };
-  }, [openDropdownIndex]);
+  }, [index, openDropdownIndex, setDropdownVisibility]);
 
   return (
     <div

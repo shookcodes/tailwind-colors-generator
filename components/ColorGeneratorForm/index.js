@@ -100,6 +100,7 @@ const ColorGeneratorForm = ({
     }
 
     if (
+      primaryInputData !== null &&
       secondaryInputData !== null &&
       tertiaryInputData !== null &&
       secondaryInputData.shade.hex

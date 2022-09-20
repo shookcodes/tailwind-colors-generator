@@ -28,9 +28,6 @@ export const filterInputSearch = (value, listElement) => {
 
   if (!value) {
     setDropdownVisibility(listElement).hideList();
-    // buttons.map((button) => {
-    //   button.classList.remove("hidden");
-    // });
   }
   return found;
 };

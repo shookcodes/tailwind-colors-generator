@@ -17,7 +17,7 @@ export const setDropdownVisibility = (listElement) => {
     }, 200);
   };
 
-  const showList = (setListIndexCallback) => {
+  const showList = () => {
     buttons.map((button) => {
       button.classList.remove("hidden");
     });
@@ -26,10 +26,6 @@ export const setDropdownVisibility = (listElement) => {
     listElement.parentNode.classList.add("h-128");
     listElement.classList.remove(...hideClasses);
     listElement.classList.add(...showClasses);
-
-    // return setListIndexCallback(() => {
-    //   return index;
-    // });
   };
 
   return { hideList, showList };

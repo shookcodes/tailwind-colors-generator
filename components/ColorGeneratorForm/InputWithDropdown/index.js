@@ -17,7 +17,7 @@ const InputWithDropdown = ({
   setInputData,
   colorPreviewHex,
 }) => {
-  const [openDropdownIndex, setOpenDropdownIndex] = useState("");
+  const [openDropdownIndex, setOpenDropdownIndex] = useState(null);
   const [currentInputIndex, setCurrentInputIndex] = useState("");
 
   const handleDropdownVisibility = ({ hideAll, hideOther, toggle }) => {
@@ -28,13 +28,16 @@ const InputWithDropdown = ({
     dropdownLists.map((list, listIndex) => {
       if (hideAll) {
         setDropdownVisibility(list).hideList();
-        return;
+        return setOpenDropdownIndex(null);
       }
 
       if (toggle && index === listIndex) {
         if (list.classList.contains("-translate-y-full")) {
           // Show the list and return/set the current index of the open dropdown.
-          setDropdownVisibility(list).showList(setOpenDropdownIndex);
+          setDropdownVisibility(list).showList();
+          return setOpenDropdownIndex(() => {
+            return index;
+          });
         } else {
           setDropdownVisibility(list).hideList();
         }
@@ -45,10 +48,15 @@ const InputWithDropdown = ({
       if (hideOther && index !== listIndex) {
         setDropdownVisibility(list).hideList();
       }
+      if (hideOther && index === listIndex) {
+        return setOpenDropdownIndex(() => {
+          return index;
+        });
+      }
     });
   };
 
-  const handleDropdownClick = (e, index) => {
+  const handleDropdownClick = (e) => {
     handleDropdownVisibility({ toggle: true });
     e.preventDefault();
   };
@@ -97,9 +105,28 @@ const InputWithDropdown = ({
   }, [inputData, index]);
 
   useEffect(() => {
-    if (currentInputIndex) {
+    const list = document.querySelector(`#dropdownList-${index}`);
+    const handleOutsideListClick = (e) => {
+      const button = document.querySelector(`#dropdownToggle-${index}`);
+      const input = document.querySelector(`#dropdownInput-${index}`);
+
+      if (!list.classList.contains("-translate-y-full")) {
+        if (
+          !list.contains(e.target) &&
+          !button.contains(e.target) &&
+          !input.contains(e.target)
+        ) {
+          setDropdownVisibility(list).hideList();
+        }
+      }
+    };
+    if (openDropdownIndex !== null) {
+      document.addEventListener("click", handleOutsideListClick);
     }
-  }, [currentInputIndex]);
+    return () => {
+      document.removeEventListener("click", handleOutsideListClick);
+    };
+  }, [index, openDropdownIndex]);
 
   return (
     <div
@@ -130,7 +157,7 @@ const InputWithDropdown = ({
         />
         {colorPreviewHex && (
           <div
-            className="absolute w-8 h-8 -top-1.5 right-9 rounded-lg border border-gray-200 shadow-md"
+            className="absolute w-8 h-8 -top-1.5 right-9 pointer-events-none rounded-lg border border-gray-200 shadow-md"
             style={{ backgroundColor: colorPreviewHex }}
           ></div>
         )}

@@ -1,27 +1,56 @@
-import { useEffect } from "react";
+import { useState, useEffect } from "react";
 import { generateListData } from "../../../../utils";
 
 const DropdownList = ({
   data,
   index,
+  inputData,
   setInputData,
   setList,
   setDropdownVisibility,
   openDropdownIndex,
 }) => {
+  const [input, setInput] = useState("");
+
+  const [buttonHovered, setButtonHovered] = useState(false);
+
+  const [colorPreviewEl, setColorPreviewEl] = useState("");
+
+  useEffect(() => {
+    setInput(document.querySelector(`#dropdownInput-${index}`));
+    setColorPreviewEl(document.querySelector(`#colorPreview-${index}`));
+  }, [index, input]);
   const handleItemClick = (e, item, index) => {
     e.preventDefault();
 
-    const input = document.querySelector(`#dropdownInput-${index}`);
     const dropdownList = document.querySelector(`#dropdownList-${index}`);
     input.value = e.currentTarget.innerText;
     setDropdownVisibility(dropdownList).hideList();
     const generatedData = generateListData(e, data, index);
     setInputData(item);
+
     index !== 2 &&
       setList(() => {
         return generatedData;
       });
+  };
+
+  const handleButtonMouseOver = (e, object, index) => {
+    index === 0
+      ? (input.value = object.colorPrefix)
+      : (input.value = object.shade.value);
+    colorPreviewEl.style.backgroundColor = object.shade.hex;
+    setButtonHovered(true);
+  };
+
+  const handleButtonMouseOut = (e) => {
+    if (!e.relatedTarget || e.relatedTarget.type !== "button") {
+      setButtonHovered(false);
+      colorPreviewEl.style.backgroundColor = inputData?.shade?.hex || "";
+      index === 0
+        ? (input.value = inputData?.colorPrefix || "")
+        : (input.value = inputData?.shade?.value || "");
+    }
   };
 
   useEffect(() => {
@@ -70,10 +99,17 @@ const DropdownList = ({
                     className="flex justify-between text-gray-500 w-full pl-4 pr-1 py-3 items-center border-b border-b-gray-200 hover:cursor-pointer hover:text-gray-400  hover:bg-amber-50 hover:shadow-inner dropdownListButton group"
                     id={tailwindName}
                     value={tailwindName}
+                    type="button"
                     onClick={(e) => {
                       e.preventDefault();
                       // Pass the index value of parent component for event handling
                       handleItemClick(e, object, index);
+                    }}
+                    onMouseOver={(e, index) => {
+                      handleButtonMouseOver(e, object, index);
+                    }}
+                    onMouseOut={(e) => {
+                      handleButtonMouseOut(e);
                     }}
                   >
                     <span>{index === 0 ? item.colorPrefix : shade.value}</span>

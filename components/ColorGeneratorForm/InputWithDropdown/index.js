@@ -136,7 +136,7 @@ const InputWithDropdown = ({
     >
       <label htmlFor={"color" + index} className="relative h-full z-20 ">
         <input
-          className={`h-12 py-2 w-full transition-all ease-in-out duration-300 ${
+          className={`h-12 py-2 w-full bg-${colorPreviewHex} transition-all ease-in-out duration-300 ${
             isDisabled
               ? "placeholder-gray-300 bg-gray-100 shadow-inner drop-shadow"
               : "shadow"
@@ -148,6 +148,9 @@ const InputWithDropdown = ({
           onChange={(e, index) => {
             handleInputChange(e);
           }}
+          // style={{
+          //   border: colorPreviewHex && `2px  solid ${colorPreviewHex} `,
+          // }}
           disabled={isDisabled}
           onFocus={(e) => {
             handleInputFocus(index);
@@ -155,12 +158,14 @@ const InputWithDropdown = ({
 
           //   style={rgb && { backgroundColor: rgb }}
         />
-        {colorPreviewHex && (
-          <div
-            className="absolute w-8 h-8 -top-1.5 right-9 pointer-events-none rounded-lg border border-gray-200 shadow-md"
-            style={{ backgroundColor: colorPreviewHex }}
-          ></div>
-        )}
+
+        <div
+          className="
+            absolute w-8 h-8 -top-1.5 right-9 pointer-events-none rounded-lg border border-gray-200 shadow-md"
+          id={`colorPreview-${index}`}
+          style={{ backgroundColor: colorPreviewHex }}
+        ></div>
+
         <button
           className="absolute inset-y-1 right-3 group"
           id={`dropdownToggle-${index}`}
@@ -181,6 +186,7 @@ const InputWithDropdown = ({
       <DropdownList
         index={index}
         data={data}
+        inputData={inputData}
         setInputData={setInputData}
         setList={setList}
         setDropdownVisibility={setDropdownVisibility}

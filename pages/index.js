@@ -37,12 +37,8 @@ export default function Home() {
                   shadeAdded={shadeAdded}
                 />
               )}
-              {shadeAdded && (
-                <CodeBox
-                  colorsPalette={colorsPalette}
-                  shadeAdded={shadeAdded}
-                />
-              )}
+
+              <CodeBox colorsPalette={colorsPalette} shadeAdded={shadeAdded} />
             </div>
           </div>
         </div>

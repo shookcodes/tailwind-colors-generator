@@ -1,11 +1,13 @@
+import { tailwindColors } from "../../data/tailwindColors";
+
 // This function generates the second dropdown list based on the color prefix and value of the first input
-export const generateSecondaryData = (e, data) => {
+export const generateListData = (e, data, index) => {
   const colorPrefix = e.target?.value?.split("-")[0];
   const colorSuffix = e.target?.value?.split("-")[1];
 
   // Filter out the colors that don't match the prefix
   const listData = [
-    ...data.filter((color) => color.colorPrefix === colorPrefix),
+    ...tailwindColors().filter((color) => color.colorPrefix === colorPrefix),
   ];
 
   const shades = listData[0]?.shades;
@@ -14,7 +16,7 @@ export const generateSecondaryData = (e, data) => {
 
   // If the value of the shade matches the first input value, don't add it to the secondary array
   shades?.map((shade) => {
-    if (shade?.value === colorSuffix) {
+    if (index !== 0 && shade?.value === colorSuffix) {
       return;
     }
     renderedColorsArr.push(shade);

@@ -27,9 +27,11 @@ export const setDropdownVisibility = (listElement) => {
     listElement.classList.remove(...hideClasses);
     listElement.classList.add(...showClasses);
 
-    return setListIndexCallback(() => {
-      return index;
-    });
+    if (setListIndexCallback) {
+      return setListIndexCallback(() => {
+        return index;
+      });
+    }
   };
 
   return { hideList, showList };

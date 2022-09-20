@@ -1,34 +1,55 @@
 import { useState, useEffect } from "react";
-import { generateSecondaryData } from "../../../../utils";
+import { generateListData } from "../../../../utils";
 
 const DropdownList = ({
   data,
   index,
-  setInputValue,
-  setFilteredTailwindColors,
+  inputData,
+  setInputData,
+  setList,
   setDropdownVisibility,
   openDropdownIndex,
-  setOpenDropdownIndex,
 }) => {
-  const handleItemClick = (e, index) => {
+  const [input, setInput] = useState("");
+
+  const [buttonHovered, setButtonHovered] = useState(false);
+
+  const [colorPreviewEl, setColorPreviewEl] = useState("");
+
+  useEffect(() => {
+    setInput(document.querySelector(`#dropdownInput-${index}`));
+    setColorPreviewEl(document.querySelector(`#colorPreview-${index}`));
+  }, [index, input]);
+  const handleItemClick = (e, item, index) => {
     e.preventDefault();
-    const input = document.querySelector(`#dropdownInput-${index}`);
+
     const dropdownList = document.querySelector(`#dropdownList-${index}`);
     input.value = e.currentTarget.innerText;
-
     setDropdownVisibility(dropdownList).hideList();
+    const generatedData = generateListData(e, data, index);
+    setInputData(item);
 
-    setInputValue(e.currentTarget.value);
-    // If the first input has data, pass new array with filtered data to the second input
-    if (index === 0) {
-      const generatedData = generateSecondaryData(e, data);
-      setFilteredTailwindColors(generatedData);
-      const targetPrefix = e.currentTarget.value.split("-")[0];
-      const secondaryInput = document.querySelector("#dropdownInput-1");
+    index !== 2 &&
+      setList(() => {
+        return generatedData;
+      });
+  };
 
-      if (targetPrefix !== secondaryInput.value.split("-")[0]) {
-        secondaryInput.value = "";
-      }
+  const handleButtonMouseOver = (e, object, index) => {
+    index === 0
+      ? (input.value = object.colorPrefix)
+      : (input.value = object.shade.value);
+    colorPreviewEl.style.backgroundColor = object.shade.hex;
+    setButtonHovered(true);
+  };
+
+  const handleButtonMouseOut = (e) => {
+    if (!e.relatedTarget || e.relatedTarget.type !== "button") {
+      setButtonHovered(false);
+      colorPreviewEl.style.backgroundColor = inputData?.shade?.hex || "";
+      index === 0
+        ? (input.value = inputData?.colorPrefix || "")
+        : (input.value = inputData?.shade?.value || "");
     }
   };
 
@@ -44,6 +65,7 @@ const DropdownList = ({
         currentInput.focus();
       }
     };
+
     if (openDropdownIndex) {
       document.addEventListener("keyup", handleListButtonKeyUp);
     }
@@ -51,7 +73,7 @@ const DropdownList = ({
     return () => {
       document.removeEventListener("keyup", handleListButtonKeyUp);
     };
-  }, [openDropdownIndex]);
+  }, [index, openDropdownIndex, setDropdownVisibility]);
 
   return (
     <div
@@ -60,30 +82,40 @@ const DropdownList = ({
     >
       <ul
         id={`dropdownList-${index}`}
-        className={` absolute top-0 inset-0 mt-4 
-        flex-col scroll w-full h-max z-10 rounded-md shadow-lg opacity-0 transform duration-200 bg-gray-100 transition-all max-h-120 -translate-y-full mx-auto dropdownList`}
+        className={` absolute top-0 inset-0 mt-0 
+        flex-col scroll w-full h-max z-10 rounded-md shadow-lg opacity-0 transform duration-200 bg-gray-100 transition-all max-h-120 -translate-y-full mx-auto dropdownList border border-gray-200`}
       >
         {data &&
           data.map((item, dataIndex) =>
             item.shades.map((shade, shadeIndex) => {
               const tailwindName = item.colorPrefix + "-" + shade.value;
-
+              const object = {
+                colorPrefix: item.colorPrefix,
+                shade: { hex: shade.hex, value: shade.value },
+              };
               return (
                 <li key={"btn-" + item.colorPrefix + "-" + shadeIndex}>
                   <button
-                    className="flex justify-between text-gray-500 w-full pl-4 pr-1 py-3 items-center border-b border-b-gray-200 hover:cursor-pointer hover:text-gray-400  hover:bg-amber-50 hover:shadow-inner dropdownListButton"
+                    className="flex justify-between text-gray-500 w-full pl-4 pr-1 py-3 items-center border-b border-b-gray-200 hover:cursor-pointer hover:text-gray-400  hover:bg-amber-50 hover:shadow-inner dropdownListButton group"
                     id={tailwindName}
                     value={tailwindName}
+                    type="button"
                     onClick={(e) => {
                       e.preventDefault();
                       // Pass the index value of parent component for event handling
-                      handleItemClick(e, index);
+                      handleItemClick(e, object, index);
+                    }}
+                    onMouseOver={(e, index) => {
+                      handleButtonMouseOver(e, object, index);
+                    }}
+                    onMouseOut={(e) => {
+                      handleButtonMouseOut(e);
                     }}
                   >
-                    <span>{tailwindName}</span>
+                    <span>{index === 0 ? item.colorPrefix : shade.value}</span>
 
                     <div
-                      className="w-4 h-4 rounded-md border bg-${color} border-gray-300 shadoww-sm shadow"
+                      className="w-4 h-4 rounded-md border border-gray-300 shadoww-sm shadow group-hover:w-6 group-hover:h-6 transition-all ease-in-out"
                       style={{ backgroundColor: shade.hex }}
                     ></div>
                   </button>

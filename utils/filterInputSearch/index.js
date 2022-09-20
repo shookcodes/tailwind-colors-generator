@@ -1,7 +1,7 @@
 import { setDropdownVisibility } from "../setDropdownVisibility";
 export const filterInputSearch = (value, listElement) => {
   let found = false;
-  const buttons = Array.from(listElement.querySelectorAll("button"));
+  const buttons = Array.from(listElement?.querySelectorAll("button"));
   if (value.length > 1) {
     setDropdownVisibility(listElement).showList();
   }

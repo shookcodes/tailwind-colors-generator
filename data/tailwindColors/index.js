@@ -43,6 +43,4 @@ const baseTailwindColors = () => {
   ];
 };
 
-console.log(baseTailwindColors());
-
 export { tailwindColors, baseTailwindColors };

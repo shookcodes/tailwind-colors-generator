@@ -12,7 +12,7 @@ const InputWithDropdown = ({
   placeholder,
   isDisabled,
   data,
-  setPrimaryShadeList,
+  setList,
   inputData,
   setInputData,
   colorPreviewHex,
@@ -20,7 +20,6 @@ const InputWithDropdown = ({
   const [openDropdownIndex, setOpenDropdownIndex] = useState("");
   const [currentInputIndex, setCurrentInputIndex] = useState("");
 
-  console.log("INPUT DATA", data);
   const handleDropdownVisibility = ({ hideAll, hideOther, toggle }) => {
     const dropdownLists = Array.from(
       document.querySelectorAll(".dropdownList")
@@ -54,32 +53,31 @@ const InputWithDropdown = ({
     e.preventDefault();
   };
 
-  const handleInputChange = (e, index) => {
+  const handleInputChange = (e) => {
     const dropdownList = document.querySelector(`#dropdownList-${index}`);
-    const matchFound = filterInputSearch(e.target.value, dropdownList);
+    const matchFound =
+      dropdownList !== undefined &&
+      filterInputSearch(e.target.value, dropdownList);
 
-    console.log("MATCH", matchFound);
     // If an input target doesn't have a value, set the data passed to the parent to null and set the value to null so the hex preview icon is not visible
     if (!e.target.value) {
       // If the first input value is null, remove the value from the second input if it is not null and clear the input data passed to the parent
       if (index === 0) {
         handleDropdownVisibility({ hideAll: true });
         document.querySelector("#dropdownInput-1").value = "";
+        document.querySelector("#dropdownInput-2").value = "";
       }
+
+      if (index === 1) {
+        handleDropdownVisibility({ hideAll: true });
+        document.querySelector("#dropdownInput-2").value = "";
+      }
+      setInputData(null);
     }
     if (matchFound) {
       const generatedData = generateListData(e, data, index);
 
-      if (index === 0) {
-        // Generate the rendered list for the second drop-down if a valid match is found
-        setPrimaryShadeList({ ...data, primaryList: generatedData });
-      }
-      if (index === 1) {
-        // setPrimaryShadeList({
-        //   ...data,
-        //   secondaryList: generatedData,
-        // });
-      }
+      index !== 2 && setList(generatedData);
     }
   };
 
@@ -121,7 +119,7 @@ const InputWithDropdown = ({
           type="text"
           id={`dropdownInput-${index}`}
           onChange={(e, index) => {
-            handleInputChange(e, index);
+            handleInputChange(e);
           }}
           disabled={isDisabled}
           onFocus={(e) => {
@@ -157,7 +155,7 @@ const InputWithDropdown = ({
         index={index}
         data={data}
         setInputData={setInputData}
-        setPrimaryShadeList={setPrimaryShadeList}
+        setList={setList}
         setDropdownVisibility={setDropdownVisibility}
         openDropdownIndex={openDropdownIndex}
         setOpenDropdownIndex={setDropdownVisibility}

@@ -13,17 +13,6 @@ export const generateListData = (e, data, index) => {
   const shades = listData[0]?.shades;
 
   const renderedColorsArr = [];
-  console.log(
-    "index",
-    index,
-    "\n",
-    "gen data",
-    e.target.value,
-    "\ndata",
-    data,
-    "\nlistdata",
-    listData
-  );
 
   // If the value of the shade matches the first input value, don't add it to the secondary array
   shades?.map((shade) => {

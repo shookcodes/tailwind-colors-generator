@@ -6,7 +6,7 @@ const DropdownList = ({
   index,
   // setInputValue,
   setInputData,
-  setPrimaryShadeList,
+  setList,
   setDropdownVisibility,
   openDropdownIndex,
   setOpenDropdownIndex,
@@ -14,25 +14,17 @@ const DropdownList = ({
   const handleItemClick = (e, item, index) => {
     e.preventDefault();
 
-    console.log("ITEM", item);
     const input = document.querySelector(`#dropdownInput-${index}`);
     const dropdownList = document.querySelector(`#dropdownList-${index}`);
     input.value = e.currentTarget.innerText;
-    console.log("index", index);
     setDropdownVisibility(dropdownList).hideList();
     const generatedData = generateListData(e, data, index);
     // setInputValue(e.currentTarget.value);
-    // If the first input has data, pass new array with filtered data to the second input
-    if (index === 0) {
-      setPrimaryShadeList(generatedData);
-      setInputData(item);
-      const targetPrefix = e.currentTarget.value.split("-")[0];
-      const secondaryInput = document.querySelector("#dropdownInput-1");
-
-      // if (targetPrefix !== secondaryInput.value.split("-")[0]) {
-      //   secondaryInput.value = "";
-      // }
-    }
+    setInputData(item);
+    index !== 2 &&
+      setList(() => {
+        return generatedData;
+      });
   };
 
   useEffect(() => {

@@ -30,4 +30,19 @@ const tailwindColors = () => {
   return tailwindColorsArr;
 };
 
-export { tailwindColors };
+// Get all colors that have shade value of 500 for default dropdown list
+const baseTailwindColors = () => {
+  return [
+    ...tailwindColors().map((color) => {
+      const { colorPrefix } = color;
+      const filteredShade = color.shades.filter((shade) => {
+        return shade.value === "500";
+      });
+      return { colorPrefix, shades: filteredShade };
+    }),
+  ];
+};
+
+console.log(baseTailwindColors());
+
+export { tailwindColors, baseTailwindColors };

@@ -1,34 +1,37 @@
 import { useState, useEffect } from "react";
-import { generateSecondaryData } from "../../../../utils";
+import { generateListData } from "../../../../utils";
 
 const DropdownList = ({
   data,
   index,
-  setInputValue,
-  setFilteredTailwindColors,
+  // setInputValue,
+  setInputData,
+  setPrimaryShadeList,
   setDropdownVisibility,
   openDropdownIndex,
   setOpenDropdownIndex,
 }) => {
-  const handleItemClick = (e, index) => {
+  const handleItemClick = (e, item, index) => {
     e.preventDefault();
+
+    console.log("ITEM", item);
     const input = document.querySelector(`#dropdownInput-${index}`);
     const dropdownList = document.querySelector(`#dropdownList-${index}`);
     input.value = e.currentTarget.innerText;
-
+    console.log("index", index);
     setDropdownVisibility(dropdownList).hideList();
-
-    setInputValue(e.currentTarget.value);
+    const generatedData = generateListData(e, data, index);
+    // setInputValue(e.currentTarget.value);
     // If the first input has data, pass new array with filtered data to the second input
     if (index === 0) {
-      const generatedData = generateSecondaryData(e, data);
-      setFilteredTailwindColors(generatedData);
+      setPrimaryShadeList(generatedData);
+      setInputData(item);
       const targetPrefix = e.currentTarget.value.split("-")[0];
       const secondaryInput = document.querySelector("#dropdownInput-1");
 
-      if (targetPrefix !== secondaryInput.value.split("-")[0]) {
-        secondaryInput.value = "";
-      }
+      // if (targetPrefix !== secondaryInput.value.split("-")[0]) {
+      //   secondaryInput.value = "";
+      // }
     }
   };
 
@@ -67,7 +70,10 @@ const DropdownList = ({
           data.map((item, dataIndex) =>
             item.shades.map((shade, shadeIndex) => {
               const tailwindName = item.colorPrefix + "-" + shade.value;
-
+              const object = {
+                colorPrefix: item.colorPrefix,
+                shade: { hex: shade.hex, value: shade.value },
+              };
               return (
                 <li key={"btn-" + item.colorPrefix + "-" + shadeIndex}>
                   <button
@@ -77,10 +83,10 @@ const DropdownList = ({
                     onClick={(e) => {
                       e.preventDefault();
                       // Pass the index value of parent component for event handling
-                      handleItemClick(e, index);
+                      handleItemClick(e, object, index);
                     }}
                   >
-                    <span>{tailwindName}</span>
+                    <span>{index === 0 ? item.colorPrefix : shade.value}</span>
 
                     <div
                       className="w-4 h-4 rounded-md border bg-${color} border-gray-300 shadoww-sm shadow"

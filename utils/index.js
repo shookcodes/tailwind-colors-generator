@@ -6,7 +6,7 @@ import { convertFromHex, convertToHex } from "./convertHex";
 import { filterInputSearch } from "./filterInputSearch";
 import { generateColorName } from "./generateColorName";
 import { generateMedianRGB } from "./generateMedianRGB";
-import { generateSecondaryData } from "./generateSecondaryData";
+import { generateListData } from "./generateListData";
 import { handleOutsideClick } from "./handleOutsideClick";
 import { setDropdownVisibility } from "./setDropdownVisibility";
 import { toggleTextColor } from "./toggleTextColor";
@@ -20,7 +20,7 @@ export {
   filterInputSearch,
   generateColorName,
   generateMedianRGB,
-  generateSecondaryData,
+  generateListData,
   handleOutsideClick,
   setDropdownVisibility,
   toggleTextColor,

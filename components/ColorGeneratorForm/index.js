@@ -2,13 +2,14 @@ import { useState, useEffect, useContext } from "react";
 import InputWithDropdown from "./InputWithDropdown";
 import ColorPreviewButton from "../ColorPreviewButton";
 import PopupAlert from "../PopupAlert";
-import { tailwindColors } from "../../data/tailwindColors";
+import { tailwindColors, baseTailwindColors } from "../../data/tailwindColors";
 import {
   convertFromHex,
   generateMedianRGB,
   generateColorName,
   convertToHex,
   validateGeneratedColor,
+  generateListData,
 } from "../../utils";
 
 const defaultTailwindColors = tailwindColors();
@@ -17,7 +18,7 @@ const ColorGeneratorForm = ({
   setColorsPalette,
   setShadeAdded,
 }) => {
-  const [filteredTailwindColors, setFilteredTailwindColors] = useState([]);
+  const [filteredTailwindColors, setPrimaryShadeList] = useState([]);
   const [primaryInputData, setPrimaryInputData] = useState(null);
   const [secondaryInputData, setSecondaryInputData] = useState(null);
   const [generatedRGB, setGeneratedRGB] = useState(null);
@@ -37,6 +38,8 @@ const ColorGeneratorForm = ({
       });
     }
   });
+
+  console.log("PRIMM", primaryInputData);
   // Once "Add to palette" button is clicked, add the color to the palette array if there are no duplicates. Pass the paletteArr to the parent component for data handling.
   const handleAddToPaletteClick = (obj) => {
     const { colorPrefix, shade } = obj();
@@ -90,62 +93,67 @@ const ColorGeneratorForm = ({
       setGeneratedColorName("");
     }
 
-    if (
-      primaryInputData !== null &&
-      secondaryInputData !== null &&
-      secondaryInputData.shade.hex
-    ) {
-      const primaryRGB = convertFromHex(primaryInputData.shade.hex);
-      const secondaryRGB = convertFromHex(secondaryInputData?.shade.hex);
-      const colorPrefix = secondaryInputData.colorPrefix;
-      const primaryColorValue = primaryInputData.shade.value;
-      const secondaryColorValue = secondaryInputData.shade.value;
-      setIsDuplicateHex(false);
-      if (primaryInputData.colorPrefix !== colorPrefix) {
-        return setSecondaryInputData(null);
-      }
-      // generate RGB for the median color
-      setGeneratedRGB(generateMedianRGB(primaryRGB, secondaryRGB));
-      const colorValues = {
-        colorPrefix,
-        primaryColorValue,
-        secondaryColorValue,
-      };
-
-      if (generatedRGB) {
-        const hex = convertToHex(generatedRGB);
-        setIsDuplicateHex(false);
-        const colorName = validateGeneratedColor(
-          defaultTailwindColors,
-          colorsPalette,
-          generateColorName({ ...colorValues }),
-          hex,
-          (currentName, duplicatePrefix, duplicateColor) => {
-            const currentPrefix = currentName.split("-")[0];
-            const currentValue = currentName.split("-")[1];
-            if (duplicateColor) {
-              return setIsDuplicateHex(true);
-            }
-            if (!duplicatePrefix) {
-              setColorObject({
-                colorPrefix: currentPrefix,
-                shades: [{ value: currentValue, hex, rgb: generatedRGB }],
-              });
-              return setShadeObject(null);
-            }
-            if (duplicatePrefix) {
-              setShadeObject({
-                colorPrefix: currentPrefix,
-                shade: { value: currentValue, hex, rgb: generatedRGB },
-              });
-              return setColorObject(null);
-            }
-          }
-        );
-
-        setGeneratedColorName(colorName);
-      }
+    if (primaryInputData !== null) {
+      // console.log("EEE", e.target);
+      // generateListData();
     }
+
+    // if (
+    //   primaryInputData !== null &&
+    //   secondaryInputData !== null &&
+    //   secondaryInputData.shade.hex
+    // ) {
+    //   const primaryRGB = convertFromHex(primaryInputData.shade.hex);
+    //   const secondaryRGB = convertFromHex(secondaryInputData?.shade.hex);
+    //   const colorPrefix = secondaryInputData.colorPrefix;
+    //   const primaryColorValue = primaryInputData.shade.value;
+    //   const secondaryColorValue = secondaryInputData.shade.value;
+    //   setIsDuplicateHex(false);
+    //   if (primaryInputData.colorPrefix !== colorPrefix) {
+    //     return setSecondaryInputData(null);
+    //   }
+    // generate RGB for the median color
+    // setGeneratedRGB(generateMedianRGB(primaryRGB, secondaryRGB));
+    // const colorValues = {
+    //   colorPrefix,
+    //   primaryColorValue,
+    //   secondaryColorValue,
+    // };
+
+    // if (generatedRGB) {
+    //   const hex = convertToHex(generatedRGB);
+    //   setIsDuplicateHex(false);
+    //   const colorName = validateGeneratedColor(
+    //     defaultTailwindColors,
+    //     colorsPalette,
+    //     generateColorName({ ...colorValues }),
+    //     hex,
+    //     (currentName, duplicatePrefix, duplicateColor) => {
+    //       const currentPrefix = currentName.split("-")[0];
+    //       const currentValue = currentName.split("-")[1];
+    //       if (duplicateColor) {
+    //         return setIsDuplicateHex(true);
+    //       }
+    //       if (!duplicatePrefix) {
+    //         setColorObject({
+    //           colorPrefix: currentPrefix,
+    //           shades: [{ value: currentValue, hex, rgb: generatedRGB }],
+    //         });
+    //         return setShadeObject(null);
+    //       }
+    //       if (duplicatePrefix) {
+    //         setShadeObject({
+    //           colorPrefix: currentPrefix,
+    //           shade: { value: currentValue, hex, rgb: generatedRGB },
+    //         });
+    //         return setColorObject(null);
+    //       }
+    //     }
+    //   );
+
+    //   setGeneratedColorName(colorName);
+    // }
+    // }
   }, [
     filteredTailwindColors,
     colorsPalette,
@@ -173,17 +181,17 @@ const ColorGeneratorForm = ({
           <div className=" flex flex-col sm:flex sm:flex-row sm:flex-nowrap sm:items-start items-center justify-center relative w-full gap-6 sm:gap-4">
             <InputWithDropdown
               index={0}
-              placeholder="Search for a color"
+              placeholder="Select base color"
               isDisabled={false}
-              data={defaultTailwindColors}
-              setFilteredTailwindColors={setFilteredTailwindColors}
+              data={baseTailwindColors()}
+              setPrimaryShadeList={setPrimaryShadeList}
               inputData={primaryInputData}
               setInputData={setPrimaryInputData}
               colorPreviewHex={primaryInputData?.shade.hex}
             />
             <InputWithDropdown
               index={1}
-              placeholder="Search for a color"
+              placeholder="Choose 1st shade"
               isDisabled={primaryInputData ? false : true}
               data={filteredTailwindColors}
               inputData={secondaryInputData}
@@ -192,6 +200,17 @@ const ColorGeneratorForm = ({
                 secondaryInputData?.shade ? secondaryInputData.shade.hex : null
               }
             />
+            {/* <InputWithDropdown
+              index={2}
+              placeholder="Choose 2nd shade"
+              isDisabled={primaryInputData ? false : true}
+              data={filteredTailwindColors}
+              inputData={secondaryInputData}
+              setInputData={setSecondaryInputData}
+              colorPreviewHex={
+                secondaryInputData?.shade ? secondaryInputData.shade.hex : null
+              }
+            /> */}
             <ColorPreviewButton
               backgroundColor={generatedRGB}
               text={generatedColorName}

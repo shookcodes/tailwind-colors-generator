@@ -1,7 +1,7 @@
 import { tailwindColors } from "../../data/tailwindColors";
 
 // This function generates the second dropdown list based on the color prefix and value of the first input
-export const generateSecondaryData = (e, data) => {
+export const generateListData = (e, data, index) => {
   const colorPrefix = e.target?.value?.split("-")[0];
   const colorSuffix = e.target?.value?.split("-")[1];
 

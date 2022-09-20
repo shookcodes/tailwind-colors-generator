@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import DropdownList from "./DropdownList";
 import {
   filterInputSearch,
-  generateSecondaryData,
+  generateListData,
   setDropdownVisibility,
 } from "../../../utils";
 import { AiFillCaretDown } from "react-icons/ai";
@@ -58,6 +58,7 @@ const InputWithDropdown = ({
     const dropdownList = document.querySelector(`#dropdownList-${index}`);
     const matchFound = filterInputSearch(e.target.value, dropdownList);
 
+    console.log("MATCH", matchFound);
     // If an input target doesn't have a value, set the data passed to the parent to null and set the value to null so the hex preview icon is not visible
     if (!e.target.value) {
       // If the first input value is null, remove the value from the second input if it is not null and clear the input data passed to the parent
@@ -68,12 +69,17 @@ const InputWithDropdown = ({
       setInputData(null);
     }
     if (matchFound) {
-      setInputValue(e.target.value);
+      const generatedData = generateListData(e, data, index);
 
       if (index === 0) {
         // Generate the rendered list for the second drop-down if a valid match is found
-        const generatedData = generateSecondaryData(e, data);
-        setFilteredTailwindColors(generatedData);
+        setFilteredTailwindColors({ ...data, primaryList: generatedData });
+      }
+      if (index === 1) {
+        setFilteredTailwindColors({
+          ...data,
+          secondaryList: generatedData,
+        });
       }
     }
   };
@@ -83,28 +89,7 @@ const InputWithDropdown = ({
       return index;
     });
     // If input is focused, hide other list if it is open.
-
     handleDropdownVisibility({ hideOther: true });
-  };
-
-  // Filter data and return the value of the input's matching object to parent component for data handling
-  const setInputValue = (colorValue) => {
-    // Filter the object that matches the selected color's prefix
-    const currentColor = data.filter(
-      (color) => color && color?.colorPrefix === colorValue?.split("-")[0]
-    );
-    console.log("COL", colorValue, data);
-
-    // Filter the shade that matches the selected color's suffix
-    const currentShade = currentColor[0]?.shades?.filter((shade) => {
-      return parseInt(shade.value) === parseInt(colorValue.split("-")[1]);
-    });
-
-    // Passing the input data to parent for data handling
-    setInputData({
-      colorPrefix: currentColor?.pop().colorPrefix,
-      shade: currentShade[0],
-    });
   };
 
   // Remove text from input fields
@@ -172,7 +157,7 @@ const InputWithDropdown = ({
       <DropdownList
         index={index}
         data={data}
-        setInputValue={setInputValue}
+        setInputData={setInputData}
         setFilteredTailwindColors={setFilteredTailwindColors}
         setDropdownVisibility={setDropdownVisibility}
         openDropdownIndex={openDropdownIndex}

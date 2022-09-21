@@ -11,6 +11,7 @@ import {
   validateGeneratedColor,
   generateListData,
 } from "../../utils";
+import SelectionGrid from "./SelectionGrid";
 
 const defaultTailwindColors = tailwindColors();
 const ColorGeneratorForm = ({
@@ -187,13 +188,26 @@ const ColorGeneratorForm = ({
               index={0}
               placeholder="Select base color"
               isDisabled={false}
-              data={baseTailwindColors()}
+              data={defaultTailwindColors}
               setList={setPrimaryShadeList}
               inputData={primaryInputData}
               setInputData={setPrimaryInputData}
               colorPreviewHex={primaryInputData?.shade.hex}
+              className="max-w-lg"
             />
-            <InputWithDropdown
+            {/* <SelectionGrid
+              index={1}
+              placeholder="Choose 1st shade"
+              // isDisabled={primaryInputData ? false : true}
+              data={primaryShadeList}
+              setList={setSecondaryShadeList}
+              inputData={secondaryInputData}
+              setInputData={setSecondaryInputData}
+              colorPreviewHex={
+                secondaryInputData?.shade ? secondaryInputData.shade.hex : null
+              }
+            /> */}
+            {/* <InputWithDropdown
               index={1}
               placeholder="Choose 1st shade"
               isDisabled={primaryInputData ? false : true}
@@ -215,7 +229,7 @@ const ColorGeneratorForm = ({
               colorPreviewHex={
                 tertiaryInputData?.shade ? tertiaryInputData.shade.hex : null
               }
-            />
+            /> */}
             <ColorPreviewButton
               backgroundColor={generatedRGB}
               text={generatedColorName}

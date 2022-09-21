@@ -10,6 +10,7 @@ module.exports = {
     "text-slate-50",
     "text-slate-700",
     "text-slate-800",
+    "grid-cols",
     "h-128",
     "h-0",
     "translate-y-4",
@@ -23,6 +24,10 @@ module.exports = {
     "hidden",
     "animate-slideInDown",
     "animate-gradient",
+    {
+      pattern: /(grid-cols)-(\d{1,2})/,
+      variants: ["hover", "focus", "sm", "xs"],
+    },
     // {
     //   pattern: /(from|via|to|border|bg|text)-(.*)-(\d{2,3})/,
     //   variants: ["hover", "focus"],

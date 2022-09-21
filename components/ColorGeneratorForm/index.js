@@ -10,8 +10,10 @@ import {
   convertToHex,
   validateGeneratedColor,
   generateListData,
+  randomizeOpacity,
 } from "../../utils";
 import SelectionGrid from "./SelectionGrid";
+import { IoMdClose } from "react-icons/io";
 
 const defaultTailwindColors = tailwindColors();
 const ColorGeneratorForm = ({
@@ -19,11 +21,8 @@ const ColorGeneratorForm = ({
   setColorsPalette,
   setShadeAdded,
 }) => {
-  const [primaryShadeList, setPrimaryShadeList] = useState([]);
-  const [secondaryShadeList, setSecondaryShadeList] = useState([]);
-  const [primaryInputData, setPrimaryInputData] = useState(null);
-  const [secondaryInputData, setSecondaryInputData] = useState(null);
-  const [tertiaryInputData, setTertiaryInputData] = useState(null);
+  const [filteredTailwindShades, setFilteredTailwindShades] = useState([]);
+
   const [generatedRGB, setGeneratedRGB] = useState(null);
   const [generatedColorName, setGeneratedColorName] = useState("");
   const [currentPaletteColor, setCurrentPaletteColor] = useState(null);
@@ -33,6 +32,29 @@ const ColorGeneratorForm = ({
   const [colorObject, setColorObject] = useState(null);
   const [shadeObject, setShadeObject] = useState(null);
 
+  const [visibleListIndex, setVisibleListIndex] = useState(0);
+
+  const [grids, setGrids] = useState([]);
+  const [currentListData, setCurrentListData] = useState(null);
+  useEffect(() => {
+    document !== undefined &&
+      setGrids(Array.from(document.querySelectorAll(".selectionGrid")));
+  }, []);
+
+  useEffect(() => {
+    console.log("VIS", visibleListIndex);
+    // console.log("cur1", currentListData);
+    grids?.map((grid, gridIndex) => {
+      console.log("GR", gridIndex);
+      if (gridIndex === visibleListIndex) {
+        return randomizeOpacity(grid, false);
+      } else {
+        return randomizeOpacity(grid, true);
+      }
+    });
+  }, [visibleListIndex, grids]);
+
+  console.log("listtttt", currentListData);
   // Sort each color's values from smallest to largest
   const sortColorValues = colorsPalette.map((color) => {
     if (color.shades && color.shades?.length > 1) {
@@ -41,6 +63,27 @@ const ColorGeneratorForm = ({
       });
     }
   });
+
+  // Generate the data for the secondary grid
+  const generateShadesListData = async (e, data, listIndex) =>
+    generateListData(e, data, listIndex);
+
+  const handleButtonData = async (clickData) => {
+    const { e, colorObject, data, index } = clickData();
+
+    console.log("DATA", data);
+    if (index === 0) {
+      const listData = await generateShadesListData(e, data, index);
+
+      setVisibleListIndex(1);
+      setCurrentListData(listData);
+      setFilteredTailwindShades(listData);
+    } else if (index === 1) {
+      setVisibleListIndex(0);
+      setCurrentListData(defaultTailwindColors);
+    }
+  };
+  console.log("cur", currentListData);
 
   // Once "Add to palette" button is clicked, add the color to the palette array if there are no duplicates. Pass the paletteArr to the parent component for data handling.
   const handleAddToPaletteClick = (obj) => {
@@ -83,92 +126,6 @@ const ColorGeneratorForm = ({
     // setShadeAdded triggers ColorPalette and CodeBox to re-render once shade is added to colorPalette
   };
 
-  // This useEffect takes the data from both inputs and creates a new color object that can be added to the colorsPalette array.
-  useEffect(() => {
-    if (primaryInputData === null) {
-      setSecondaryInputData(null);
-    }
-
-    if (primaryInputData === null || secondaryInputData === null) {
-      setSecondaryInputData(null);
-      setTertiaryInputData(null);
-      // setGeneratedRGB(null);
-      // setGeneratedColorName("");
-    }
-    if (tertiaryInputData === null || secondaryInputData === null) {
-      setGeneratedRGB(null);
-      setGeneratedColorName("");
-    }
-
-    if (
-      primaryInputData !== null &&
-      secondaryInputData !== null &&
-      tertiaryInputData !== null &&
-      secondaryInputData.shade.hex
-    ) {
-      const primaryRGB = convertFromHex(secondaryInputData?.shade.hex);
-      const secondaryRGB = convertFromHex(tertiaryInputData?.shade.hex);
-      const colorPrefix = secondaryInputData.colorPrefix;
-      const primaryColorValue = secondaryInputData.shade.value;
-      const secondaryColorValue = tertiaryInputData.shade.value;
-      setIsDuplicateHex(false);
-      if (primaryInputData.colorPrefix !== colorPrefix) {
-        setSecondaryInputData(null);
-        setTertiaryInputData(null);
-      }
-      // generate RGB for the median color
-      setGeneratedRGB(generateMedianRGB(primaryRGB, secondaryRGB));
-      const colorValues = {
-        colorPrefix,
-        primaryColorValue,
-        secondaryColorValue,
-      };
-
-      if (generatedRGB) {
-        const hex = convertToHex(generatedRGB);
-        setIsDuplicateHex(false);
-        const colorName = validateGeneratedColor(
-          defaultTailwindColors,
-          colorsPalette,
-          generateColorName({ ...colorValues }),
-          hex,
-          (currentName, duplicatePrefix, duplicateColor) => {
-            const currentPrefix = currentName.split("-")[0];
-            const currentValue = currentName.split("-")[1];
-            if (duplicateColor) {
-              return setIsDuplicateHex(true);
-            }
-            if (!duplicatePrefix) {
-              setColorObject({
-                colorPrefix: currentPrefix,
-                shades: [{ value: currentValue, hex, rgb: generatedRGB }],
-              });
-              return setShadeObject(null);
-            }
-            if (duplicatePrefix) {
-              setShadeObject({
-                colorPrefix: currentPrefix,
-                shade: { value: currentValue, hex, rgb: generatedRGB },
-              });
-              return setColorObject(null);
-            }
-          }
-        );
-
-        setGeneratedColorName(colorName);
-      }
-    }
-  }, [
-    primaryShadeList,
-    colorsPalette,
-    primaryInputData,
-    secondaryInputData,
-    generatedRGB,
-    generatedColorName,
-    isDuplicateHex,
-    tertiaryInputData,
-  ]);
-
   return (
     <>
       <PopupAlert
@@ -183,23 +140,40 @@ const ColorGeneratorForm = ({
         }}
       >
         <fieldset className="flex w-full h-auto flex-col items-center mb-12">
-          <div className=" flex flex-col md:flex md:flex-row md:flex-nowrap md:items-start items-center justify-center relative w-full gap-6 md:gap-4">
-            <InputWithDropdown
-              index={0}
-              placeholder="Select base color"
-              isDisabled={false}
-              data={defaultTailwindColors}
-              setList={setPrimaryShadeList}
-              inputData={primaryInputData}
-              setInputData={setPrimaryInputData}
-              colorPreviewHex={primaryInputData?.shade.hex}
-              className="max-w-lg"
-            />
+          <div className=" flex flex-col md:flex md:flex-row md:flex-nowrap md:items-start items-start justify-center relative w-full gap-6 md:gap-4">
+            <div className="relative border w-full h-128 border-gray-200 rounded-md place-content-center shadow-lg bg-gray-100 max-w-xl">
+              {visibleListIndex !== 0 && (
+                <button
+                  onClick={() => {
+                    setVisibleListIndex(() => {
+                      return 0;
+                    });
+                  }}
+                  className="absolute z-10 w-6 h-6 top-4 right-4 "
+                >
+                  <IoMdClose className="pointer-events-none" />
+                </button>
+              )}
+              <SelectionGrid
+                index={0}
+                data={defaultTailwindColors}
+                // visibleListIndex={visibleListIndex}
+                handleButtonData={handleButtonData}
+              />
+              <SelectionGrid
+                index={1}
+                data={filteredTailwindShades}
+                // visibleListIndex={visibleListIndex}
+                columns="3"
+                handleButtonData={handleButtonData}
+                // visibleListIndex={secondaryGridVisible}
+              />
+            </div>
             {/* <SelectionGrid
               index={1}
               placeholder="Choose 1st shade"
               // isDisabled={primaryInputData ? false : true}
-              data={primaryShadeList}
+              data={filteredTailwindShades}
               setList={setSecondaryShadeList}
               inputData={secondaryInputData}
               setInputData={setSecondaryInputData}
@@ -211,7 +185,7 @@ const ColorGeneratorForm = ({
               index={1}
               placeholder="Choose 1st shade"
               isDisabled={primaryInputData ? false : true}
-              data={primaryShadeList}
+              data={filteredTailwindShades}
               setList={setSecondaryShadeList}
               inputData={secondaryInputData}
               setInputData={setSecondaryInputData}

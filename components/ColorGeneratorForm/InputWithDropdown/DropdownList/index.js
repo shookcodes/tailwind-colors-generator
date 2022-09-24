@@ -20,7 +20,7 @@ const DropdownList = ({
     setInput(document.querySelector(`#dropdownInput-${index}`));
     setColorPreviewEl(document.querySelector(`#colorPreview-${index}`));
   }, [index, input]);
-  const handleItemClick = (e, item, index) => {
+  const handleButtonData = (e, item, index) => {
     e.preventDefault();
 
     const dropdownList = document.querySelector(`#dropdownList-${index}`);
@@ -103,7 +103,7 @@ const DropdownList = ({
                     onClick={(e) => {
                       e.preventDefault();
                       // Pass the index value of parent component for event handling
-                      handleItemClick(e, object, index);
+                      handleButtonData(e, object, index);
                     }}
                     onMouseOver={(e, index) => {
                       handleButtonMouseOver(e, object, index);

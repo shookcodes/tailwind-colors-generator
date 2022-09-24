@@ -10,6 +10,7 @@ module.exports = {
     "text-slate-50",
     "text-slate-700",
     "text-slate-800",
+    "grid-cols",
     "h-128",
     "h-0",
     "translate-y-4",
@@ -22,6 +23,15 @@ module.exports = {
     "z-10",
     "hidden",
     "animate-slideInDown",
+    "animate-gradient",
+    {
+      pattern: /(grid-cols)-(\d{1,2})/,
+      variants: ["hover", "focus", "sm", "xs"],
+    },
+    // {
+    //   pattern: /(from|via|to|border|bg|text)-(.*)-(\d{2,3})/,
+    //   variants: ["hover", "focus"],
+    // },
   ],
   theme: {
     extend: {
@@ -63,10 +73,28 @@ module.exports = {
             opacity: 1,
           },
         },
+        gradient: {
+          "0%": {
+            "background-position": "top",
+          },
+          "25%": {
+            "background-position": "left",
+          },
+          "50%": {
+            "background-position": "bottom",
+          },
+          "75%": {
+            "background-position": "right",
+          },
+          "100%": {
+            "background-position": "top",
+          },
+        },
       },
 
       animation: {
         scaleIn: "scaleIn 0.2s ease-in-out forwards",
+        gradient: "gradient 5s ease-in-out ",
       },
     },
   },

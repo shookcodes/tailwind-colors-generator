@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import DropdownGrid from "./DropdownGrid";
 import DropdownList from "./DropdownList";
 import {
   filterInputSearch,
@@ -16,6 +17,7 @@ const InputWithDropdown = ({
   inputData,
   setInputData,
   colorPreviewHex,
+  className,
 }) => {
   const [openDropdownIndex, setOpenDropdownIndex] = useState(null);
   const [currentInputIndex, setCurrentInputIndex] = useState("");
@@ -132,7 +134,7 @@ const InputWithDropdown = ({
     <div
       className={`relative w-full h-full bg-inherit ${index === 0 && "z-30"}  ${
         index === 1 && "z-20"
-      } ${index === 2 && "z-10"}`}
+      } ${index === 2 && "z-10"} ${className}`}
     >
       <label htmlFor={"color" + index} className="relative h-full z-20 ">
         <input
@@ -163,7 +165,7 @@ const InputWithDropdown = ({
           className="
             absolute w-8 h-8 -top-1.5 right-9 pointer-events-none rounded-lg border border-gray-200 shadow-md"
           id={`colorPreview-${index}`}
-          style={{ backgroundColor: colorPreviewHex }}
+          // style={{ backgroundColor: colorPreviewHex }}
         ></div>
 
         <button
@@ -183,7 +185,7 @@ const InputWithDropdown = ({
         </button>
       </label>
 
-      <DropdownList
+      <DropdownGrid
         index={index}
         data={data}
         inputData={inputData}
@@ -193,6 +195,16 @@ const InputWithDropdown = ({
         openDropdownIndex={openDropdownIndex}
         setOpenDropdownIndex={setDropdownVisibility}
       />
+      {/* <DropdownList
+        index={index}
+        data={data}
+        inputData={inputData}
+        setInputData={setInputData}
+        setList={setList}
+        setDropdownVisibility={setDropdownVisibility}
+        openDropdownIndex={openDropdownIndex}
+        setOpenDropdownIndex={setDropdownVisibility}
+      /> */}
     </div>
   );
 };

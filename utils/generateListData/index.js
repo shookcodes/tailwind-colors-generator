@@ -16,9 +16,9 @@ export const generateListData = (e, data, index) => {
 
   // If the value of the shade matches the first input value, don't add it to the secondary array
   shades?.map((shade) => {
-    if (index !== 0 && shade?.value === colorSuffix) {
-      return;
-    }
+    // if (index !== 0 && shade?.value === colorSuffix) {
+    //   return;
+    // }
     renderedColorsArr.push(shade);
   });
 

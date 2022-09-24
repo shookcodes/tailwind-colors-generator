@@ -102,6 +102,7 @@ const ColorGeneratorForm = ({
           <div className=" flex flex-col md:flex md:flex-row md:flex-nowrap md:items-start items-start justify-center relative w-full gap-6 md:gap-4">
             {filteredTailwindColors && (
               <FilterGrids
+                defaultFilter={[...baseTailwindColors()]}
                 useDefaultFilter={useDefaultFilter}
                 setUseDefaultFilter={setUseDefaultFilter}
                 filteredTailwindColors={filteredTailwindColors}

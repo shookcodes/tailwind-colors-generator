@@ -9,48 +9,38 @@ import {
 
 const SelectionGrid = ({
   data,
-  defaultData,
+  index,
   handleButtonData,
+  inputData,
+  setInputData,
+  setList,
+  visibleListIndex,
   columns,
   className,
-  index,
 }) => {
   const handleButtonMouseOut = (e) => {
     if (!e.relatedTarget || e.relatedTarget.type !== "button") {
     }
   };
 
-  const handleButtonClick = (colorObject) => {
-    const list = document.querySelectorAll(".listItem");
-    handleButtonData(colorObject, list, false);
-  };
-  useEffect(() => {
-    const list = document?.querySelectorAll(".listItem");
-
-    if (document !== undefined) {
-      const listIndex = parseInt(
-        document.querySelector(`#selectionGrid-${index}`).id.split("-")[1]
-      );
-      if (data && index === listIndex) {
-        randomizeOpacity(list, false);
-      }
-    }
-  }, [data, index, defaultData]);
-
   return (
     <ul
       id={`selectionGrid-${index}`}
-      className={` mx-auto mt-0 p-2 sm:p-4 
+      className={`relative mx-auto mt-0 p-2 sm:p-4 
         grid ${
           columns ? `xs:grid-cols-${columns}` : "sm:grid-cols-4"
-        } grid-cols-2 gap-4 w-full h-max transform duration-200 transition-all max-h-120 selectionGrid ${className}`}
+        } grid-cols-2 gap-4 scroll w-full h-max transform duration-200 transition-all max-h-120 selectionGrid ${className}`}
     >
       {data &&
         data.map((item, dataIndex) =>
           item.shades.map((shade, shadeIndex) => {
             const tailwindName = item.colorPrefix + "-" + shade.value;
-            const textColor = toggleTextColor(convertFromHex(shade.hex));
 
+            const textColor = toggleTextColor(convertFromHex(shade.hex));
+            const colorObject = {
+              colorPrefix: item.colorPrefix,
+              shade: { hex: shade.hex, value: shade.value },
+            };
             const hoverColorsArr = [
               item.shades
                 .filter((shade, arrIndex) => {
@@ -62,42 +52,48 @@ const SelectionGrid = ({
             ];
 
             return (
-              <li
-                key={"btn-" + item.colorPrefix + "-" + shadeIndex}
-                className={`opacity-0 listItem`}
-              >
-                <button
-                  className={`marker:flex justify-between border-2  w-full py-3 items-center hover:cursor-pointer rounded-lg hover:shadow-inner dropdownListButton hover:animate-gradient ${textColor}`}
-                  id={tailwindName}
-                  value={tailwindName}
-                  type="button"
-                  style={{
-                    background: shade.hex,
-                  }}
-                  onClick={(e) => {
-                    const colorObject = {
-                      colorPrefix: item.colorPrefix,
-                      shades: { hex: shade.hex, value: shade.value },
-                    };
-                    e.preventDefault();
-                    // Pass the index value of parent component for event handling
-                    handleButtonClick({ colorObject, index });
-                  }}
-                  onMouseOver={(e) => {
-                    e.currentTarget.style.background = `linear-gradient(45deg, ${hoverColorsArr})`;
-                    e.currentTarget.style.border = `8px solid orange outset`;
-                    // e.currentTarget.style.opacity = 0.7;
-                  }}
-                  onMouseOut={(e) => {
-                    e.currentTarget.style.background = shade.hex;
-                    e.currentTarget.style.opacity = 1;
-
-                    handleButtonMouseOut(e);
-                  }}
+              ((index === 0 && shade.value === "500") || index !== 0) && (
+                <li
+                  key={"btn-" + item.colorPrefix + "-" + shadeIndex}
+                  className="opacity-0"
                 >
-                  <span>{defaultData ? item.colorPrefix : shade.value}</span>
-                </button>
-              </li>
+                  <button
+                    className={`marker:flex justify-between border-2  w-full py-3 items-center hover:cursor-pointer rounded-lg hover:shadow-inner dropdownListButton hover:animate-gradient ${textColor}`}
+                    id={tailwindName}
+                    value={tailwindName}
+                    type="button"
+                    style={{
+                      background: shade.hex,
+                    }}
+                    onClick={(e) => {
+                      e.preventDefault();
+                      // Pass the index value of parent component for event handling
+                      handleButtonData(() => {
+                        return { e, colorObject, data, index };
+                      });
+                    }}
+                    onMouseOver={(e, index) => {
+                      e.currentTarget.style.background = `linear-gradient(45deg, ${hoverColorsArr})`;
+                      // ${item.shades[0].hex}
+                      e.currentTarget.style.border = `8px solid orange outset`;
+                      // e.currentTarget.style.opacity = 0.7;
+                    }}
+                    onMouseOut={(e) => {
+                      e.currentTarget.style.background = shade.hex;
+                      e.currentTarget.style.opacity = 1;
+
+                      handleButtonMouseOut(e);
+                    }}
+                  >
+                    <span>{index === 0 ? item.colorPrefix : shade.value}</span>
+
+                    {/* <div
+                      className="w-4 h-4 rounded-md border border-gray-300 shadoww-sm shadow group-hover:w-6 group-hover:h-6 transition-all ease-in-out"
+                      style={{ backgroundColor: shade.hex }}
+                    ></div> */}
+                  </button>
+                </li>
+              )
             );
           })
         )}

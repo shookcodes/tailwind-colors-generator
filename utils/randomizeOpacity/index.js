@@ -1,5 +1,7 @@
-export const randomizeOpacity = (listElements, hideElements) => {
-  const listItems = Array.from(listElements);
+export const randomizeOpacity = (listElement, hideElements) => {
+  const listItems = listElement?.children
+    ? Array.from(listElement.children)
+    : listElement;
   let isHidden;
 
   if (hideElements === false || hideElements === "show") {
@@ -10,20 +12,18 @@ export const randomizeOpacity = (listElements, hideElements) => {
     return;
   }
 
-  const randomize = () => {
-    listItems.map((listItem) => {
-      const random = (Math.random() * 400).toFixed(2);
-      setTimeout(() => {
-        if (isHidden) {
-          listItem.classList?.add("opacity-0");
-        } else if (!isHidden) {
-          listItem.classList?.remove("opacity-0");
-        } else {
-          console.log("err", listElements, hideElements);
-        }
-      }, random);
-    });
-  };
+  console.log("liste", listItems);
 
-  return randomize();
+  return listItems.map((listItem) => {
+    const random = (Math.random() * 400).toFixed(2);
+    setTimeout(() => {
+      if (isHidden) {
+        listItem.classList.add("opacity-0");
+      } else if (!isHidden) {
+        listItem.classList.remove("opacity-0");
+      } else {
+        console.log("err", listElment, hideElements);
+      }
+    }, random);
+  });
 };

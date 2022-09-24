@@ -17,6 +17,7 @@ const DropdownGrid = ({
 }) => {
   const [input, setInput] = useState("");
 
+  console.log("data", data);
   const [buttonHovered, setButtonHovered] = useState(false);
 
   const [colorPreviewEl, setColorPreviewEl] = useState("");

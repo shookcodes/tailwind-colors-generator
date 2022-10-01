@@ -1,0 +1,80 @@
+.slideTransition {
+  /* height: 0; */
+  /* transition: max-height;
+  overflow: hidden;
+  transition: height 0.4s linear; */
+  /* height: full; */
+
+  /* max-height: 300px; */
+  /* overflow-y: hidden;
+  transition: max-height 0.7s linear; */
+
+  /* max-height: 2px; */
+  /* height: max-content; */
+  /* min-height: var(--gridHeight); */
+  height: var(--gridHeight);
+  transition: height 200ms linear;
+  overflow: hidden;
+}
+
+.slideOutUp {
+  max-height: 0;
+}
+
+.slideInDown {
+  overflow: hidden;
+  transition: transform 0.3s ease-out;
+  height: auto;
+  transform: scaleY(1);
+  transform-origin: top;
+  /* max-height: 754px;
+  transition: max-height 200ms linear; */
+  /* @apply scale-y-90 */
+  /* transform-origin: top; */
+  /* animation: slideInDown 0.2s ease-in-out forwards; */
+  /* transition: transform 0.26s ease; */
+  /* height: 400px;
+  animation: slideInDown 0.2s ease-in forwards; */
+}
+
+/* #gridWrapper {
+  transform-origin: top;
+  transition: transform 0.26s ease;
+}
+#gridWrapper ~ ul {
+  transform: scaleY(1);
+} */
+
+@keyframes slideInDown {
+  from {
+    height: 0;
+    /* max-height: 0; */
+    /* transform: scaleY(0); */
+    /* height: 0; */
+    /* transform: scale(0, 0); */
+    /* transform-origin: top; */
+  }
+  to {
+    height: auto;
+    max-height: 1000px;
+    /* max-height: 1000px; */
+    /* transform: scale(1, 1); */
+    /* height: auto; */
+    /* transform: scaleY(1); */
+  }
+  /* from {
+    transform: "scaleY(0)";
+    max-height: 0;
+    height: 0;
+    width: 0;
+    opacity: 0;
+  }
+  to {
+    transform: "scaleY(1)";
+    transition: max-height 0.25s ease-in;
+    height: 400px;
+    max-height: 400px;
+    width: "full";
+    opacity: 1;
+  } */
+}

@@ -8,8 +8,8 @@ import { generateColorName } from "./generateColorName";
 import { generateMedianRGB } from "./generateMedianRGB";
 import { generateListData } from "./generateListData";
 import { handleOutsideClick } from "./handleOutsideClick";
-import { randomizeOpacity } from "./randomizeOpacity";
-import { setDropdownVisibility } from "./setDropdownVisibility";
+
+import { setElementVisibility } from "./setElementVisibility";
 import { toggleTextColor } from "./toggleTextColor";
 import { validateGeneratedColor } from "./validateGeneratedColor";
 
@@ -23,8 +23,7 @@ export {
   generateMedianRGB,
   generateListData,
   handleOutsideClick,
-  randomizeOpacity,
-  setDropdownVisibility,
+  setElementVisibility,
   toggleTextColor,
   validateGeneratedColor,
 };

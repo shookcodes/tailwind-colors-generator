@@ -7,7 +7,7 @@ const DropdownList = ({
   inputData,
   setInputData,
   setList,
-  setDropdownVisibility,
+  setElementVisibility,
   openDropdownIndex,
 }) => {
   const [input, setInput] = useState("");
@@ -25,7 +25,7 @@ const DropdownList = ({
 
     const dropdownList = document.querySelector(`#dropdownList-${index}`);
     input.value = e.currentTarget.innerText;
-    setDropdownVisibility(dropdownList).hideList();
+    setElementVisibility(dropdownList).hideElement();
     const generatedData = generateListData(e, data, index);
     setInputData(item);
 
@@ -73,7 +73,7 @@ const DropdownList = ({
     return () => {
       document.removeEventListener("keyup", handleListButtonKeyUp);
     };
-  }, [index, openDropdownIndex, setDropdownVisibility]);
+  }, [index, openDropdownIndex, setElementVisibility]);
 
   return (
     <div

@@ -9,11 +9,8 @@ import {
   generateColorName,
   convertToHex,
   validateGeneratedColor,
-  generateListData,
-  randomizeOpacity,
 } from "../../utils";
-import SelectionGrid from "./SelectionGrid";
-import FilterGrids from "./FilterGrids";
+import SelectionGrid from "../SelectionGrid";
 
 const ColorGeneratorForm = ({
   colorsPalette,
@@ -24,6 +21,8 @@ const ColorGeneratorForm = ({
     ...baseTailwindColors(),
   ]);
 
+  const [primaryShade, setPrimaryShade] = useState(null);
+  const [secondaryShade, setSecondaryShade] = useState(null);
   const [generatedRGB, setGeneratedRGB] = useState(null);
   const [generatedColorName, setGeneratedColorName] = useState("");
   const [currentPaletteColor, setCurrentPaletteColor] = useState(null);
@@ -85,6 +84,67 @@ const ColorGeneratorForm = ({
     // setShadeAdded triggers ColorPalette and CodeBox to re-render once shade is added to colorPalette
   };
 
+  // This useEffect takes the data from both inputs and creates a new color object that can be added to the colorsPalette array.
+  useEffect(() => {
+    if (primaryShade !== null && secondaryShade !== null) {
+      const primaryRGB = convertFromHex(primaryShade?.shade.hex);
+      const secondaryRGB = convertFromHex(secondaryShade?.shade.hex);
+      const colorPrefix = secondaryShade.colorPrefix;
+      const primaryColorValue = primaryShade.shade.value;
+      const secondaryColorValue = secondaryShade.shade.value;
+      setIsDuplicateHex(false);
+
+      // generate RGB for the median color
+      setGeneratedRGB(generateMedianRGB(primaryRGB, secondaryRGB));
+      const colorValues = {
+        colorPrefix,
+        primaryColorValue,
+        secondaryColorValue,
+      };
+
+      if (generatedRGB) {
+        const hex = convertToHex(generatedRGB);
+        setIsDuplicateHex(false);
+        const colorName = validateGeneratedColor(
+          tailwindColors(),
+          colorsPalette,
+          generateColorName({ ...colorValues }),
+          hex,
+          (currentName, duplicatePrefix, duplicateColor) => {
+            const currentPrefix = currentName.split("-")[0];
+            const currentValue = currentName.split("-")[1];
+            if (duplicateColor) {
+              return setIsDuplicateHex(true);
+            }
+            if (!duplicatePrefix) {
+              setColorObject({
+                colorPrefix: currentPrefix,
+                shades: [{ value: currentValue, hex, rgb: generatedRGB }],
+              });
+              return setShadeObject(null);
+            }
+            if (duplicatePrefix) {
+              setShadeObject({
+                colorPrefix: currentPrefix,
+                shade: { value: currentValue, hex, rgb: generatedRGB },
+              });
+              return setColorObject(null);
+            }
+          }
+        );
+
+        setGeneratedColorName(colorName);
+      }
+    }
+  }, [
+    colorsPalette,
+    primaryShade,
+    secondaryShade,
+    generatedRGB,
+    generatedColorName,
+    isDuplicateHex,
+  ]);
+
   return (
     <>
       <PopupAlert
@@ -93,36 +153,38 @@ const ColorGeneratorForm = ({
       />
       <form
         id="colorGeneratorForm"
-        className="h-full w-full"
+        className="h-full w-full border  flex flex-col  p-6 border-gray-200 rounded-md shadow-lg bg-gray-100 max-w-xl  transform transition-all duration-200  overflow-hidden "
         onSubmit={(e) => {
           e.preventDefault();
         }}
       >
         <fieldset className="flex w-full h-auto flex-col items-center mb-12">
-          <div className=" flex flex-col md:flex md:flex-row md:flex-nowrap md:items-start items-start justify-center relative w-full gap-6 md:gap-4">
-            {filteredTailwindColors && (
-              <FilterGrids
-                defaultFilter={[...baseTailwindColors()]}
-                useDefaultFilter={useDefaultFilter}
-                setUseDefaultFilter={setUseDefaultFilter}
-                filteredTailwindColors={filteredTailwindColors}
-                setFilteredTailwindColors={setFilteredTailwindColors}
-              />
-            )}
-
-            <ColorPreviewButton
-              backgroundColor={generatedRGB}
-              text={generatedColorName}
-              currentPaletteColor={currentPaletteColor}
-              setCurrentPaletteColor={setCurrentPaletteColor}
-              handleAddToPaletteClick={handleAddToPaletteClick}
-              className={`transform ease-in-out duration-500 ${
-                generatedRGB
-                  ? "translate-x-0 w-full sm:w-8/12 opacity-100"
-                  : "-translate-x-100 w-0 opacity-0"
-              }`}
+          {filteredTailwindColors && (
+            <SelectionGrid
+              defaultFilter={[...baseTailwindColors()]}
+              useDefaultFilter={useDefaultFilter}
+              setUseDefaultFilter={setUseDefaultFilter}
+              filteredTailwindColors={filteredTailwindColors}
+              setFilteredTailwindColors={setFilteredTailwindColors}
+              primaryShade={primaryShade}
+              setPrimaryShade={setPrimaryShade}
+              secondaryShade={secondaryShade}
+              setSecondaryShade={setSecondaryShade}
             />
-          </div>
+          )}
+
+          <ColorPreviewButton
+            backgroundColor={generatedRGB}
+            text={generatedColorName}
+            currentPaletteColor={currentPaletteColor}
+            setCurrentPaletteColor={setCurrentPaletteColor}
+            handleAddToPaletteClick={handleAddToPaletteClick}
+            className={`transform ease-in-out duration-500 ${
+              generatedRGB
+                ? "translate-x-0 w-full sm:w-8/12 opacity-100"
+                : "-translate-x-100 w-0 opacity-0"
+            }`}
+          />
         </fieldset>
       </form>
     </>

@@ -1,0 +1,11 @@
+/* .btn {
+  @apply rounded-lg  text-sm hover:cursor-pointer hover:shadow-inner;
+} */
+
+.buttonPrimary {
+  @apply bg-gradient-to-br font-medium from-sky-200 to-sky-300 w-40 mx-2 h-10 text-gray-500  transition ease-in-out  hover:from-sky-300 hover:to-sky-200 hover:shadow-inner hover:opacity-90;
+}
+
+/* .btnColor {
+  @apply w-16 h-16;
+} */

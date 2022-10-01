@@ -3,6 +3,7 @@ module.exports = {
   content: [
     "./pages/**/*.{js,ts,jsx,tsx}",
     "./components/**/*.{js,ts,jsx,tsx}",
+    "./animations/**/*.{js,ts,jsx,tsx}",
   ],
   safelist: [
     "text-gray-50",
@@ -13,6 +14,10 @@ module.exports = {
     "grid-cols",
     "h-128",
     "h-0",
+    "scale-0",
+    "scale-100",
+    "scale-y-0",
+    "scale-y-100",
     "translate-y-4",
     "shadow-xl",
     "opacity-100",
@@ -20,12 +25,21 @@ module.exports = {
     "-translate-y-full",
     "shadow-none",
     "opacity-0",
+    "opacity-1",
+    "opacity-100",
     "z-10",
     "hidden",
     "animate-slideInDown",
     "animate-gradient",
+    "slideInDown",
+    "slideTransition",
+
     {
       pattern: /(grid-cols)-(\d{1,2})/,
+      variants: ["hover", "focus", "sm", "xs"],
+    },
+    {
+      pattern: /h-/,
       variants: ["hover", "focus", "sm", "xs"],
     },
     // {
@@ -47,6 +61,11 @@ module.exports = {
         xl: "1280px",
         "2xl": "1440px",
       },
+      animation: {
+        scaleIn: "scaleIn 0.2s ease-in-out forwards",
+        gradient: "gradient 5s ease-in-out ",
+        slideInDown: "slideInDown 0.2s ease-in-out forwards",
+      },
       keyframes: {
         scaleIn: {
           "0%": { transform: "scale(0, 0)", height: 0, width: 0, opacity: 0 },
@@ -67,8 +86,8 @@ module.exports = {
           },
           "100%": {
             transform: "scaleY(1)",
-            height: "500px",
-            "max-height": "500px",
+            height: 100,
+            "max-height": 100,
             // width: "full",
             opacity: 1,
           },
@@ -90,11 +109,9 @@ module.exports = {
             "background-position": "top",
           },
         },
-      },
-
-      animation: {
-        scaleIn: "scaleIn 0.2s ease-in-out forwards",
-        gradient: "gradient 5s ease-in-out ",
+        transitionProperty: {
+          flex: "flex",
+        },
       },
     },
   },

@@ -1,6 +1,9 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+@import "./variables.css";
+@import "./animations.css";
+@import "./buttons.css";
 
 * {
   box-sizing: border-box;
@@ -43,10 +46,6 @@ button {
   border: none;
   background-color: transparent;
   padding: 0;
-}
-
-.buttonPrimary {
-  @apply rounded-md bg-gradient-to-br from-sky-200 to-sky-300 w-40 mx-2 h-10 text-gray-500 font-medium text-sm  transition ease-in-out  hover:from-sky-300 hover:to-sky-200 hover:shadow-inner hover:opacity-90;
 }
 
 /* .buttonPrimary {

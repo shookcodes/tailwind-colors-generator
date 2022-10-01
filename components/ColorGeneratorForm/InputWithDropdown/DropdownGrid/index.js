@@ -12,7 +12,7 @@ const DropdownGrid = ({
   inputData,
   setInputData,
   setList,
-  setDropdownVisibility,
+  setElementVisibility,
   openDropdownIndex,
 }) => {
   const [input, setInput] = useState("");
@@ -30,7 +30,7 @@ const DropdownGrid = ({
 
     const dropdownList = document.querySelector(`#dropdownList-${index}`);
     input.value = e.currentTarget.innerText;
-    setDropdownVisibility(dropdownList).hideList();
+    setElementVisibility(dropdownList).hideElement();
     const generatedData = generateListData(e, data, index);
     setInputData(item);
 
@@ -78,7 +78,7 @@ const DropdownGrid = ({
     return () => {
       document.removeEventListener("keyup", handleListButtonKeyUp);
     };
-  }, [index, openDropdownIndex, setDropdownVisibility]);
+  }, [index, openDropdownIndex, setElementVisibility]);
 
   return (
     <div
@@ -100,7 +100,7 @@ const DropdownGrid = ({
               const textColor = toggleTextColor(convertFromHex(shade.hex));
               const object = {
                 colorPrefix: item.colorPrefix,
-                shade: { hex: shade.hex, value: shade.value },
+                shades: { hex: shade.hex, value: shade.value },
               };
               const hoverColorsArr = [
                 item.shades
@@ -116,7 +116,7 @@ const DropdownGrid = ({
                 ((index === 0 && shade.value === "500") || index !== 0) && (
                   <li key={"btn-" + item.colorPrefix + "-" + shadeIndex}>
                     <button
-                      className={`marker:flex justify-between border-2  w-full pl-4 pr-1 py-3 items-center hover:cursor-pointer rounded-md hover:shadow-inner dropdownListButton hover:animate-gradient ${textColor}`}
+                      className={`flex justify-between border-2  w-full pl-4 pr-1 py-3 items-center hover:cursor-pointer rounded-md hover:shadow-inner dropdownListButton hover:animate-gradient ${textColor}`}
                       id={tailwindName}
                       value={tailwindName}
                       type="button"

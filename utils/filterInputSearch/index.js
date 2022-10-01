@@ -1,9 +1,9 @@
-import { setDropdownVisibility } from "../setDropdownVisibility";
+import { setElementVisibility } from "../setElementVisibility";
 export const filterInputSearch = (value, listElement) => {
   let found = false;
   const buttons = Array.from(listElement?.querySelectorAll("button"));
   if (value.length > 1) {
-    setDropdownVisibility(listElement).showList();
+    setElementVisibility(listElement).showElement();
   }
   buttons.map((button) => {
     if (button.innerText.toLowerCase() === value.toLowerCase()) {
@@ -23,11 +23,11 @@ export const filterInputSearch = (value, listElement) => {
   });
 
   if (found && value.split("-")[1] !== "50") {
-    setDropdownVisibility(listElement).hideList();
+    setElementVisibility(listElement).hideElement();
   }
 
   if (!value) {
-    setDropdownVisibility(listElement).hideList();
+    setElementVisibility(listElement).hideElement();
   }
   return found;
 };

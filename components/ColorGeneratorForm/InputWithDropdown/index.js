@@ -4,7 +4,7 @@ import DropdownList from "./DropdownList";
 import {
   filterInputSearch,
   generateListData,
-  setDropdownVisibility,
+  setElementVisibility,
 } from "../../../utils";
 import { AiFillCaretDown } from "react-icons/ai";
 
@@ -29,26 +29,26 @@ const InputWithDropdown = ({
 
     dropdownLists.map((list, listIndex) => {
       if (hideAll) {
-        setDropdownVisibility(list).hideList();
+        setElementVisibility(list).hideElement();
         return setOpenDropdownIndex(null);
       }
 
       if (toggle && index === listIndex) {
         if (list.classList.contains("-translate-y-full")) {
           // Show the list and return/set the current index of the open dropdown.
-          setDropdownVisibility(list).showList();
+          setElementVisibility(list).showElement();
           return setOpenDropdownIndex(() => {
             return index;
           });
         } else {
-          setDropdownVisibility(list).hideList();
+          setElementVisibility(list).hideElement();
         }
       } else {
-        setDropdownVisibility(list).hideList();
+        setElementVisibility(list).hideElement();
       }
 
       if (hideOther && index !== listIndex) {
-        setDropdownVisibility(list).hideList();
+        setElementVisibility(list).hideElement();
       }
       if (hideOther && index === listIndex) {
         return setOpenDropdownIndex(() => {
@@ -118,7 +118,7 @@ const InputWithDropdown = ({
           !button.contains(e.target) &&
           !input.contains(e.target)
         ) {
-          setDropdownVisibility(list).hideList();
+          setElementVisibility(list).hideElement();
         }
       }
     };
@@ -191,9 +191,9 @@ const InputWithDropdown = ({
         inputData={inputData}
         setInputData={setInputData}
         setList={setList}
-        setDropdownVisibility={setDropdownVisibility}
+        setElementVisibility={setElementVisibility}
         openDropdownIndex={openDropdownIndex}
-        setOpenDropdownIndex={setDropdownVisibility}
+        setOpenDropdownIndex={setElementVisibility}
       />
       {/* <DropdownList
         index={index}
@@ -201,9 +201,9 @@ const InputWithDropdown = ({
         inputData={inputData}
         setInputData={setInputData}
         setList={setList}
-        setDropdownVisibility={setDropdownVisibility}
+        setElementVisibility={setElementVisibility}
         openDropdownIndex={openDropdownIndex}
-        setOpenDropdownIndex={setDropdownVisibility}
+        setOpenDropdownIndex={setElementVisibility}
       /> */}
     </div>
   );

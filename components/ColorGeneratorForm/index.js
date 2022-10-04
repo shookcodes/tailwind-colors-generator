@@ -1,8 +1,8 @@
 import { useState, useEffect, useContext } from "react";
-import InputWithDropdown from "./InputWithDropdown";
+import { ColorsContext } from "../../context";
 import ColorPreviewButton from "../ColorPreviewButton";
 import PopupAlert from "../PopupAlert";
-import { tailwindColors, baseTailwindColors } from "../../data/tailwindColors";
+import { tailwindColors } from "../../data/tailwindColors";
 import {
   convertFromHex,
   generateMedianRGB,
@@ -17,12 +17,10 @@ const ColorGeneratorForm = ({
   setColorsPalette,
   setShadeAdded,
 }) => {
-  const [filteredTailwindColors, setFilteredTailwindColors] = useState([
-    ...baseTailwindColors(),
-  ]);
+  const { state, dispatch } = useContext(ColorsContext);
 
-  const [primaryShade, setPrimaryShade] = useState(null);
-  const [secondaryShade, setSecondaryShade] = useState(null);
+  const { primaryShade, secondaryShade } = state;
+
   const [generatedRGB, setGeneratedRGB] = useState(null);
   const [generatedColorName, setGeneratedColorName] = useState("");
   const [currentPaletteColor, setCurrentPaletteColor] = useState(null);
@@ -31,8 +29,6 @@ const ColorGeneratorForm = ({
 
   const [colorObject, setColorObject] = useState(null);
   const [shadeObject, setShadeObject] = useState(null);
-
-  const [useDefaultFilter, setUseDefaultFilter] = useState(true);
 
   // Sort each color's values from smallest to largest
   const sortColorValues = colorsPalette.map((color) => {
@@ -87,20 +83,21 @@ const ColorGeneratorForm = ({
   // This useEffect takes the data from both inputs and creates a new color object that can be added to the colorsPalette array.
   useEffect(() => {
     if (primaryShade !== null && secondaryShade !== null) {
-      const primaryRGB = convertFromHex(primaryShade?.shade.hex);
-      const secondaryRGB = convertFromHex(secondaryShade?.shade.hex);
-      const colorPrefix = secondaryShade.colorPrefix;
-      const primaryColorValue = primaryShade.shade.value;
-      const secondaryColorValue = secondaryShade.shade.value;
-      setIsDuplicateHex(false);
+      console.log("stuff", primaryShade, secondaryShade);
+      // const primaryRGB = convertFromHex(primaryShade?.shade.hex);
+      // const secondaryRGB = convertFromHex(secondaryShade?.shade.hex);
+      // const colorPrefix = secondaryShade.colorPrefix;
+      // const primaryColorValue = primaryShade.shade.value;
+      // const secondaryColorValue = secondaryShade.shade.value;
+      // setIsDuplicateHex(false);
 
-      // generate RGB for the median color
-      setGeneratedRGB(generateMedianRGB(primaryRGB, secondaryRGB));
-      const colorValues = {
-        colorPrefix,
-        primaryColorValue,
-        secondaryColorValue,
-      };
+      // // generate RGB for the median color
+      // setGeneratedRGB(generateMedianRGB(primaryRGB, secondaryRGB));
+      // const colorValues = {
+      //   colorPrefix,
+      //   primaryColorValue,
+      //   secondaryColorValue,
+      // };
 
       if (generatedRGB) {
         const hex = convertToHex(generatedRGB);
@@ -159,19 +156,7 @@ const ColorGeneratorForm = ({
         }}
       >
         <fieldset className="flex w-full h-auto flex-col items-center mb-12">
-          {filteredTailwindColors && (
-            <SelectionGrid
-              defaultFilter={[...baseTailwindColors()]}
-              useDefaultFilter={useDefaultFilter}
-              setUseDefaultFilter={setUseDefaultFilter}
-              filteredTailwindColors={filteredTailwindColors}
-              setFilteredTailwindColors={setFilteredTailwindColors}
-              primaryShade={primaryShade}
-              setPrimaryShade={setPrimaryShade}
-              secondaryShade={secondaryShade}
-              setSecondaryShade={setSecondaryShade}
-            />
-          )}
+          <SelectionGrid />
 
           <ColorPreviewButton
             backgroundColor={generatedRGB}

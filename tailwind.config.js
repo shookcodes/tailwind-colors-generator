@@ -1,3 +1,5 @@
+const { default: postcss } = require("postcss");
+
 module.exports = {
   mode: "jit",
   content: [
@@ -115,5 +117,5 @@ module.exports = {
       },
     },
   },
-  plugins: [],
+  plugins: [postcss],
 };

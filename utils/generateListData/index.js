@@ -1,7 +1,7 @@
 import { tailwindColors } from "../../data/tailwindColors";
 
 // This function generates the second dropdown list based on the color prefix and value of the first input
-export const generateListData = ({ colorPrefix, ...shades }, index) => {
+const _createListArr = ({ colorPrefix }) => {
   // Filter out the colors that don't match the prefix
   const listData = [
     ...tailwindColors().filter((color) => color.colorPrefix === colorPrefix),
@@ -20,6 +20,16 @@ export const generateListData = ({ colorPrefix, ...shades }, index) => {
   });
 
   // Creating a new list object with the filtered data, removing the current color selected from the first input. This copy ensures the data list isn't mutated and the secondary list shows the correct data.
-  const renderedColorsList = [{ colorPrefix, shades: [...renderedColorsArr] }];
+  const renderedColorsList = { colorPrefix, shades: [...renderedColorsArr] };
+
+  // callback = renderedColorsList;
   return renderedColorsList;
 };
+
+const generateListData = ({ colorPrefix }) => {
+  const listData = _createListArr({ colorPrefix });
+
+  return listData;
+};
+
+export { generateListData };

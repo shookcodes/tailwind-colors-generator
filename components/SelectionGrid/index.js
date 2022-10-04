@@ -1,120 +1,82 @@
-import { useState, useEffect, useRef } from "react";
-import { generateListData } from "../../utils";
+import { useEffect, useContext } from "react";
+import { ColorsContext } from "../../context";
 import { IoMdClose } from "react-icons/io";
 
 import { randomizeOpacity } from "../../animations/randomizeOpacity.js";
 import { transitionHeight } from "../../animations/transitionHeight";
 import { convertToHex, convertFromHex, toggleTextColor } from "../../utils";
 
-const SelectionGrid = ({
-  data,
-  defaultData,
-  columns,
-  className,
-  index,
-  defaultFilter,
-  useDefaultFilter,
-  setUseDefaultFilter,
-  filteredTailwindColors,
-  setFilteredTailwindColors,
-  primaryShade,
-  setPrimaryShade,
-  secondaryShade,
-  setSecondaryShade,
-  // prevButtons,
-}) => {
-  const [grid, setGrid] = useState("");
-  const [gridButtons, setGridButtons] = useState([]);
-  const queryGridButtons = () => [...document.querySelectorAll(".gridButton")];
-  useEffect(() => {
-    if (document !== undefined) {
-      setGrid(document.querySelector("#selectionGrid"));
-    }
-  }, []);
+const SelectionGrid = ({ defaultData, className, index }) => {
+  const { state, dispatch } = useContext(ColorsContext);
 
-  console.log("flit", filteredTailwindColors);
+  const { currentColors, listType, previousListType, generatedObject } = state;
 
+  const { colorPrefix, primaryShade, secondaryShade } = generatedObject;
   const handleButtonMouseOut = (e) => {
     if (!e.relatedTarget || e.relatedTarget.type !== "button") {
     }
   };
+  const gridButtons = () => [...document.querySelectorAll(".gridButton")];
 
   const handleButtonClick = async (colorObject) => {
-    const listData = await generateShadesListData(colorObject);
-    if (!isDefault) {
-      if (primaryShade === null) {
-        setPrimaryShade(colorObject);
-      } else {
-        setSecondaryShade(colorObject);
-      }
-    } else {
-      if (primaryShade === null && secondaryShade === null) {
-        // transitionHeight(grid);
-        // randomizeOpacity(list, false);
-        // transitionHeight(grid, false);
-        setTimeout(() => {
-          setFilteredTailwindColors(listData);
-          setUseDefaultFilter(false);
-        }, 401);
-      }
+    if (listType === "primary") {
+      randomizeOpacity(gridButtons(), false);
+
+      setTimeout(() => {
+        dispatch({
+          type: "update",
+          data: colorObject,
+        });
+      }, 501);
+    }
+
+    if (listType === "secondary" && previousListType === "primary") {
+      dispatch({
+        type: "addPrimaryShade",
+        data: colorObject,
+      });
+    }
+
+    if (listType === "secondary" && primaryShade) {
+      dispatch({
+        type: "addSecondaryShade",
+        data: colorObject,
+      });
+    }
+
+    if (listType === "secondary" && primaryShade && secondaryShade) {
+      dispatch({
+        type: "generateNewShade",
+        data: colorObject,
+      });
     }
   };
-
   const handleCloseButtonClick = () => {
-    const list = [...document.querySelectorAll(".gridButton")];
-    setPrimaryShade(null);
-    setSecondaryShade(null);
-    randomizeOpacity(list, false);
-
-    // transitionHeight(grid, false);
+    randomizeOpacity(gridButtons(), false);
 
     setTimeout(() => {
-      setFilteredTailwindColors(defaultFilter);
-      setUseDefaultFilter(true);
-    }, 401);
+      dispatch({
+        type: "default",
+      });
+    }, 501);
   };
 
-  // Generate the data for the secondary grid
-  const generateShadesListData = async (colorObject, listIndex) => {
-    return generateListData({ ...colorObject });
-  };
-
-  // const prevousButtons = usePrevious(data, gridButtons);
-  const randomize = randomizeOpacity(gridButtons, true);
-  // console.log("prev", prevousButtons);
-
-  // useEffect(() => {
-  //   if (data) {
-  //     console.log("grid bt", gridButtons);
-  //   }
-  // }, [data]);
   useEffect(() => {
-    // console.log("gridButtons);
-    if (document !== undefined) {
-      // setTimeout(() => {
-      //   randomize;
-      // setGridButtons((prev) => [
-      //   prev[prev.length > 0 && prev.length - 1],
-      //   queryGridButtons(),
-      // ]);
-      setGridButtons(queryGridButtons());
-      // transitionHeight(grid);
-      // }, 401);
+    if (!currentColors && !listType) {
+      return dispatch({ type: "default" });
     }
-  }, []);
-
-  useEffect(() => {
-    console.log("DEF", defaultData);
-    if (!defaultData) {
-      console.log("false");
-      setGridButtons((prev) => [prev, ...queryGridButtons()]);
+    if (listType === "primary") {
+      randomizeOpacity(gridButtons(), true);
     }
-    console.log("btns", gridButtons);
-  }, [defaultData]);
+    if (listType === "secondary" && previousListType === "primary") {
+      randomizeOpacity(gridButtons(), true);
+    }
+  }, [dispatch, currentColors, listType, primaryShade, previousListType]);
 
+  console.log("STATE", state);
   return (
     <div id="gridWrapper" className="border-2 border-blue-400">
-      {!useDefaultFilter && (
+      {listType === "secondary" && (
         <button
           onClick={(e) => {
             handleCloseButtonClick();
@@ -131,14 +93,15 @@ const SelectionGrid = ({
         className={`flex flex-1 flex-wrap mx-auto mt-0 p-2 border-2 border-red-400 sm:p-4 transform transition-all duration-200 delay-500 gap-4
        w-full selectionGrid ${className}`}
       >
-        {data &&
-          data.map((item, dataIndex) =>
-            item.shades.map((shade, shadeIndex) => {
-              const tailwindName = item.colorPrefix + "-" + shade.value;
+        {currentColors?.length > 0 &&
+          currentColors.map((item, dataIndex) => {
+            const { colorPrefix, shades } = item;
+            return shades.map((shade, shadeIndex) => {
+              const tailwindName = colorPrefix + "-" + shade.value;
               const textColor = toggleTextColor(convertFromHex(shade.hex));
 
               const hoverColorsArr = [
-                item.shades
+                shades
                   .filter((shade, arrIndex) => {
                     if (arrIndex !== 0) return shade;
                   })
@@ -150,8 +113,7 @@ const SelectionGrid = ({
               return (
                 <button
                   key={"btn-" + item.colorPrefix + "-" + shadeIndex}
-                  className={` transform transition-all ease-in-out justify-center 
-            items-center rounded-lg opacity-0 forwards scale-0 w-16 h-16 origin-center gridButton  ${textColor}`}
+                  className={`transform transition-all ease-in-out justify-center items-center rounded-lg w-16 h-16 origin-center opacity-0 scale-0 forwards gridButton  ${textColor}`}
                   id={tailwindName}
                   value={tailwindName}
                   type="button"
@@ -168,7 +130,7 @@ const SelectionGrid = ({
                     handleButtonClick({ colorObject, index });
                   }}
                   onMouseOver={(e) => {
-                    e.currentTarget.style.background = `linear-gradient(45deg, ${hoverColorsArr})`;
+                    e.currentTarget.opacity = 0.8;
                     e.currentTarget.style.border = `8px solid orange outset`;
                     // e.currentTarget.style.opacity = 0.7;
                   }}
@@ -182,8 +144,8 @@ const SelectionGrid = ({
                   <span>{defaultData ? item.colorPrefix : shade.value}</span>
                 </button>
               );
-            })
-          )}
+            });
+          })}
       </div>
     </div>
   );

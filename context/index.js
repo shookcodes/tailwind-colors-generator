@@ -7,16 +7,6 @@ const initialState = {
   previousListType: "",
   currentColors: "",
   listType: "",
-  generatedObject: {
-    colorPrefix: "",
-    primaryShade: { hex: "", rgb: "" },
-    secondaryShade: { hex: "", rgb: "" },
-    generatedShade: {
-      value: "",
-      hex: "",
-      rgb: "",
-    },
-  },
   colorsPalette: [],
 };
 

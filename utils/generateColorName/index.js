@@ -1,8 +1,8 @@
-export const generateColorName = ({
+export const generateColorName = (
   colorPrefix,
   primaryColorValue,
-  secondaryColorValue,
-}) => {
+  secondaryColorValue
+) => {
   let averageValue =
     (parseInt(primaryColorValue) + parseInt(secondaryColorValue)) / 2;
 

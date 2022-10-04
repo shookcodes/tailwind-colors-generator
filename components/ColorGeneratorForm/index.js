@@ -12,13 +12,10 @@ import {
 } from "../../utils";
 import SelectionGrid from "../SelectionGrid";
 
-const ColorGeneratorForm = ({
-  colorsPalette,
-  setColorsPalette,
-  setShadeAdded,
-}) => {
+const ColorGeneratorForm = ({ setColorsPalette, setShadeAdded }) => {
   const { state, dispatch } = useContext(ColorsContext);
 
+  const { colorsPalette } = state;
   const { primaryShade, secondaryShade } = state;
 
   const [generatedRGB, setGeneratedRGB] = useState(null);
@@ -31,7 +28,7 @@ const ColorGeneratorForm = ({
   const [shadeObject, setShadeObject] = useState(null);
 
   // Sort each color's values from smallest to largest
-  const sortColorValues = colorsPalette.map((color) => {
+  const sortColorValues = colorsPalette?.map((color) => {
     if (color.shades && color.shades?.length > 1) {
       color.shades?.sort((a, b) => {
         return a.value - b.value;
@@ -83,30 +80,14 @@ const ColorGeneratorForm = ({
   // This useEffect takes the data from both inputs and creates a new color object that can be added to the colorsPalette array.
   useEffect(() => {
     if (primaryShade !== null && secondaryShade !== null) {
-      console.log("stuff", primaryShade, secondaryShade);
-      // const primaryRGB = convertFromHex(primaryShade?.shade.hex);
-      // const secondaryRGB = convertFromHex(secondaryShade?.shade.hex);
-      // const colorPrefix = secondaryShade.colorPrefix;
-      // const primaryColorValue = primaryShade.shade.value;
-      // const secondaryColorValue = secondaryShade.shade.value;
-      // setIsDuplicateHex(false);
-
-      // // generate RGB for the median color
-      // setGeneratedRGB(generateMedianRGB(primaryRGB, secondaryRGB));
-      // const colorValues = {
-      //   colorPrefix,
-      //   primaryColorValue,
-      //   secondaryColorValue,
-      // };
-
       if (generatedRGB) {
-        const hex = convertToHex(generatedRGB);
+        // const hex = convertToHex(generatedRGB);
         setIsDuplicateHex(false);
         const colorName = validateGeneratedColor(
-          tailwindColors(),
           colorsPalette,
           generateColorName({ ...colorValues }),
           hex,
+
           (currentName, duplicatePrefix, duplicateColor) => {
             const currentPrefix = currentName.split("-")[0];
             const currentValue = currentName.split("-")[1];

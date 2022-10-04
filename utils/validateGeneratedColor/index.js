@@ -1,11 +1,11 @@
+import { tailwindColors } from "../../data/tailwindColors";
 import { checkColorHexDuplicates } from "../checkDuplicates";
 import { checkColorNameDuplicates } from "../checkDuplicates";
 
 // This validation checks for duplicate color prefixes and values on both the default Tailwind colors and the generated colors palette. It returns an updated color name, if applicable, or returns "duplicate found" if an exact name and hex match is found in the generated array.
 export const validateGeneratedColor = (
-  defaultColors,
   filteredColors,
-  currentName,
+  generatedName,
   rgb,
   callback,
   duplicatePrefix = false,
@@ -14,34 +14,34 @@ export const validateGeneratedColor = (
   // duplicateValue = false
 ) => {
   //   let duplicateColor = false;
-  // If a duplicate is found in the default array, increase the value of the currentName by one.
+  // If a duplicate is found in the default array, increase the value of the generatedName by one.
   const increaseColorValue = () => {
-    return (currentName =
-      currentName.split("-")[0] +
+    return (generatedName =
+      generatedName.split("-")[0] +
       "-" +
-      (parseInt(currentName.split("-")[1]) + 1));
+      (parseInt(generatedName.split("-")[1]) + 1));
   };
   // defaultDuplicates  checks for duplicates of the default Tailwind colors. Returns false if no duplicates are found, otherwise return checkColorNameDuplicates's value
   const defaultDuplicates = () => {
-    return checkColorNameDuplicates(defaultColors, currentName)
-      ? checkColorNameDuplicates(defaultColors, currentName)
+    return checkColorNameDuplicates(tailwindColors(), generatedName)
+      ? checkColorNameDuplicates(tailwindColors(), generatedName)
       : false;
   };
 
   // paletteDuplicates  checks for duplicates of the filteredColors array. Returns false if no duplicates are found, otherwise return checkColorNameDuplicates's value
   const paletteDuplicates = () => {
-    return checkColorNameDuplicates(filteredColors, currentName)
-      ? checkColorNameDuplicates(filteredColors, currentName)
+    return checkColorNameDuplicates(filteredColors, generatedName)
+      ? checkColorNameDuplicates(filteredColors, generatedName)
       : false;
   };
 
   if (defaultDuplicates().duplicateValue) {
-    increaseColorValue(currentName);
+    increaseColorValue(generatedName);
   }
   // If the filtered palette is empty or if there are no other colors on the palette starting with the same color prefix, return the validated name.
   if (filteredColors.length === 0 || !paletteDuplicates().duplicatePrefix) {
-    callback(currentName, duplicatePrefix, duplicateColor);
-    return currentName;
+    callback(generatedName, duplicatePrefix, duplicateColor);
+    return generatedName;
   }
 
   // If the color's prefix is found on the filtered palette, check if a match is found with the same name and/or hex, and handle as applicable
@@ -49,21 +49,20 @@ export const validateGeneratedColor = (
     duplicatePrefix = true;
 
     if (
-      currentName ===
+      generatedName ===
       `${paletteDuplicates().duplicatePrefix}-${
         paletteDuplicates().duplicateValue
       }`
     ) {
-        
       let prefix;
       let shade;
       const duplicateNameAndHex = checkColorHexDuplicates(
         filteredColors,
-        currentName.split("-")[0],
+        generatedName.split("-")[0],
         rgb
       );
 
-      // If the current color has the same colorPrefix, value, and hex properties, set duplicateColor callback value to true but don't update the value of the currentName.
+      // If the current color has the same colorPrefix, value, and hex properties, set duplicateColor callback value to true but don't update the value of the generatedName.
       if (duplicateNameAndHex) {
         duplicateColor = filteredColors.map((color) => {
           if (color.colorPrefix === duplicateNameAndHex.colorPrefix) {
@@ -79,15 +78,16 @@ export const validateGeneratedColor = (
         });
       }
 
-      // If the current name is the same but the hexes are different, increase the value of the currentName.
+      // If the current name is the same but the hexes are different, increase the value of the generatedName.
       if (!duplicateColor) {
-        increaseColorValue(currentName);
+        increaseColorValue(generatedName);
       } else {
-        currentName = currentName.split("-")[0] + "-" + parseInt(shade.value);
+        generatedName =
+          generatedName.split("-")[0] + "-" + parseInt(shade.value);
       }
     }
 
-    callback(currentName, duplicatePrefix, duplicateColor);
-    return currentName;
+    callback(generatedName, duplicatePrefix, duplicateColor);
+    return generatedName;
   }
 };

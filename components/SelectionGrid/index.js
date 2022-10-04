@@ -11,7 +11,7 @@ const SelectionGrid = ({ defaultData, className, index }) => {
 
   const { currentColors, listType, previousListType, generatedObject } = state;
 
-  const { colorPrefix, primaryShade, secondaryShade } = generatedObject;
+  const { colorPrefix, primaryShade, secondaryShade } = generatedObject || "";
   const handleButtonMouseOut = (e) => {
     if (!e.relatedTarget || e.relatedTarget.type !== "button") {
     }

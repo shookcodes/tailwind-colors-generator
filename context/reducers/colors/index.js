@@ -27,7 +27,6 @@ const colors = (state, action) => {
 
   const { colorObject } = data || "";
 
-  console.log("stateeee", state);
   // Set state of previous list
   previousListType = listType || "";
   switch (type) {
@@ -45,7 +44,6 @@ const colors = (state, action) => {
 
     case "addPrimaryShade":
       previousListType = listType;
-      console.log("data", data);
       const colorPrefix = colorObject.colorPrefix;
       const primaryShade = { ...colorObject.shade };
       const primaryRGB = convertFromHex(primaryShade.hex);
@@ -63,63 +61,42 @@ const colors = (state, action) => {
       previousListType = listType;
 
       const secondaryShade = colorObject.shade;
-      console.log("sec", secondaryShade);
       const secondaryRGB = convertFromHex(secondaryShade.hex);
-      console.log(
-        "sec2",
-        generatedObject.colorPrefix,
-        generatedObject.primaryShade.value,
-        secondaryShade.value
-      );
 
       secondaryShade = { ...secondaryShade, rgb: secondaryRGB };
-      console.log(
-        "sec2",
+
+      const initialGeneratedName = generateColorName(
         generatedObject.colorPrefix,
         generatedObject.primaryShade.value,
         secondaryShade.value
       );
 
-      console.log(
-        "sec2",
-        generatedObject.colorPrefix,
-        generatedObject.primaryShade.value,
-
-        generatedObject.primaryShade.rgb,
-        secondaryShade.rgb
-      );
-      // generate blended color
       const generatedRGB = generateMedianRGB(
         generatedObject.primaryShade.rgb,
         secondaryShade.rgb
       );
-      const generatedHex = convertToHex(generatedRGB);
-
-      const generatedName = generateColorName(
-        generatedObject.colorPrefix,
-        generatedObject.primaryShade.value,
-        secondaryShade.value
-      );
-
-      // generatedObject = { ...generatedObject, ...secondaryShade, generatedShade: {hex} };
-      console.log("NAME", generatedName);
+      // generate blended color
+      const generatedShade = {
+        rgb: generatedRGB,
+        hex: convertToHex(generatedRGB),
+      };
 
       // validate generated name
-      // validateGeneratedColor(
-      //   colorsPalette,
-      //   generatedName,
-      //   generatedHex,
-      //   (generatedName, duplicatePrefix, duplicateColor) => {
-      //     console.log("CB", generatedName, duplicatePrefix, duplicateColor);
-      //     if (!duplicateColor) {
-
-      //     }
-      //   }
-      // );
+      const { generatedName, duplicateColor } =
+        validateGeneratedColor(
+          colorsPalette,
+          initialGeneratedName,
+          generatedShade.hex
+        ) || "";
+      generatedObject = {
+        secondaryShade,
+        generatedShade: { ...generatedShade, name: generatedName },
+        duplicateColor,
+      };
       return {
         ...state,
         previousListType,
-        generatedObject,
+        ...generatedObject,
       };
 
     default:

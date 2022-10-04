@@ -1,7 +1,4 @@
-import { useContext } from "react";
-import { ColorContext } from "../../context/ColorContext";
-
-export const updateColorsPalette = (colorObject, colorPalette) => {
+export const updateColorsPalette = (colorObject, colorsPalette) => {
   if (colorsPalette.length === 0) {
     return colorsPalette.push({
       colorPrefix: colorObject.colorPrefix,

@@ -6,14 +6,14 @@ import { checkColorNameDuplicates } from "../checkDuplicates";
 export const validateGeneratedColor = (
   filteredColors,
   generatedName,
-  rgb,
-  callback,
-  duplicatePrefix = false,
-  duplicateColor = null
-
-  // duplicateValue = false
+  rgb
+  // callback,
+  // duplicatePrefix = false,
+  // duplicateColor = false
 ) => {
-  //   let duplicateColor = false;
+  let duplicatePrefix = false;
+  let duplicateColor = false;
+
   // If a duplicate is found in the default array, increase the value of the generatedName by one.
   const increaseColorValue = () => {
     return (generatedName =
@@ -28,7 +28,7 @@ export const validateGeneratedColor = (
       : false;
   };
 
-  // paletteDuplicates  checks for duplicates of the filteredColors array. Returns false if no duplicates are found, otherwise return checkColorNameDuplicates's value
+  // paletteDuplicates checks for duplicates of the filteredColors array. Returns false if no duplicates are found, otherwise return checkColorNameDuplicates's value
   const paletteDuplicates = () => {
     return checkColorNameDuplicates(filteredColors, generatedName)
       ? checkColorNameDuplicates(filteredColors, generatedName)
@@ -40,8 +40,7 @@ export const validateGeneratedColor = (
   }
   // If the filtered palette is empty or if there are no other colors on the palette starting with the same color prefix, return the validated name.
   if (filteredColors.length === 0 || !paletteDuplicates().duplicatePrefix) {
-    callback(generatedName, duplicatePrefix, duplicateColor);
-    return generatedName;
+    return { generatedName, duplicatePrefix, duplicateColor };
   }
 
   // If the color's prefix is found on the filtered palette, check if a match is found with the same name and/or hex, and handle as applicable
@@ -62,7 +61,7 @@ export const validateGeneratedColor = (
         rgb
       );
 
-      // If the current color has the same colorPrefix, value, and hex properties, set duplicateColor callback value to true but don't update the value of the generatedName.
+      // If the current color has the same colorPrefix, value, and hex properties, set duplicateColor value to true but don't update the value of the generatedName.
       if (duplicateNameAndHex) {
         duplicateColor = filteredColors.map((color) => {
           if (color.colorPrefix === duplicateNameAndHex.colorPrefix) {
@@ -74,7 +73,7 @@ export const validateGeneratedColor = (
               .pop();
           }
 
-          return { prefix, shade };
+          return { generatedName, duplicateColor: { prefix, shade } };
         });
       }
 
@@ -85,9 +84,7 @@ export const validateGeneratedColor = (
         generatedName =
           generatedName.split("-")[0] + "-" + parseInt(shade.value);
       }
+      return { generatedName, duplicateColor };
     }
-
-    callback(generatedName, duplicatePrefix, duplicateColor);
-    return generatedName;
   }
 };

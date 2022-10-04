@@ -14,7 +14,6 @@ const initialState = {
 const combinedReducers =
   (...reducers) =>
   (state, action) => {
-    console.log("state", state, "action", action, reducers);
     for (let i = 0; i < reducers.length; i++)
       state = reducers[i](state, action);
     return state;

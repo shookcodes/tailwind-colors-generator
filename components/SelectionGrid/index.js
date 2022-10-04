@@ -73,7 +73,6 @@ const SelectionGrid = ({ defaultData, className, index }) => {
     }
   }, [dispatch, currentColors, listType, primaryShade, previousListType]);
 
-  console.log("STATE", state);
   return (
     <div id="gridWrapper" className="border-2 border-blue-400">
       {listType === "secondary" && (

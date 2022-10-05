@@ -2,24 +2,17 @@ import { useState, useEffect, useContext } from "react";
 import { ColorsContext } from "../../context";
 import ColorPreviewButton from "../ColorPreviewButton";
 import PopupAlert from "../PopupAlert";
-import { tailwindColors } from "../../data/tailwindColors";
-import {
-  convertFromHex,
-  generateMedianRGB,
-  generateColorName,
-  convertToHex,
-  validateGeneratedColor,
-} from "../../utils";
 import SelectionGrid from "../SelectionGrid";
 
 const ColorGeneratorForm = ({ setColorsPalette, setShadeAdded }) => {
   const { state, dispatch } = useContext(ColorsContext);
 
   const { colorsPalette } = state;
-  const { primaryShade, secondaryShade } = state;
+  const { primaryShade, secondaryShade, generatedShade } =
+    state.generatedObject || "";
 
-  const [generatedRGB, setGeneratedRGB] = useState(null);
-  const [generatedColorName, setGeneratedColorName] = useState("");
+  const { rgb, hex, value, name } = generatedShade || "";
+
   const [currentPaletteColor, setCurrentPaletteColor] = useState(null);
   const [duplicateAlert, setDuplicateAlert] = useState(false);
   const [isDuplicateHex, setIsDuplicateHex] = useState(false);
@@ -43,7 +36,7 @@ const ColorGeneratorForm = ({ setColorsPalette, setShadeAdded }) => {
 
     sortColorValues;
     if (colorsPalette.length === 0) {
-      setColorsPalette([{ colorPrefix, shades: [{ ...shade }] }]);
+      return [{ colorPrefix, shades: [{ ...shade }] }];
     } else {
       if (isDuplicateHex) {
         setDuplicateAlert(true);
@@ -79,48 +72,14 @@ const ColorGeneratorForm = ({ setColorsPalette, setShadeAdded }) => {
 
   // This useEffect takes the data from both inputs and creates a new color object that can be added to the colorsPalette array.
   useEffect(() => {
-    if (primaryShade !== null && secondaryShade !== null) {
-      if (generatedRGB) {
-        // const hex = convertToHex(generatedRGB);
-        setIsDuplicateHex(false);
-        const colorName = validateGeneratedColor(
-          colorsPalette,
-          generateColorName({ ...colorValues }),
-          hex,
-
-          (currentName, duplicatePrefix, duplicateColor) => {
-            const currentPrefix = currentName.split("-")[0];
-            const currentValue = currentName.split("-")[1];
-            if (duplicateColor) {
-              return setIsDuplicateHex(true);
-            }
-            if (!duplicatePrefix) {
-              setColorObject({
-                colorPrefix: currentPrefix,
-                shades: [{ value: currentValue, hex, rgb: generatedRGB }],
-              });
-              return setShadeObject(null);
-            }
-            if (duplicatePrefix) {
-              setShadeObject({
-                colorPrefix: currentPrefix,
-                shade: { value: currentValue, hex, rgb: generatedRGB },
-              });
-              return setColorObject(null);
-            }
-          }
-        );
-
-        setGeneratedColorName(colorName);
-      }
+    if (generatedShade && generatedShade.duplicateColor === false) {
     }
   }, [
     colorsPalette,
     primaryShade,
     secondaryShade,
-    generatedRGB,
-    generatedColorName,
     isDuplicateHex,
+    generatedShade,
   ]);
 
   return (
@@ -140,13 +99,13 @@ const ColorGeneratorForm = ({ setColorsPalette, setShadeAdded }) => {
           <SelectionGrid />
 
           <ColorPreviewButton
-            backgroundColor={generatedRGB}
-            text={generatedColorName}
+            backgroundColor={rgb}
+            text={name}
             currentPaletteColor={currentPaletteColor}
             setCurrentPaletteColor={setCurrentPaletteColor}
             handleAddToPaletteClick={handleAddToPaletteClick}
             className={`transform ease-in-out duration-500 ${
-              generatedRGB
+              rgb
                 ? "translate-x-0 w-full sm:w-8/12 opacity-100"
                 : "-translate-x-100 w-0 opacity-0"
             }`}

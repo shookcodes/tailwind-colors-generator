@@ -11,18 +11,18 @@ const SelectionGrid = ({ defaultData, className, index }) => {
 
   const { currentColors, listType, previousListType, generatedObject } = state;
 
-  const { colorPrefix, primaryShade, secondaryShade } = generatedObject || "";
+  const { primaryShade, secondaryShade } = generatedObject || "";
   const handleButtonMouseOut = (e) => {
     if (!e.relatedTarget || e.relatedTarget.type !== "button") {
     }
   };
   const gridButtons = () => [...document.querySelectorAll(".gridButton")];
 
-  const handleButtonClick = async (colorObject) => {
+  const handleButtonClick = async ({ colorObject }) => {
     if (listType === "primary") {
+      // Remove buttons from the grid so secondary data can be displayed
       randomizeOpacity(gridButtons(), false);
-
-      setTimeout(() => {
+      return setTimeout(() => {
         dispatch({
           type: "update",
           data: colorObject,
@@ -30,25 +30,31 @@ const SelectionGrid = ({ defaultData, className, index }) => {
       }, 501);
     }
 
-    if (listType === "secondary" && previousListType === "primary") {
-      dispatch({
-        type: "addPrimaryShade",
-        data: colorObject,
-      });
-    }
+    if (listType === "secondary") {
+      // If secondary data is displayed, add the first color clicked as the primary shade
 
-    if (listType === "secondary" && primaryShade) {
-      dispatch({
-        type: "addSecondaryShade",
-        data: colorObject,
-      });
-    }
+      if (!primaryShade?.rgb) {
+        return dispatch({
+          type: "createPrimaryShade",
+          data: colorObject,
+        });
+      }
 
-    if (listType === "secondary" && primaryShade && secondaryShade) {
-      dispatch({
-        type: "generateNewShade",
-        data: colorObject,
-      });
+      // If a user clicks the button that was already selected for the primary shade, remove the primary shade
+      if (primaryShade?.value === colorObject?.shade?.value) {
+        return dispatch({
+          type: "deletePrimaryShade",
+        });
+      } else if (primaryShade?.rgb && !secondaryShade?.rgb) {
+        return dispatch({
+          type: "createSecondaryShade",
+          data: colorObject,
+        });
+      } else if (secondaryShade?.value === colorObject?.shade?.value) {
+        return dispatch({
+          type: "deleteSecondaryShade",
+        });
+      } else return;
     }
   };
   const handleCloseButtonClick = () => {
@@ -71,7 +77,19 @@ const SelectionGrid = ({ defaultData, className, index }) => {
     if (listType === "secondary" && previousListType === "primary") {
       randomizeOpacity(gridButtons(), true);
     }
-  }, [dispatch, currentColors, listType, primaryShade, previousListType]);
+    if (primaryShade?.rgb && secondaryShade?.rgb) {
+      dispatch({
+        type: "createGeneratedShade",
+      });
+    }
+  }, [
+    dispatch,
+    currentColors,
+    listType,
+    primaryShade,
+    previousListType,
+    secondaryShade?.rgb,
+  ]);
 
   return (
     <div id="gridWrapper" className="border-2 border-blue-400">

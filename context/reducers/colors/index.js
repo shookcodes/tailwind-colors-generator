@@ -25,7 +25,7 @@ const colors = (state, action) => {
     // },
   } = state;
 
-  const { colorObject } = data || "";
+  const colorObject = data || "";
 
   // Set state of previous list
   previousListType = listType || "";
@@ -42,7 +42,7 @@ const colors = (state, action) => {
 
       return { ...state, previousListType, listType, currentColors };
 
-    case "addPrimaryShade":
+    case "createPrimaryShade":
       previousListType = listType;
       const colorPrefix = colorObject.colorPrefix;
       const primaryShade = { ...colorObject.shade };
@@ -52,12 +52,27 @@ const colors = (state, action) => {
         ...state,
         previousListType,
         generatedObject: {
+          ...generatedObject,
           colorPrefix,
           primaryShade: { rgb: primaryRGB, ...primaryShade },
         },
       };
+    case "deletePrimaryShade":
+      previousListType = listType;
 
-    case "addSecondaryShade":
+      // Remove primary and generated shade
+      generatedObject.primaryShade = "";
+      if (generatedObject?.generatedShade) {
+        generatedObject.generatedShade = "";
+      }
+
+      return {
+        ...state,
+        previousListType,
+        generatedObject,
+      };
+
+    case "createSecondaryShade":
       previousListType = listType;
 
       const secondaryShade = colorObject.shade;
@@ -65,23 +80,46 @@ const colors = (state, action) => {
 
       secondaryShade = { ...secondaryShade, rgb: secondaryRGB };
 
+      return {
+        ...state,
+        previousListType,
+        generatedObject: { ...generatedObject, secondaryShade },
+      };
+
+    case "deleteSecondaryShade":
+      previousListType = listType;
+
+      // Remove primary and generated shade
+      generatedObject.secondaryShade = "";
+      if (generatedObject?.generatedShade) {
+        return (generatedObject.generatedShade = "");
+      }
+
+      return {
+        ...state,
+        previousListType,
+        generatedObject: { ...generatedObject, secondaryShade },
+      };
+
+    case "createGeneratedShade":
+      previousListType = listType;
       const initialGeneratedName = generateColorName(
         generatedObject.colorPrefix,
         generatedObject.primaryShade.value,
-        secondaryShade.value
+        generatedObject.secondaryShade.value
       );
 
       const generatedRGB = generateMedianRGB(
         generatedObject.primaryShade.rgb,
-        secondaryShade.rgb
+        generatedObject.secondaryShade.rgb
       );
-      // generate blended color
+      // Generate blended color
       const generatedShade = {
         rgb: generatedRGB,
         hex: convertToHex(generatedRGB),
       };
 
-      // validate generated name
+      // Validate generated name
       const { generatedName, duplicateColor } =
         validateGeneratedColor(
           colorsPalette,
@@ -89,14 +127,17 @@ const colors = (state, action) => {
           generatedShade.hex
         ) || "";
       generatedObject = {
-        secondaryShade,
+        ...generatedObject,
+        ...primaryShade,
+        ...secondaryShade,
         generatedShade: { ...generatedShade, name: generatedName },
         duplicateColor,
       };
+
       return {
         ...state,
         previousListType,
-        ...generatedObject,
+        generatedObject,
       };
 
     default:

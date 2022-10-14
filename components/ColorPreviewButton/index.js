@@ -8,23 +8,6 @@ const ColorPreviewButton = ({
   backgroundColor,
   handleAddToPaletteClick,
 }) => {
-  // Set the color object and pass it to the parent form component for data handling
-  const handleAddColorButtonClick = (e) => {
-    e.preventDefault();
-    const obj = {
-      colorPrefix: text.split("-")[0],
-      shade: {
-        value: text.split("-")[1],
-        hex: convertToHex(backgroundColor),
-        rgb: backgroundColor,
-      },
-    };
-
-    handleAddToPaletteClick(() => {
-      return obj;
-    });
-  };
-
   const textColor = () => {
     if (backgroundColor) {
       return toggleTextColor(backgroundColor);
@@ -45,9 +28,7 @@ const ColorPreviewButton = ({
         title="Add color to palette"
         type="submit"
         value={text}
-        onClick={(e) => {
-          handleAddColorButtonClick(e);
-        }}
+        onClick={handleAddToPaletteClick}
       >
         <span
           className={`flex  transform delay-100 transition ease-in-out whitespace-nowrap ${textColor()} ${

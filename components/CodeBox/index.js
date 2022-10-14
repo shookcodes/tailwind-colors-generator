@@ -7,15 +7,14 @@ const CodeBox = ({ colorsPalette }) => {
         colors: { 
             extend: {
               ${colorsPalette
-                .map((color, index) => {
-                  return `${index > 0 ? "" : "  "}${color.colorPrefix}: {
-                  ${color.shades
+                .map(({ colorPrefix, shades }, index) => {
+                  return `${index > 0 ? "" : "  "}${colorPrefix}: {
+                  ${shades
                     .map((shade, index) => {
                       return `${index > 0 ? "     " : "  "}${shade.value}: "${
                         shade.hex
                       }"${
-                        color.shades.length > 1 &&
-                        index !== color.shades.length - 1
+                        shades.length > 1 && index !== shades.length - 1
                           ? ",\n               "
                           : "\n               "
                       }`;

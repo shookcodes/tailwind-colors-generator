@@ -53,7 +53,7 @@ export const validateGeneratedColor = (
         paletteDuplicates().duplicateValue
       }`
     ) {
-      let prefix;
+      let colorPrefix;
       let shade;
       const duplicateNameAndHex = checkColorHexDuplicates(
         filteredColors,
@@ -65,7 +65,7 @@ export const validateGeneratedColor = (
       if (duplicateNameAndHex) {
         duplicateColor = filteredColors.map((color) => {
           if (color.colorPrefix === duplicateNameAndHex.colorPrefix) {
-            prefix = color.colorPrefix;
+            colorPrefix = color.colorPrefix;
             shade = color.shades
               .filter((shade) => {
                 return shade.hex === duplicateNameAndHex.filteredShades[0].hex;
@@ -73,7 +73,7 @@ export const validateGeneratedColor = (
               .pop();
           }
 
-          return { generatedName, duplicateColor: { prefix, shade } };
+          return { generatedName, duplicateColor: { colorPrefix, shade } };
         });
       }
 
@@ -87,4 +87,5 @@ export const validateGeneratedColor = (
       return { generatedName, duplicateColor };
     }
   }
+  return { generatedName, duplicatePrefix, duplicateColor };
 };

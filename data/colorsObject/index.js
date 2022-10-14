@@ -1,14 +1,13 @@
-export const updateColorsPalette = (colorObject, colorsPalette) => {
-  if (colorsPalette.length === 0) {
-    return colorsPalette.push({
-      colorPrefix: colorObject.colorPrefix,
-      shades: [{ ...colorObject.shade }],
-    });
-  }
-
-  colorsPalette.forEach((color) => {
-    if (color.colorPrefix === colorObject.colorPrefix) {
-      return color.shades.push({ ...colorObject.shade });
-    }
-  });
+export const colorsObject = {
+  listType: "",
+  previousListType: "",
+  currentSelectionColors: [],
+  generatedObject: {
+    primaryShade: { value: "", hex: "", rgb: "" },
+    secondaryShade: { value: "", hex: "", rgb: "" },
+    generatedShade: { name: "", value: "", hex: "", rgb: "" },
+    duplicateColor: false,
+    addedToColorsPalette: false,
+  },
+  colorsPalette: [],
 };

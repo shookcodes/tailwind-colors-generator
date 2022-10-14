@@ -1,7 +1,7 @@
 import { useEffect, useContext } from "react";
 import { ColorsContext } from "../../context";
 import { IoMdClose } from "react-icons/io";
-
+import { colorsObject } from "../../data/colorsObject";
 import { randomizeOpacity } from "../../animations/randomizeOpacity.js";
 import { transitionHeight } from "../../animations/transitionHeight";
 import { convertToHex, convertFromHex, toggleTextColor } from "../../utils";
@@ -9,9 +9,14 @@ import { convertToHex, convertFromHex, toggleTextColor } from "../../utils";
 const SelectionGrid = ({ defaultData, className, index }) => {
   const { state, dispatch } = useContext(ColorsContext);
 
-  const { currentColors, listType, previousListType, generatedObject } = state;
-
-  const { primaryShade, secondaryShade } = generatedObject || "";
+  const {
+    currentSelectionColors,
+    listType,
+    previousListType,
+    generatedObject,
+  } = state;
+  const { primaryShade, secondaryShade, addedToPalette } =
+    generatedObject || "";
   const handleButtonMouseOut = (e) => {
     if (!e.relatedTarget || e.relatedTarget.type !== "button") {
     }
@@ -23,14 +28,16 @@ const SelectionGrid = ({ defaultData, className, index }) => {
       // Remove buttons from the grid so secondary data can be displayed
       randomizeOpacity(gridButtons(), false);
       return setTimeout(() => {
-        dispatch({
-          type: "update",
+        return dispatch({
+          type: "showSecondaryGrid",
           data: colorObject,
         });
       }, 501);
     }
 
     if (listType === "secondary") {
+      if (!primaryShade.rgb || !secondaryShade.rgb) {
+      }
       // If secondary data is displayed, add the first color clicked as the primary shade
 
       if (!primaryShade?.rgb) {
@@ -45,7 +52,7 @@ const SelectionGrid = ({ defaultData, className, index }) => {
         return dispatch({
           type: "deletePrimaryShade",
         });
-      } else if (primaryShade?.rgb && !secondaryShade?.rgb) {
+      } else if (primaryShade?.rgb && !secondaryShade?.rgb && !addedToPalette) {
         return dispatch({
           type: "createSecondaryShade",
           data: colorObject,
@@ -54,7 +61,7 @@ const SelectionGrid = ({ defaultData, className, index }) => {
         return dispatch({
           type: "deleteSecondaryShade",
         });
-      } else return;
+      }
     }
   };
   const handleCloseButtonClick = () => {
@@ -62,14 +69,13 @@ const SelectionGrid = ({ defaultData, className, index }) => {
 
     setTimeout(() => {
       dispatch({
-        type: "default",
+        type: "showPrimaryGrid",
       });
     }, 501);
   };
-
   useEffect(() => {
-    if (!currentColors && !listType) {
-      return dispatch({ type: "default" });
+    if (state.currentSelectionColors?.length === 0 && listType?.length === 0) {
+      return dispatch({ type: "showPrimaryGrid" });
     }
     if (listType === "primary") {
       randomizeOpacity(gridButtons(), true);
@@ -78,18 +84,19 @@ const SelectionGrid = ({ defaultData, className, index }) => {
       randomizeOpacity(gridButtons(), true);
     }
     if (primaryShade?.rgb && secondaryShade?.rgb) {
-      dispatch({
-        type: "createGeneratedShade",
-      });
+      return dispatch({ type: "createGeneratedShade" });
     }
   }, [
+    currentSelectionColors.length,
     dispatch,
-    currentColors,
     listType,
-    primaryShade,
     previousListType,
-    secondaryShade?.rgb,
+    primaryShade,
+    secondaryShade.rgb,
+    state.currentSelectionColors?.length,
   ]);
+
+  // console.log("state", state);
 
   return (
     <div id="gridWrapper" className="border-2 border-blue-400">
@@ -110,9 +117,8 @@ const SelectionGrid = ({ defaultData, className, index }) => {
         className={`flex flex-1 flex-wrap mx-auto mt-0 p-2 border-2 border-red-400 sm:p-4 transform transition-all duration-200 delay-500 gap-4
        w-full selectionGrid ${className}`}
       >
-        {currentColors?.length > 0 &&
-          currentColors.map((item, dataIndex) => {
-            const { colorPrefix, shades } = item;
+        {currentSelectionColors &&
+          currentSelectionColors.map(({ colorPrefix, shades }, dataIndex) => {
             return shades.map((shade, shadeIndex) => {
               const tailwindName = colorPrefix + "-" + shade.value;
               const textColor = toggleTextColor(convertFromHex(shade.hex));
@@ -129,7 +135,7 @@ const SelectionGrid = ({ defaultData, className, index }) => {
 
               return (
                 <button
-                  key={"btn-" + item.colorPrefix + "-" + shadeIndex}
+                  key={"btn-" + colorPrefix + "-" + shadeIndex}
                   className={`transform transition-all ease-in-out justify-center items-center rounded-lg w-16 h-16 origin-center opacity-0 scale-0 forwards gridButton  ${textColor}`}
                   id={tailwindName}
                   value={tailwindName}
@@ -139,7 +145,7 @@ const SelectionGrid = ({ defaultData, className, index }) => {
                   }}
                   onClick={(e) => {
                     const colorObject = {
-                      colorPrefix: item.colorPrefix,
+                      colorPrefix: colorPrefix,
                       shade: { hex: shade.hex, value: shade.value },
                     };
                     e.preventDefault();
@@ -158,7 +164,7 @@ const SelectionGrid = ({ defaultData, className, index }) => {
                     handleButtonMouseOut(e);
                   }}
                 >
-                  <span>{defaultData ? item.colorPrefix : shade.value}</span>
+                  <span>{defaultData ? colorPrefix : shade.value}</span>
                 </button>
               );
             });

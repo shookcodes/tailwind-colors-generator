@@ -1,14 +1,8 @@
 import { createContext, useReducer } from "react";
 import colors from "./reducers/colors";
-import { baseTailwindColors } from "../data/tailwindColors";
+import colorsPalette from "./reducers/colorsPalette";
+import { colorsObject } from "../data/colorsObject";
 const ColorsContext = createContext([]);
-
-const initialState = {
-  previousListType: "",
-  currentColors: "",
-  listType: "",
-  colorsPalette: [],
-};
 
 // combine reducer function
 const combinedReducers =
@@ -35,7 +29,10 @@ const Provider = ({ children }) => {
     return result;
   };
 
-  const [state, dispatch] = useReducer(combinedReducers(colors), initialState); // pass more reducers combineReducers(user, blogs, products)
+  const [state, dispatch] = useReducer(
+    combinedReducers(colors, colorsPalette),
+    colorsObject
+  ); // pass more reducers combineReducers(user, blogs, products)
   const value = { state, dispatch, data };
   return (
     <ColorsContext.Provider value={value}>{children}</ColorsContext.Provider>

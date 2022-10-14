@@ -1,18 +1,19 @@
+import { useContext } from "react";
+import { ColorsContext } from "../../context";
 import { toggleTextColor } from "../../utils";
 import { MdInvertColorsOff, MdRemove } from "react-icons/md";
 
-const ColorsPalette = ({
-  colorsPalette,
-  setColorsPalette,
-  handleRemoveColor,
-  textColor,
-}) => {
+const ColorsPalette = ({ setColorsPalette, handleRemoveColor, textColor }) => {
+  const { state, dispatch } = useContext(ColorsContext);
+
+  const { colorsPalette, generatedObject } = state;
+
   return (
     <div className="flex flex-col w-full h-full mb-12">
       {colorsPalette &&
         colorsPalette.length > 0 &&
         colorsPalette.map((color, colorIndex) => {
-          const { colorPrefix } = color;
+          const { colorPrefix, shades } = color;
 
           return (
             <div
@@ -23,7 +24,7 @@ const ColorsPalette = ({
             >
               <h2 className="mb-1">{colorPrefix}</h2>
               <div className="flex flex-wrap gap-6 justify-start">
-                {color.shades.map((shade, index) => {
+                {shades?.map((shade, index) => {
                   const colorName = `${colorPrefix}-${shade.value}`;
 
                   // TODO REMOVE CONDITIONAL AFTER BUG FIXES

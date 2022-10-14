@@ -4,21 +4,26 @@ import ColorPreviewButton from "../ColorPreviewButton";
 import PopupAlert from "../PopupAlert";
 import SelectionGrid from "../SelectionGrid";
 
-const ColorGeneratorForm = ({ setColorsPalette, setShadeAdded }) => {
+const ColorGeneratorForm = ({ setShadeAdded }) => {
   const { state, dispatch } = useContext(ColorsContext);
 
-  const { colorsPalette } = state;
-  const { primaryShade, secondaryShade, generatedShade } =
-    state.generatedObject || "";
+  const { listType, previousListType, generatedObject } = state || "";
 
-  const { rgb, hex, value, name } = generatedShade || "";
+  const {
+    colorPrefix,
+    primaryShade,
+    secondaryShade,
+    generatedShade,
+    duplicateColor,
+  } = generatedObject || "";
+
+  const { currentSelectionColors, colorsPalette } = state || [];
+
+  const { rgb, hex, value, name } = generatedShade;
 
   const [currentPaletteColor, setCurrentPaletteColor] = useState(null);
   const [duplicateAlert, setDuplicateAlert] = useState(false);
   const [isDuplicateHex, setIsDuplicateHex] = useState(false);
-
-  const [colorObject, setColorObject] = useState(null);
-  const [shadeObject, setShadeObject] = useState(null);
 
   // Sort each color's values from smallest to largest
   const sortColorValues = colorsPalette?.map((color) => {
@@ -29,58 +34,21 @@ const ColorGeneratorForm = ({ setColorsPalette, setShadeAdded }) => {
     }
   });
 
-  // Once "Add to palette" button is clicked, add the color to the palette array if there are no duplicates. Pass the paletteArr to the parent component for data handling.
-  const handleAddToPaletteClick = (obj) => {
-    const { colorPrefix, shade } = obj();
-    setCurrentPaletteColor(obj());
-
+  // Once "Add to palette" button is clicked, add the color to the palette array if there are no duplicates.
+  const handleAddToPaletteClick = () => {
     sortColorValues;
-    if (colorsPalette.length === 0) {
-      return [{ colorPrefix, shades: [{ ...shade }] }];
+    if (generatedObject.duplicateColor) {
+      dispatch({ type: "deletePrimaryShade", type: "deleteSecondaryShade" });
+      return setDuplicateAlert(true);
     } else {
-      if (isDuplicateHex) {
-        setDuplicateAlert(true);
-      } else {
-        if (shadeObject) {
-          const { colorPrefix } = shadeObject;
-
-          const filteredColor = colorsPalette.filter((color) => {
-            if (color.colorPrefix === colorPrefix) {
-              return color.shades.push(shadeObject.shade);
-            }
-          });
-          setColorsPalette([...colorsPalette]);
-
-          setShadeAdded(true);
-        } else if (colorObject) {
-          setColorsPalette([
-            ...colorsPalette,
-            {
-              colorPrefix: colorObject.colorPrefix,
-              shades: [{ ...colorObject.shades[0] }],
-            },
-          ]);
-          setColorObject(() => {
-            return null;
-          });
-        }
-      }
+      return dispatch({
+        type: "addToPalette",
+        data: {
+          ...generatedObject,
+        },
+      });
     }
-    return setShadeAdded(true);
-    // setShadeAdded triggers ColorPalette and CodeBox to re-render once shade is added to colorPalette
   };
-
-  // This useEffect takes the data from both inputs and creates a new color object that can be added to the colorsPalette array.
-  useEffect(() => {
-    if (generatedShade && generatedShade.duplicateColor === false) {
-    }
-  }, [
-    colorsPalette,
-    primaryShade,
-    secondaryShade,
-    isDuplicateHex,
-    generatedShade,
-  ]);
 
   return (
     <>

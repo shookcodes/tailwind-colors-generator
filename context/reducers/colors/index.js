@@ -6,138 +6,174 @@ import {
   generateColorName,
   validateGeneratedColor,
 } from "../../../utils";
+import { colorsObject } from "../../../data/colorsObject";
 import { baseTailwindColors } from "../../../data/tailwindColors";
 
 const colors = (state, action) => {
   const { type, data } = action;
   const defaultColors = baseTailwindColors();
+
+  // const { ...colorsPalette } = state || [];
+
   const {
-    currentColors,
-    previousListType,
     listType,
-    colorsPalette,
-    generatedObject,
-    // generatedObject: {
-    //   colorPrefix,
-    //   primaryShade,
-    //   secondaryShade,
-    //   generatedShade,
-    // },
+    previousListType,
+    generatedObject: {
+      colorPrefix,
+      primaryShade,
+      secondaryShade,
+      generatedShade,
+    },
   } = state;
 
+  const { addedToPalette, duplicateColor } = state || false;
+
+  const { currentSelectionColors, colorsPalette } = state || [];
+
+  const { name, value, hex, rgb } = generatedShade;
   const colorObject = data || "";
 
   // Set state of previous list
   previousListType = listType || "";
+  let primaryRGB, secondaryRGB;
   switch (type) {
-    case "default":
-      currentColors = defaultColors;
+    case "showPrimaryGrid":
+      currentSelectionColors = defaultColors;
       listType = "primary";
-      return { ...state, currentColors, listType };
+      return { ...state, listType, currentSelectionColors };
 
-    case "update":
+    case "showSecondaryGrid":
       listType = "secondary";
 
-      currentColors = [generateListData({ ...colorObject })];
+      currentSelectionColors = [generateListData({ ...colorObject })];
 
-      return { ...state, previousListType, listType, currentColors };
+      return { ...state, previousListType, listType, currentSelectionColors };
 
     case "createPrimaryShade":
-      previousListType = listType;
-      const colorPrefix = colorObject.colorPrefix;
-      const primaryShade = { ...colorObject.shade };
-      const primaryRGB = convertFromHex(primaryShade.hex);
+      // previousListType = listType;
+      colorPrefix = colorObject.colorPrefix;
+      primaryShade = { ...colorObject.shade };
+      primaryRGB = convertFromHex(primaryShade.hex);
 
       return {
         ...state,
         previousListType,
+        listType,
         generatedObject: {
-          ...generatedObject,
           colorPrefix,
           primaryShade: { rgb: primaryRGB, ...primaryShade },
+          secondaryShade,
+          generatedShade,
+          duplicateColor,
+          addedToPalette,
         },
       };
     case "deletePrimaryShade":
-      previousListType = listType;
+      // previousListType = listType;
 
       // Remove primary and generated shade
-      generatedObject.primaryShade = "";
-      if (generatedObject?.generatedShade) {
-        generatedObject.generatedShade = "";
+      primaryShade = "";
+      if (generatedShade !== undefined) {
+        generatedShade = "";
       }
 
       return {
         ...state,
         previousListType,
-        generatedObject,
+        listType,
+        generatedObject: {
+          colorPrefix,
+          primaryShade,
+          secondaryShade: { rgb: secondaryRGB || "", ...secondaryShade },
+          generatedShade,
+          duplicateColor,
+          addedToPalette,
+        },
       };
 
     case "createSecondaryShade":
-      previousListType = listType;
-
-      const secondaryShade = colorObject.shade;
-      const secondaryRGB = convertFromHex(secondaryShade.hex);
+      // previousListType = listType;
+      listType = "secondary";
+      secondaryShade = colorObject.shade;
+      secondaryRGB = convertFromHex(secondaryShade.hex);
 
       secondaryShade = { ...secondaryShade, rgb: secondaryRGB };
 
       return {
         ...state,
         previousListType,
-        generatedObject: { ...generatedObject, secondaryShade },
+        listType,
+        generatedObject: {
+          colorPrefix,
+          primaryShade,
+          secondaryShade: { rgb: secondaryRGB, ...secondaryShade },
+          generatedShade,
+          duplicateColor,
+          addedToPalette,
+        },
       };
 
     case "deleteSecondaryShade":
-      previousListType = listType;
+      // previousListType = listType;
 
       // Remove primary and generated shade
-      generatedObject.secondaryShade = "";
-      if (generatedObject?.generatedShade) {
-        return (generatedObject.generatedShade = "");
+      secondaryShade = "";
+      if (generatedShade !== undefined) {
+        return (generatedShade = "");
       }
 
       return {
         ...state,
         previousListType,
-        generatedObject: { ...generatedObject, secondaryShade },
+        listType,
+        generatedObject: {
+          colorPrefix,
+          primaryShade,
+          secondaryShade,
+          generatedShade,
+          duplicateColor,
+          addedToPalette,
+        },
       };
 
     case "createGeneratedShade":
-      previousListType = listType;
+      // previousListType = listType;
       const initialGeneratedName = generateColorName(
-        generatedObject.colorPrefix,
-        generatedObject.primaryShade.value,
-        generatedObject.secondaryShade.value
+        colorPrefix,
+        primaryShade.value,
+        secondaryShade.value
       );
 
-      const generatedRGB = generateMedianRGB(
-        generatedObject.primaryShade.rgb,
-        generatedObject.secondaryShade.rgb
-      );
-      // Generate blended color
-      const generatedShade = {
-        rgb: generatedRGB,
-        hex: convertToHex(generatedRGB),
-      };
+      rgb = generateMedianRGB(primaryShade.rgb, secondaryShade.rgb);
+
+      hex = convertToHex(rgb);
 
       // Validate generated name
       const { generatedName, duplicateColor } =
-        validateGeneratedColor(
-          colorsPalette,
-          initialGeneratedName,
-          generatedShade.hex
-        ) || "";
-      generatedObject = {
-        ...generatedObject,
-        ...primaryShade,
-        ...secondaryShade,
-        generatedShade: { ...generatedShade, name: generatedName },
-        duplicateColor,
-      };
+        validateGeneratedColor(colorsPalette, initialGeneratedName, hex) || "";
 
+      // Generate blended color
+      // rgb = generatedRGB;
+      // hex = convertToHex(generatedRGB);
+      // name = generatedName;
+      // value = generatedName.split("-")[1];
       return {
         ...state,
         previousListType,
-        generatedObject,
+        listType,
+        generatedObject: {
+          colorPrefix,
+          primaryShade,
+          secondaryShade,
+          generatedShade: {
+            name: generatedName,
+            value: generatedName.split("-")[1],
+            hex,
+            rgb,
+          },
+          duplicateColor,
+          addedToPalette: true,
+        },
       };
 
     default:

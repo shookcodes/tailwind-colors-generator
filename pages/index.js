@@ -1,11 +1,13 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import Head from "next/head";
+import { ColorsContext } from "../context";
 import ColorGeneratorForm from "../components/ColorGeneratorForm";
 import ColorsPalette from "../components/ColorsPalette";
 import CodeBox from "../components/CodeBox";
 export default function Home() {
-  const [colorsPalette, setColorsPalette] = useState([]);
-  const [shadeAdded, setShadeAdded] = useState(null);
+  const { state } = useContext(ColorsContext);
+
+  const { colorsPalette } = state || "";
 
   return (
     <div>
@@ -25,20 +27,14 @@ export default function Home() {
         <div className="w-full h-full px-4 pb-80 ">
           <div className="w-full h-max  px-4 pb-40">
             <div className="w-full flex h-full flex-col items-center mx-auto max-w-3xl  ">
-              <ColorGeneratorForm
-                colorsPalette={colorsPalette}
-                setColorsPalette={setColorsPalette}
-                setShadeAdded={setShadeAdded}
-              />
-              {shadeAdded && (
-                <ColorsPalette
-                  colorsPalette={colorsPalette}
-                  setColorsPalette={setColorsPalette}
-                  shadeAdded={shadeAdded}
-                />
-              )}
+              <ColorGeneratorForm colorsPalette={colorsPalette} />
+              {colorsPalette?.length > 0 && (
+                <>
+                  <ColorsPalette />
 
-              <CodeBox colorsPalette={colorsPalette} shadeAdded={shadeAdded} />
+                  <CodeBox colorsPalette={colorsPalette} />
+                </>
+              )}
             </div>
           </div>
         </div>

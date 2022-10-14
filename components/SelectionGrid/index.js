@@ -96,10 +96,8 @@ const SelectionGrid = ({ defaultData, className, index }) => {
     state.currentSelectionColors?.length,
   ]);
 
-  // console.log("state", state);
-
   return (
-    <div id="gridWrapper" className="border-2 border-blue-400">
+    <div id="gridWrapper">
       {listType === "secondary" && (
         <button
           onClick={(e) => {
@@ -114,7 +112,7 @@ const SelectionGrid = ({ defaultData, className, index }) => {
 
       <div
         id={`selectionGrid`}
-        className={`flex flex-1 flex-wrap mx-auto mt-0 p-2 border-2 border-red-400 sm:p-4 transform transition-all duration-200 delay-500 gap-4
+        className={`flex flex-1 flex-wrap mx-auto mt-0 p-2 sm:p-4 transform transition-all duration-200 delay-500 gap-4
        w-full selectionGrid ${className}`}
       >
         {currentSelectionColors &&
@@ -164,7 +162,9 @@ const SelectionGrid = ({ defaultData, className, index }) => {
                     handleButtonMouseOut(e);
                   }}
                 >
-                  <span>{defaultData ? colorPrefix : shade.value}</span>
+                  <span>
+                    {listType === "primary" ? colorPrefix : shade.value}
+                  </span>
                 </button>
               );
             });
